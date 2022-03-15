@@ -1,10 +1,6 @@
 import styled from 'styled-components';
 
-const Wrapper =styled.div`
-  .info {
-    
-  }
-
+const Wrapper = styled.div`
 
 `;
 
