@@ -1,6 +1,7 @@
 package com.sawyou.api.service;
 
 import com.sawyou.api.request.UserRegisterPostReq;
+import com.sawyou.api.response.UserRes;
 import com.sawyou.db.entity.User;
 
 /**
@@ -9,5 +10,5 @@ import com.sawyou.db.entity.User;
 public interface UserService {
     User createUser(UserRegisterPostReq userRegisterInfo);
 
-    User getUserByUserId(String userId);
+    UserRes getUserByUserId(String userId);
 }
