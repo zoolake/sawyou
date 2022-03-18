@@ -1,40 +1,123 @@
-import React from 'react';
-// import { Paper, Grid } from '@material-ui/core';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
+import React, {useState} from 'react';
+import { 
+  Container, 
+  Button, 
+  TextField } 
+from '@mui/material';
 import Wrapper from './styles';
 
+const Signup = () =>{
+  const [id, setId] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordCheck, setPasswordCheck] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
 
-const Signup = (props) => {
+  const onSubmit = (e) => {
+      e.preventDefault();
+
+      // 비밀번호와 비밀번호확인 일치여부 검증
+      if(password !== passwordCheck){
+          return setPasswordError(true);
+      }
+  };
+
+  // Coustom Hook 이전
+  const onChangeId = (e) => {
+    setId(e.target.value);
+  };
+
+  const onChangeName = (e) => {
+    setName(e.target.value);
+  };
+
+  const onChangeEmail = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const onChangePassword = (e) => {
+    setPassword(e.target.value);
+  };
+  
+  const onChangePasswordCheck = (e) => {
+    setPasswordError(e.target.value !== password);
+    setPasswordCheck(e.target.value);
+  };
 
   return (
     <Wrapper>
-    <div>
-      <Grid container>
-        <Grid item xs={6}>
-          <Paper className="info">아이디</Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper className="info">비밀번호</Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper className="info">비밀번호 확인</Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper className="info">닉네임</Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper className="info">이메일</Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper className="info">자기소개</Paper>
-        </Grid>
-      </Grid>
-    </div>
+      <Container 
+        onSubmit={onSubmit} 
+        style={{padding:10}}
+        className="formBlock"
+      >
+        <div>
+        <TextField
+          className="inputBox1"
+          id="outlined-password-input"
+          label="아이디"
+          type="password"
+          autoComplete="current-password"
+          variant="outlined"
+          onChange={onChangeId}
+        />
+        </div>
+        <div>
+        <TextField
+          className="inputBox2"
+          id="outlined-password-input"
+          label="이름"
+          type="name"
+          autoComplete="current-password"
+          variant="outlined"
+          onChange={onChangeName}
+        />
+        </div>
+        <div>
+        <TextField
+          className="inputBox3"
+          id="outlined-password-input"
+          label="이메일"
+          type="email"
+          autoComplete="current-password"
+          variant="outlined"
+          onChange={onChangeEmail}
+        />
+        </div>
+        <div>
+        <TextField
+          className="inputBox4"
+          id="outlined-password-input"
+          label="비밀번호"
+          type="password"
+          autoComplete="current-password"
+          variant="outlined"
+          onChange={onChangePassword}
+        />
+        </div>
+        <div>
+        <TextField
+          className="inputBox5"
+          id="outlined-password-input"
+          label="비밀번호확인"
+          type="passwordCheck"
+          autoComplete="current-password"
+          variant="outlined"
+          onChange={onChangePasswordCheck}
+        />
+        </div>
+        <div>
+        <Button
+          className="signupBtn"
+          variant="contained" 
+        >
+          가입
+        </Button>
+        </div>
+      </Container>
     </Wrapper>
-
-  )
-
-}
+  );
+};
 
 export default Signup;

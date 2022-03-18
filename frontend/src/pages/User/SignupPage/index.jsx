@@ -5,8 +5,10 @@ import Wrapper from './styles';
 const SignupPage = (props) => {
 
   return (
+    <Wrapper>
+      <Signup></Signup>      
+    </Wrapper>
 
-    </Signup>
 
   )
 
