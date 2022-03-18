@@ -1,12 +1,18 @@
-import Router from './routes';
-import ThemeConfig from './theme';
-import GlobalStyles from './theme/globalStyles';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Signup from './pages/User/SignupPage';
+import Login from './pages/User/LoginPage';
 
-export default function App() {
+function App() {
   return (
-    <ThemeConfig>
-      <GlobalStyles />
-      <Router />
-    </ThemeConfig>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/accounts/signup" element={<Signup/>} />
+        <Route path="/accounts/Login" element={<Login/>} />
+      </Routes>
+
+    </BrowserRouter>
+
   );
 }
+
+export default App;
