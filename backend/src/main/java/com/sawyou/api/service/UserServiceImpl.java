@@ -12,6 +12,7 @@ import com.sawyou.db.repository.UserRepository;
 import com.sawyou.db.repository.UserRepositorySupport;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -49,18 +50,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByUserId(String userId) {
         // 디비에 유저 정보 조회 (userId 를 통한 조회).
-        User user = userRepositorySupport.findUserByUserId(userId).get();
-        return user;
+        Optional<User> user = userRepositorySupport.findUserByUserId(userId);
+        if(!user.isPresent()) return null;
+
+        return user.get();
     }
 
     @Override
     public UserRes getUser(Long userSeq, Long fromSeq) {
-        if(!userRepositorySupport.findUserByUserSeq(userSeq).isPresent()) return null;
-        User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
+        Optional<User> oUser = userRepositorySupport.findUserByUserSeq(userSeq);
+        if(!oUser.isPresent()) return null;
+        User user = oUser.get();
 
         boolean isFollowing = false;
         if(followingRepositorySupport.findFollowingByUserSeq(userSeq, fromSeq).isPresent())  isFollowing = true;
-
 
         return UserRes.builder()
                 .userId(user.getUserId())

@@ -26,6 +26,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -59,6 +60,21 @@ public class UserController {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
+    @GetMapping("/idcheck")
+    @ApiOperation(value = "아이디 중복 검사", notes = "현재 입력된 아이디가 이미 가입되어있는 아이디인지 확인한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Boolean> idCheck(@RequestBody @ApiParam(value = "중복체크할 아이디", required = true) Map<String, String> request) {
+        User user = userService.getUserByUserId(request.get("userId"));
+        // 중복 아이디가 없는 경우 true 반환
+        if(user == null) return ResponseEntity.ok(true);
+        // 중복 아이디가 있을 경우 false 반환
+        return ResponseEntity.status(409).body(false);
+    }
+
     @PostMapping("/login")
     @ApiOperation(value = "로그인", notes = "<strong>아이디와 패스워드</strong>를 통해 로그인 한다.")
     @ApiResponses({
@@ -89,7 +105,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> getUserInfo(@ApiIgnore Authentication authentication, @ApiParam @PathVariable Long userSeq) {
+    public ResponseEntity<Result> getUserInfo(@ApiIgnore Authentication authentication, @ApiParam(value = "조회할 유저 일련번호", required = true) @PathVariable Long userSeq) {
         /**
          * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
          * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
@@ -102,12 +118,8 @@ public class UserController {
         UserRes userRes = userService.getUser(userSeq, user.getUserSeq());
         if(Objects.isNull(userRes)) return ResponseEntity.status(404).body(Result.builder().status(404).message("사용자 없음").build());
 
-        return ResponseEntity.status(200)
-                .body(Result.builder()
-                        .data(userRes)
-                        .status(200)
-                        .message("프로필 조회 성공")
-                        .build());
+        return ResponseEntity.status(200).body(Result.builder()
+                        .data(userRes).status(200).message("프로필 조회 성공").build());
     }
 
     @Data
