@@ -47,75 +47,86 @@ const Signup = () =>{
 
   return (
     <Wrapper>
-      <Container 
-        onSubmit={onSubmit} 
-        style={{padding:10}}
-        className="formBlock"
-      >
-        <div>
-        <TextField
-          className="inputBox1"
-          id="outlined-password-input"
-          label="아이디"
-          type="password"
-          autoComplete="current-password"
-          variant="outlined"
+      <div className="logo">
+        I SAW YOU
+      </div>
+      <div className="c1">
+        <input 
+          type="email" 
+          id="loginId" 
+          name="loginId" 
+          placeholder="아이디" 
+          className="inputBox"
           onChange={onChangeId}
-        />
-        </div>
-        <div>
-        <TextField
-          className="inputBox2"
-          id="outlined-password-input"
-          label="이름"
-          type="name"
-          autoComplete="current-password"
-          variant="outlined"
-          onChange={onChangeName}
-        />
-        </div>
-        <div>
-        <TextField
-          className="inputBox3"
-          id="outlined-password-input"
-          label="이메일"
-          type="email"
-          autoComplete="current-password"
-          variant="outlined"
-          onChange={onChangeEmail}
-        />
-        </div>
-        <div>
-        <TextField
-          className="inputBox4"
-          id="outlined-password-input"
-          label="비밀번호"
-          type="password"
-          autoComplete="current-password"
-          variant="outlined"
-          onChange={onChangePassword}
-        />
-        </div>
-        <div>
-        <TextField
-          className="inputBox5"
-          id="outlined-password-input"
-          label="비밀번호확인"
-          type="passwordCheck"
-          autoComplete="current-password"
-          variant="outlined"
-          onChange={onChangePasswordCheck}
-        />
-        </div>
-        <div>
-        <Button
-          className="signupBtn"
-          variant="contained" 
-        >
-          가입
-        </Button>
-        </div>
-      </Container>
+        >          
+        </input>
+      </div>
+      <div className="c1">
+
+
+      <input 
+        type="email" 
+        id="loginId" 
+        name="loginId" 
+        placeholder="이름" 
+        className="inputBox"
+        onChange={onChangeName}
+      >          
+      </input>
+      </div>
+      <div className="c1">
+
+      <input 
+        type="email" 
+        id="loginId" 
+        name="loginId" 
+        placeholder="이메일" 
+        className="inputBox"
+        onChange={onChangeEmail}
+      >                    
+      </input>
+      </div>
+      <div className="c1">
+
+      <input 
+        type="email" 
+        id="loginId" 
+        name="loginId" 
+        placeholder="비밀번호" 
+        className="inputBox"
+        onChange={onChangePassword}
+      >          
+      </input>
+      </div>
+      <div className="c1">
+
+      <input 
+        type="email" 
+        id="loginId" 
+        name="loginId" 
+        placeholder="비밀번호확인" 
+        className="inputBox"
+        onChange={onChangePasswordCheck}
+      >          
+      </input>
+      </div>
+      <div className="c1">
+
+      <Button
+        className="signupBtn"
+        variant="contained" 
+      >
+        가입
+      </Button>
+      </div>
+      <div className="d1">
+        <p class="e1">
+          계정이 있으신가요?
+          <a href="/accounts/login">
+            로그인
+          </a>
+        </p>
+      </div>
     </Wrapper>
   );
 };
