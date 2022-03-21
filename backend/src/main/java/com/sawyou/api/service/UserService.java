@@ -11,4 +11,6 @@ public interface UserService {
     User createUser(UserRegisterPostReq userRegisterInfo);
 
     User getUserByUserId(String userId);
+
+    UserRes getUser(Long UserSeq, Long fromSeq);
 }

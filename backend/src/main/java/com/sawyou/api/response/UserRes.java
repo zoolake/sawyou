@@ -4,9 +4,7 @@ import com.sawyou.db.entity.User;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * 회원 본인 정보 조회 API ([GET] /api/v1/users/me) 요청에 대한 응답값 정의.
@@ -14,6 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor @AllArgsConstructor
 @ApiModel("UserResponse")
 public class UserRes {
     @ApiModelProperty(name = "User ID")
@@ -27,12 +26,6 @@ public class UserRes {
     @ApiModelProperty(name = "User Profile")
     private String userProfile;
 
-
-    public UserRes(User user) {
-        this.userId = user.getUserId();
-        this.userName = user.getUserName();
-        this.userEmail = user.getUserEmail();
-        this.userDesc = user.getUserDesc();
-        this.userProfile = user.getUserProfile();
-    }
+    @ApiModelProperty(name = "팔로잉 여부")
+    private boolean isFollowing;
 }
