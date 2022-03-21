@@ -41,12 +41,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRes getUserByUserId(String userId) {
+    public User getUserByUserId(String userId) {
         // 디비에 유저 정보 조회 (userId 를 통한 조회).
         User user = userRepositorySupport.findUserByUserId(userId).get();
         System.out.println("user = " + user.getUserDesc());
         System.out.println("user = " + user.getUserId());
-        UserRes userRes = new UserRes(user);
-        return userRes;
+//        UserRes userRes = new UserRes(user);
+        return user;
     }
 }

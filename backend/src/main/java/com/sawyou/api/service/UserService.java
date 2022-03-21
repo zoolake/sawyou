@@ -10,5 +10,5 @@ import com.sawyou.db.entity.User;
 public interface UserService {
     User createUser(UserRegisterPostReq userRegisterInfo);
 
-    UserRes getUserByUserId(String userId);
+    User getUserByUserId(String userId);
 }

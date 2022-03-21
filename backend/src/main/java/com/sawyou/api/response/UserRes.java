@@ -4,6 +4,7 @@ import com.sawyou.db.entity.User;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Builder
 @ApiModel("UserResponse")
 public class UserRes {
     @ApiModelProperty(name = "User ID")
