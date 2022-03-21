@@ -11,45 +11,64 @@ const Login = (props) => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
 
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+
+    const body = {
+      id : id,
+      password : password,
+    };
+    console.log(body)
+  };
+
+  const onChangeId = (e) => {
+    setId(e.target.value);
+  };
+
+  const onChangePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
   return (
     <Wrapper>
     <div>
-      <Grid container sx={{ height: '100vh' }}>
+        <Box component="form" onSubmit={onSubmitHandler}>
+          <div className="logo">
+          I SAW YOU
+          </div>
+          <div className="c1">
+            <input 
+              type="text" 
+              id="loginid" 
+              name="loginId" 
+              placeholder="아이디" 
+              className="inputBox"
+              onChange={onChangeId}
+            >          
+            </input>
+          </div>
+          <div className="c1">
+            <input 
+              type="text" 
+              id="password" 
+              name="password" 
+              placeholder="비밀번호" 
+              className="inputBox"
+              onChange={onChangePassword}
+            >          
+            </input>
+          </div>
+            <div className="c1">
+            <Button
+              className="signupBtn"
+              type="submit"
+              variant="contained"
+            >
+              로그인
+            </Button>
+          </div>
+        </Box>
 
-      <Box component="form" noValidate sx={{ mt: 1 }}>
-                
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="Id"
-                  label="아이디"
-                  name="Id"
-                  autoComplete="Id"
-                  autoFocus
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="비밀번호"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
-
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  로그인
-                </Button>
-                
-              </Box>
-        </Grid>
 
     </div>
     </Wrapper>
