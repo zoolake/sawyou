@@ -10,6 +10,7 @@ import TextField from '@mui/material/TextField';
 const Login = (props) => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordWaring,setPasswordWarning] = useState('');
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -28,6 +29,8 @@ const Login = (props) => {
   const onChangePassword = (e) => {
     setPassword(e.target.value);
   };
+
+
 
   return (
     <Wrapper>
@@ -49,7 +52,7 @@ const Login = (props) => {
           </div>
           <div className="c1">
             <input 
-              type="text" 
+              type="password" 
               id="password" 
               name="password" 
               placeholder="비밀번호" 
