@@ -17,9 +17,10 @@ public class PostServiceImpl implements PostService {
 	@Autowired
 	private PostRepositorySupport postRepositorySupport;
 
-
+	// 게시글 조회
 	@Override
 	public Post getPostInfo(Long postSeq) {
+		// JPA의 기본 메소드를 활용하여 postRepo에 해당 메소드 명시 없이 PK값을 가지고 데이터 찾음
 		return postRepository.getById(postSeq);
 	}
 }

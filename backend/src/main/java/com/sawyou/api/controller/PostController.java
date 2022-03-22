@@ -30,13 +30,22 @@ public class PostController {
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "게시글 조회 성공"),
 			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "찾는 게시글 없음"),
 			@ApiResponse(code = 409, message = "게시글 조회 실패"),
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> getPostInfo(@ApiIgnore Authentication authentication, @ApiParam(value = "조회할 게시글 일련번호", required = true) @PathVariable Long postSeq) {
+		// 인증 토큰 확인, 올바르지 않은 토큰일 경우에도 401 자동 리턴
 		if (authentication == null) return ResponseEntity.status(401).body(BaseResponseBody.of(401, "인증 실패"));
 
+		// postSeq 값 기준으로 게시글 찾기
 		Post post = postService.getPostInfo(postSeq);
+
+		// 게시글 번호에 알맞는 데이터가 없을 경우
+		if (post == null) return ResponseEntity.status(401).body(BaseResponseBody.of(404, "찾는 게시글 없음"));
+		// 삭제된 게시글일 경우
+		if (post.isPostIsDelete()) return ResponseEntity.status(401).body(BaseResponseBody.of(404, "찾는 게시글 없음"));
+
 		return ResponseEntity.status(200).body(PostRes.of(200, "게시글 조회 성공", post));
 	}
 }
