@@ -1,57 +1,59 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  // background-color: #FFF0F0;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
   margin-top: 96px;
   margin-bottom: 32px;
-  position: relative; 
-  border-radius: 16px;
+  position: relative;
+  border: 1px solid #d4d2d2;
   box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
   width: 350px;
   height: 470px;
 
-  .formBlock {
-
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+    font-size: 48px;
   }
 
-  .inputBox1 {
-    width: 258px;
-    height: 60px;
-    background-color: #f7f7f7;
+  .c1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .inputBox2 {
+  .inputBox {
     width: 258px;
-    height: 60px;
-    background-color: #f7f7f7;    
-  }
-
-  .inputBox3 {
-    width: 258px;
-    height: 60px;
-    background-color: #f7f7f7;    
-  }
-
-  .inputBox4 {
-    width: 258px;
-    height: 60px;
-    background-color: #f7f7f7;    
-  }
-
-  .inputBox5 {
-    width: 258px;
-    height: 60px;
-    background-color: #f7f7f7;    
+    height: 50px;
+    background-color: white;
+    border: 1px solid #d4d2d2;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    margin-bottom: 4px;
   }
 
   .signupBtn {
-    width: 258px;
+    width: 264px;
     height: 50px;
+    border-radius: 16px;
     background-color: #5AD2FF;
+    margin-top: 4px;
+  }
 
+  .d1 {
+    display: flex;
+    justify-content: center;
+  }
+
+  a {
+    text-decoration-line: none;
   }
 
 
