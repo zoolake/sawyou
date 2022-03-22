@@ -1,6 +1,7 @@
 package com.sawyou.api.service;
 
 import com.sawyou.api.request.UserUpdateInfoReq;
+import com.sawyou.api.request.UserUpdatePwdReq;
 import com.sawyou.api.response.UserRes;
 import com.sawyou.db.repository.FollowingRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,10 +84,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User updateUserInfo(UserUpdateInfoReq updateInfo, Long userSeq) {
         User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
-        System.out.println("updateInfo.getUserName() = " + updateInfo.getUserName());
-        System.out.println("updateInfo.getUserEmail() = " + updateInfo.getUserEmail());
-        System.out.println("updateInfo.getUserDesc() = " + updateInfo.getUserDesc());
-        System.out.println("updateInfo.getUserProfile() = " + updateInfo.getUserProfile());
 
         if(StringUtils.hasText(updateInfo.getUserId())) {
             user.setUserId(updateInfo.getUserId());
@@ -102,6 +99,17 @@ public class UserServiceImpl implements UserService {
         }
         if(StringUtils.hasText(updateInfo.getUserProfile())) {
             user.setUserProfile(updateInfo.getUserProfile());
+        }
+        return user;
+    }
+
+    @Override
+    @Transactional
+    public User updateUserPwd(UserUpdatePwdReq updatePwd, Long userSeq) {
+        User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
+
+        if(StringUtils.hasText(updatePwd.getUserPwd())) {
+            user.setUserPwd(passwordEncoder.encode(updatePwd.getUserPwd()));
         }
         return user;
     }

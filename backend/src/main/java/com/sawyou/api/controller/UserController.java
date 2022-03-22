@@ -2,6 +2,7 @@ package com.sawyou.api.controller;
 
 import com.sawyou.api.request.UserLoginPostReq;
 import com.sawyou.api.request.UserUpdateInfoReq;
+import com.sawyou.api.request.UserUpdatePwdReq;
 import com.sawyou.api.response.UserLoginPostRes;
 import com.sawyou.common.util.JwtTokenUtil;
 import lombok.AllArgsConstructor;
@@ -140,6 +141,25 @@ public class UserController {
         User user = userService.updateUserInfo(updateInfo, oUser.getUserSeq());
 
         return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(user.getUserId())));
+    }
+
+    @PatchMapping("/pwd")
+    @ApiOperation(value = "비밀번호 수정", notes = "유저의 비밀번호를 수정한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> updateUserPwd(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value = "변경할 비밀번호", required = true) UserUpdatePwdReq updatePwd) {
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        String userId = userDetails.getUsername();
+        User oUser = userService.getUserByUserId(userId);
+        if(oUser == null) return ResponseEntity.status(401).body(Result.builder().message("인증실패").build());
+
+        User user = userService.updateUserPwd(updatePwd, oUser.getUserSeq());
+        return ResponseEntity.status(200).body(Result.builder().data(user).status(200).message("비밀번호 수정 성공").build());
+
     }
 
 
