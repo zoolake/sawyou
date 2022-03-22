@@ -3,6 +3,8 @@ package com.sawyou.db.entity;
 import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,6 +31,8 @@ public class Post {
     private String postPictureLink;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @Generated(GenerationTime.INSERT)
+    @Column
     private LocalDateTime postWritingTime;
 
     private boolean postIsDelete;
