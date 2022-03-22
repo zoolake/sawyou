@@ -3,15 +3,15 @@ package com.sawyou.api.service;
 import com.sawyou.api.request.UserUpdateInfoReq;
 import com.sawyou.api.request.UserUpdatePwdReq;
 import com.sawyou.api.response.UserRes;
-import com.sawyou.db.repository.FollowingRepositorySupport;
+import com.sawyou.db.entity.Follower;
+import com.sawyou.db.entity.Following;
+import com.sawyou.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.sawyou.api.request.UserRegisterPostReq;
 import com.sawyou.db.entity.User;
-import com.sawyou.db.repository.UserRepository;
-import com.sawyou.db.repository.UserRepositorySupport;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -30,7 +30,16 @@ public class UserServiceImpl implements UserService {
     private UserRepositorySupport userRepositorySupport;
 
     @Autowired
+    private FollowingRepository followingRepository;
+
+    @Autowired
     private FollowingRepositorySupport followingRepositorySupport;
+
+    @Autowired
+    private FollowerRepository followerRepository;
+
+    @Autowired
+    private FollowerRepositorySupport followerRepositorySupport;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -112,5 +121,42 @@ public class UserServiceImpl implements UserService {
             user.setUserPwd(passwordEncoder.encode(updatePwd.getUserPwd()));
         }
         return user;
+    }
+
+    @Override
+    @Transactional
+    public boolean followingUser(User user, Long followingToSeq) {
+        // user = 본인, followingToSeq = 팔로잉할 상대 Seq
+        // followingFromSeq == followerToSeq  /  followingToSeq == followerFromSeq
+
+        System.out.println("user.getUserSeq() = " + user.getUserSeq());
+        System.out.println("followingToSeq = " + followingToSeq);
+        //followingRepositorySupport.findFollowingByUserSeq(상대 Seq, 본인 Seq)
+        Optional<Following> following = followingRepositorySupport.findFollowingByUserSeq(followingToSeq, user.getUserSeq());
+
+        if(following.isPresent()) {
+            /**
+             * 1. 팔로잉이 존재하면
+             * 2. 팔로워 테이블에서 삭제하고
+             * 3. 팔로잉 테이블에서 삭제
+            */
+            //followerRepositorySupport.findFollowerByUserSeq(상대 Seq, 본인 Seq)
+            Optional<Follower> follower = followerRepositorySupport.findFollowerByUserSeq(followingToSeq, user.getUserSeq());
+            if(follower.isPresent())  followerRepository.delete(follower.get());
+
+            followingRepository.delete(following.get());
+            return false;
+        } else {
+            /**
+             * 1. 팔로잉이 존재하지 않으면
+             * 2. 팔로워 테이블에 추가하고
+             * 3. 팔로잉 테이블에 추가
+             */
+            Follower newFollower = Follower.builder().followerFromSeq(followingToSeq).user(user).build();
+            followerRepository.save(newFollower);
+            Following newFollowing = Following.builder().followingToSeq(followingToSeq).user(user).build();
+            followingRepository.save(newFollowing);
+            return true;
+        }
     }
 }

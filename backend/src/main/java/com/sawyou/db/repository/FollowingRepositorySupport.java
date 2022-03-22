@@ -19,6 +19,7 @@ public class FollowingRepositorySupport {
     private QFollowing qFollowing = QFollowing.following;
 
     public Optional<Following> findFollowingByUserSeq(Long userSeq, Long fromSeq) {
+        // userSeq(toSeq) : 팔로잉 대상 seq / fromSeq : 본인 Seq
         Following following = jpaQueryFactory.select(qFollowing).from(qFollowing)
                 .where(qFollowing.followingToSeq.eq(userSeq).and(qFollowing.user.userSeq.eq(fromSeq))).fetchOne();
         if (following == null) return Optional.empty();
