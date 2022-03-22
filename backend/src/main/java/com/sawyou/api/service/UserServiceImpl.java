@@ -1,5 +1,6 @@
 package com.sawyou.api.service;
 
+import com.sawyou.api.request.UserUpdateInfoReq;
 import com.sawyou.api.response.UserRes;
 import com.sawyou.db.repository.FollowingRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import com.sawyou.api.request.UserRegisterPostReq;
 import com.sawyou.db.entity.User;
 import com.sawyou.db.repository.UserRepository;
 import com.sawyou.db.repository.UserRepositorySupport;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -73,5 +76,33 @@ public class UserServiceImpl implements UserService {
                 .userProfile(user.getUserProfile())
                 .isFollowing(isFollowing)
                 .build();
+    }
+
+
+    @Override
+    @Transactional
+    public User updateUserInfo(UserUpdateInfoReq updateInfo, Long userSeq) {
+        User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
+        System.out.println("updateInfo.getUserName() = " + updateInfo.getUserName());
+        System.out.println("updateInfo.getUserEmail() = " + updateInfo.getUserEmail());
+        System.out.println("updateInfo.getUserDesc() = " + updateInfo.getUserDesc());
+        System.out.println("updateInfo.getUserProfile() = " + updateInfo.getUserProfile());
+
+        if(StringUtils.hasText(updateInfo.getUserId())) {
+            user.setUserId(updateInfo.getUserId());
+        }
+        if(StringUtils.hasText(updateInfo.getUserName())) {
+            user.setUserName(updateInfo.getUserName());
+        }
+        if(StringUtils.hasText(updateInfo.getUserEmail())) {
+            user.setUserEmail(updateInfo.getUserEmail());
+        }
+        if(StringUtils.hasText(updateInfo.getUserDesc())) {
+            user.setUserDesc(updateInfo.getUserDesc());
+        }
+        if(StringUtils.hasText(updateInfo.getUserProfile())) {
+            user.setUserProfile(updateInfo.getUserProfile());
+        }
+        return user;
     }
 }

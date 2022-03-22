@@ -1,6 +1,7 @@
 package com.sawyou.api.controller;
 
 import com.sawyou.api.request.UserLoginPostReq;
+import com.sawyou.api.request.UserUpdateInfoReq;
 import com.sawyou.api.response.UserLoginPostRes;
 import com.sawyou.common.util.JwtTokenUtil;
 import lombok.AllArgsConstructor;
@@ -113,14 +114,36 @@ public class UserController {
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         String userId = userDetails.getUsername();
         User user = userService.getUserByUserId(userId);
-        if(Objects.isNull(user)) return ResponseEntity.status(401).body(Result.builder().message("인증실패").build());
+        if(user == null) return ResponseEntity.status(401).body(Result.builder().message("인증실패").build());
 
         UserRes userRes = userService.getUser(userSeq, user.getUserSeq());
-        if(Objects.isNull(userRes)) return ResponseEntity.status(404).body(Result.builder().status(404).message("사용자 없음").build());
+        if(userRes == null) return ResponseEntity.status(404).body(Result.builder().status(404).message("사용자 없음").build());
 
         return ResponseEntity.status(200).body(Result.builder()
                         .data(userRes).status(200).message("프로필 조회 성공").build());
     }
+
+    @PatchMapping
+    @ApiOperation(value = "프로필 수정", notes = "유저의 프로필 정보를 수정한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<UserLoginPostRes> updateUserInfo(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value = "수정할 유저 정보", required = true) UserUpdateInfoReq updateInfo) {
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        String userId = userDetails.getUsername();
+        User oUser = userService.getUserByUserId(userId);
+        if(oUser == null) return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null));
+
+        User user = userService.updateUserInfo(updateInfo, oUser.getUserSeq());
+
+        return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(user.getUserId())));
+    }
+
+
+
 
     @Data
     @AllArgsConstructor

@@ -1,6 +1,7 @@
 package com.sawyou.api.service;
 
 import com.sawyou.api.request.UserRegisterPostReq;
+import com.sawyou.api.request.UserUpdateInfoReq;
 import com.sawyou.api.response.UserRes;
 import com.sawyou.db.entity.User;
 
@@ -13,4 +14,6 @@ public interface UserService {
     User getUserByUserId(String userId);
 
     UserRes getUser(Long UserSeq, Long fromSeq);
+
+    User updateUserInfo(UserUpdateInfoReq userInfo, Long userSeq);
 }
