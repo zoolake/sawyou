@@ -1,5 +1,6 @@
 package com.sawyou.api.service;
 
+import com.sawyou.db.entity.Post;
 import com.sawyou.db.repository.PostRepository;
 import com.sawyou.db.repository.PostRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,4 +16,10 @@ public class PostServiceImpl implements PostService {
 	
 	@Autowired
 	private PostRepositorySupport postRepositorySupport;
+
+
+	@Override
+	public Post getPostInfo(Long postSeq) {
+		return postRepository.getById(postSeq);
+	}
 }
