@@ -9,9 +9,7 @@ const LoginPage = (props) => {
   return (
 
     <Wrapper>
-      <Navbar></Navbar>
       <Login>
-        
       </Login>
     </Wrapper>
 

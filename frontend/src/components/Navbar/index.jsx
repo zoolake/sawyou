@@ -99,7 +99,7 @@ const UserHeader = (props) => {
                     minWidth: "30px",
                     minHeight: "30px"
                   }}  >
-                  <Avatar src="/static/images/avatar/eth.jpg" sx={{ width: 25, height: 25 }}/>
+                  <img src="/images/baseimg_nav.jpg" />
                 </Button>
                 <Menu
                   sx={{ mt: '40px' }}
