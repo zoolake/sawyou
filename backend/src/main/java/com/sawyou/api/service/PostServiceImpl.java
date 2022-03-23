@@ -1,5 +1,6 @@
 package com.sawyou.api.service;
 
+import com.sawyou.api.response.CommentRes;
 import com.sawyou.db.entity.Comment;
 import com.sawyou.db.entity.Post;
 import com.sawyou.db.entity.User;
@@ -10,7 +11,8 @@ import com.sawyou.db.repository.PostRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Properties;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 게시글, 댓글 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -111,5 +113,21 @@ public class PostServiceImpl implements PostService {
 
         // 쿼리가 정상적으로 실행되었다면, 쿼리에 사용된 객체 return
         return commentRepository.save(comment);
+    }
+
+    @Override
+    public List<CommentRes> getComments(Long postSeq) {
+        List<Comment> comments = commentRepository.findByPost_PostSeqIsAndCommentIsDeleteIsFalse(postSeq);
+        return comments.stream().
+                map(comment -> CommentRes.builder()
+                        .commentContent(comment.getCommentContent())
+                        .commentWritingTime(comment.getCommentWritingTime().toString())
+                        .commentIsDelete(comment.isCommentIsDelete())
+                        .userId(comment.getUser().getUserId())
+                        .userName(comment.getUser().getUserName())
+                        .userProfile(comment.getUser().getUserProfile())
+                        .build()
+                )
+                .collect(Collectors.toList());
     }
 }

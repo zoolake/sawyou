@@ -3,6 +3,7 @@ package com.sawyou.api.controller;
 import com.sawyou.api.request.CommentWriteReq;
 import com.sawyou.api.request.PostUpdateReq;
 import com.sawyou.api.request.PostWriteReq;
+import com.sawyou.api.response.CommentRes;
 import com.sawyou.api.service.PostService;
 import com.sawyou.common.auth.SawyouUserDetails;
 import com.sawyou.db.entity.Comment;
@@ -17,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 /**
  * 게시글, 댓글 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -197,6 +200,40 @@ public class PostController {
         if (comment == null)
             return ResponseEntity.status(409).body(Result.builder().status(409).message("댓글 작성 실패").build());
         return ResponseEntity.status(201).body(Result.builder().status(201).message("댓글 작성 성공").build());
+    }
+
+    @GetMapping("/comment/{postSeq}")
+    @ApiOperation(value = "댓글 조회", notes = "댓글 정보를 응답한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "댓글 조회 성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "찾는 게시글 없음"),
+            @ApiResponse(code = 409, message = "댓글 조회 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> getComments(
+            @ApiIgnore Authentication authentication,
+            @ApiParam(value = "조회할 댓글의 게시글 일련번호", required = true) @PathVariable Long postSeq
+    ) {
+        // 인증 토큰 확인, 올바르지 않은 토큰일 경우에도 401 자동 리턴
+        if (authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+
+        // postSeq 값 기준으로 댓글 조회할 게시글 찾기
+        Post post = postService.getPostByPostSeq(postSeq);
+
+        // 게시글 번호에 알맞는 데이터가 없을 경우
+        if (post == null)
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("찾는 게시글 없음").build());
+        // 삭제된 게시글일 경우
+        if (post.isPostIsDelete())
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("찾는 게시글 없음").build());
+
+        // postSeq 값 기준으로 게시글 찾기
+        List<CommentRes> comments = postService.getComments(postSeq);
+
+        if (comments.isEmpty()) ResponseEntity.status(409).body(Result.builder().data(comments).status(409).message("댓글 조회 실패").build());
+        return ResponseEntity.status(200).body(Result.builder().data(comments).status(200).message("댓글 조회 성공").build());
     }
 
     @Data
