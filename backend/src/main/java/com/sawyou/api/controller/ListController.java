@@ -44,6 +44,25 @@ public class ListController {
         return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("전체 게시글 조회 성공").build());
     }
 
+    @GetMapping("/following")
+    @ApiOperation(value = "팔로잉 게시글 조회", notes = "유저가 팔로잉한 유저들의 게시글 리스트를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "게시글 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> getPostListFollowing(@ApiIgnore Authentication authentication) {
+        if(authentication == null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        Long userSeq = userDetails.getUser().getUserSeq();
+
+        List<PostRes> lists = listService.getPostListFollowing(userSeq);
+        if(lists.isEmpty()) return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());
+
+        return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("전체 게시글 조회 성공").build());
+    }
 
 
 
