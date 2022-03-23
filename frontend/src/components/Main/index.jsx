@@ -12,16 +12,19 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
 const Main = () => {
   const [comment, setComment] = useState('');
-  const [postCommentStorage, setPostCommentStorage] = useState([]);
+  const [commentArray, setCommentArray] = useState([]);
   const [isValid, setIsValid] = useState(false);
+  const onChange = event => setComment(event.target.value);
 
-  const btnColor = e => {
-    e.preventDefault();
-    const copyArr = [...postCommentStorage];
-    copyArr.push(comment);
-    setPostCommentStorage(copyArr);
+  const onSubmit = event => {
+    event.preventDefault();
+    if (comment === '') {
+      return;
+    }
+    setCommentArray(commentValueList => [comment, ...commentValueList]);
     setComment('');
     setIsValid(false);
+
   };
 
   return (
@@ -58,11 +61,12 @@ const Main = () => {
               {/* <h4 className="post_txt"><strong>{username}</strong> {caption}</h4> */}
               <h4 className="post_text"><strong>leesh123</strong> 테스트</h4>
             </div>
-            <div>
-              <h4 className="post_text"><strong>kimcs456</strong> 와!</h4>
-            </div>
+            {/* <ul>
+              <Comment />
+            </ul> */}
           </div>
         </div>
+
         {/* <form className="post_comment_container" method="POST">
           <input
             value={comment}
@@ -89,6 +93,24 @@ const Main = () => {
             게시
           </text>
         </form> */}
+        <div className="commentContainer" onSubmit={onSubmit}>
+          <form className="commentWrap">
+            <input
+              type="text"
+              placeholder="댓글달기..."
+              className="commentInput"
+              value={comment}
+              onChange={onChange}
+            />
+            <text 
+              type="button"
+              className={
+                isValid === true ? 'commentUploadBtnActive' : 'commentUploadBtnDeactive'
+              }>
+              게시
+            </text>
+          </form>
+        </div>       
       </div>
     </Wrapper>
   ) 

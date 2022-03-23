@@ -14,29 +14,22 @@ const Wrapper = styled.div`
     background-color: white;
     max-width: 500px;
     border: 1px solid lightgrey;
-    // margin-bottom: 45px;
   }
   
   .post_img {
     width: 100%;
     height: 100%;
-  }
-  
-  .post_like {
-    align-items: center;
-    background: 0 0;
-    border: 0;
-    cursor: pointer;
-    padding: 8px;
-  }
+  } 
+
 
   .post_header {
+    height: 50px;
     display: flex;
     justify-content: space-between;
-    flex-direction: row;
+    // flex-direction: row;
     align-items: center;
-    align-content: stretch;
-    flex: 0 0 auto;
+    // align-content: stretch;
+    // flex: 0 0 auto;
     margin-right: 10px;
   }
 
@@ -61,6 +54,10 @@ const Wrapper = styled.div`
   }
 
   .post_like {
+    align-items: center;
+    background: 0 0;
+    border: 0;
+    cursor: pointer;
     padding: 0; !important;
     font-size: 1.2rem; !important;
   }
@@ -84,17 +81,26 @@ const Wrapper = styled.div`
     padding-bottom: 4px;
   }
 
-  .post_comment {
-    border: 0px solid lightgrey;
+  .commentWrap {
+    border: 1px solid lightgrey;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .commentInput {
+    border: 0;
     width: 85%;
+    padding-left: 8px;
   }
 
   .commentUploadBtnActive {
     color: #0095f6;
+    padding-right: 8px;
   }
 
   .commentUploadBtnDeactive {
     color: #b2dffc;
+    padding-right: 8px;
   }
 
 
