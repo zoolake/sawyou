@@ -1,5 +1,6 @@
 package com.sawyou.api.service;
 
+import com.sawyou.db.entity.Comment;
 import com.sawyou.db.entity.Post;
 import com.sawyou.api.response.PostRes;
 
@@ -18,4 +19,7 @@ public interface PostService {
 
     // 게시글 수정
     Post updatePost(Post post, String postContent);
+
+    // 댓글 작성
+    Comment writeComment(String commentContent, Long postSeq, Long userSeq);
 }

@@ -1,12 +1,16 @@
 package com.sawyou.api.service;
 
+import com.sawyou.db.entity.Comment;
 import com.sawyou.db.entity.Post;
 import com.sawyou.db.entity.User;
 import com.sawyou.api.response.PostRes;
+import com.sawyou.db.repository.CommentRepository;
 import com.sawyou.db.repository.PostRepository;
 import com.sawyou.db.repository.PostRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Properties;
 
 /**
  * 게시글, 댓글 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -15,7 +19,10 @@ import org.springframework.stereotype.Service;
 public class PostServiceImpl implements PostService {
 	@Autowired
 	private PostRepository postRepository;
-	
+
+	@Autowired
+	private CommentRepository commentRepository;
+
 	@Autowired
 	private PostRepositorySupport postRepositorySupport;
 
@@ -70,5 +77,27 @@ public class PostServiceImpl implements PostService {
 
 		// 쿼리가 정상적으로 실행되었다면, 쿼리에 사용된 객체 return
 		return postRepository.save(post);
+	}
+
+	// 댓글 작성
+	@Override
+	public Comment writeComment(String commentContent, Long postSeq, Long userSeq) {
+		// DB에 들어갈 데이터 설정
+		Comment comment = Comment.builder()
+				.commentContent(commentContent)
+				.post(
+						Post.builder()
+								.postSeq(postSeq)
+								.build()
+				)
+				.user(
+						User.builder()
+								.userSeq(userSeq)
+								.build()
+				)
+				.build();
+
+		// 쿼리가 정상적으로 실행되었다면, 쿼리에 사용된 객체 return
+		return commentRepository.save(comment);
 	}
 }
