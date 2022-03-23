@@ -90,6 +90,11 @@ public class UserController {
         String password = loginInfo.getUserPwd();
 
         User user = userService.getUserByUserId(userId);
+        if(user.isUserIsDelete()) {
+            // 삭제된 회원이라면 로그인 불가능
+            return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "삭제된 회원", null));
+        }
+
         // 로그인 요청한 유저로부터 입력된 패스워드 와 디비에 저장된 유저의 암호화된 패스워드가 같은지 확인.(유효한 패스워드인지 여부 확인)
         if (passwordEncoder.matches(password, user.getUserPwd())) {
             // 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
@@ -183,6 +188,24 @@ public class UserController {
 
         if(state) return ResponseEntity.status(204).body(Result.builder().status(204).message("팔로잉 성공").build());
         return ResponseEntity.status(204).body(Result.builder().status(204).message("팔로잉 취소").build());
+    }
+
+    @DeleteMapping
+    @ApiOperation(value = "회원탈퇴", notes = "회원탈퇴를 한다.")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> deleteUser(@ApiIgnore Authentication authentication) {
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        String userId = userDetails.getUsername();
+        User user = userService.getUserByUserId(userId);
+
+        User cUser = userService.deleteUser(user);
+
+        return ResponseEntity.status(204).body(Result.builder().data(cUser).status(200).message("회원 탈퇴 성공").build());
     }
 
 

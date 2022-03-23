@@ -13,4 +13,9 @@ public class PostLikeRepositorySupport {
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
     private QPostLike qPostLike = QPostLike.postLike;
+
+    public Long deletePostLikeByUserSeq(Long userSeq) {
+        Long affectedRow = jpaQueryFactory.delete(qPostLike).where(qPostLike.user.userSeq.eq(userSeq)).execute();
+        return affectedRow;
+    }
 }
