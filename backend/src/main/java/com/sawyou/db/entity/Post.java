@@ -1,8 +1,7 @@
 package com.sawyou.db.entity;
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 
@@ -16,11 +15,14 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "postSeq")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postSeq = null;
+    private Long postSeq;
 
     @JsonIgnore
     @ManyToOne
