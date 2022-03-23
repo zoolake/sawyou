@@ -4,6 +4,7 @@ import Login from './pages/User/LoginPage';
 import Main from './pages/MainPage';
 
 function App() {
+
   return (
     <BrowserRouter>
       <Routes>
@@ -11,9 +12,7 @@ function App() {
         <Route path="/accounts/Login" element={<Login/>} />
         <Route path="/" element={<Main/>} />
       </Routes>
-
     </BrowserRouter>
-
   );
 }
 
