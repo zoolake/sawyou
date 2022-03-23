@@ -77,8 +77,9 @@ public class PostController {
     @PatchMapping("{postSeq}")
     @ApiOperation(value = "게시글 수정", notes = "요청 값에 따라 게시글을 수정한다.")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "게시글 수정 성공"),
+            @ApiResponse(code = 200, message = "게시글 수정 성공"),
             @ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 403, message = "접근 권한 없음"),
             @ApiResponse(code = 404, message = "수정할 게시글 없음"),
             @ApiResponse(code = 409, message = "게시글 수정 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
@@ -103,14 +104,14 @@ public class PostController {
         // 삭제된 게시글일 경우
         if (oPost.isPostIsDelete()) return ResponseEntity.status(404).body(Result.builder().status(404).message("수정할 게시글 없음").build());
         // 토큰의 사용자와 수정할 게시글의 작성자가 다를 경우
-        if (oPost.getUser().getUserSeq() != userSeq) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+        if (oPost.getUser().getUserSeq() != userSeq) return ResponseEntity.status(403).body(Result.builder().status(403).message("접근 권한 없음").build());
 
 		// 게시글 수정
         Post post = postService.updatePost(oPost, postUpdate.getPostContent());
 
         // 게시글이 제대로 수정되지 않았을 경우
         if (post == null) return ResponseEntity.status(409).body(Result.builder().status(409).message("게시글 수정 실패").build());
-        return ResponseEntity.status(201).body(Result.builder().status(201).message("게시글 수정 성공").build());
+        return ResponseEntity.status(200).body(Result.builder().status(200).message("게시글 수정 성공").build());
     }
 
 	@Data
