@@ -1,5 +1,6 @@
 package com.sawyou.api.service;
 
+import com.sawyou.api.response.PostRes;
 import com.sawyou.db.entity.Post;
 
 import java.util.List;
@@ -9,5 +10,5 @@ import java.util.List;
  */
 public interface ListService {
 
-    List<Post> getPostListAll();
+    List<PostRes> getPostListAll();
 }

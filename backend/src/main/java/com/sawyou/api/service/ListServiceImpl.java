@@ -1,6 +1,8 @@
 package com.sawyou.api.service;
 
+import com.sawyou.api.response.PostRes;
 import com.sawyou.db.entity.Post;
+import com.sawyou.db.entity.User;
 import com.sawyou.db.repository.PostRepository;
 import com.sawyou.db.repository.PostRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,20 @@ public class ListServiceImpl implements ListService {
 	private PostRepositorySupport postRepositorySupport;
 
     @Override
-    public List<Post> getPostListAll() {
-        return postRepository.findAll().stream().filter(post -> !post.isPostIsDelete()).collect(Collectors.toList());
+    public List<PostRes> getPostListAll() {
+        return postRepository.findAll().stream().filter(post -> !post.isPostIsDelete())
+                .map(post -> {
+                    User user = post.getUser();
+                    return PostRes.builder()
+                            .postContent(post.getPostContent())
+                            .postPictureLink(post.getPostPictureLink())
+                            .postWritingTime(post.getPostWritingTime().toString())
+                            .postIsDelete(post.isPostIsDelete())
+                            .postIsNft(post.isPostIsNft())
+                            .userId(user.getUserId())
+                            .userName(user.getUserName())
+                            .userProfile(user.getUserProfile()).build();
+                }).collect(Collectors.toList());
     }
 
 }

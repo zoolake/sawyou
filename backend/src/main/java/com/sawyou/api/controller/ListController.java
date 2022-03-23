@@ -1,5 +1,6 @@
 package com.sawyou.api.controller;
 
+import com.sawyou.api.response.PostRes;
 import com.sawyou.api.service.ListService;
 import com.sawyou.common.auth.SawyouUserDetails;
 import com.sawyou.db.entity.Post;
@@ -37,7 +38,7 @@ public class ListController {
     public ResponseEntity<Result> getPostListAll(@ApiIgnore Authentication authentication) {
         if(authentication == null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
-        List<Post> lists = listService.getPostListAll();
+        List<PostRes> lists = listService.getPostListAll();
         if(lists.isEmpty()) return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());
 
         return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("전체 게시글 조회 성공").build());
