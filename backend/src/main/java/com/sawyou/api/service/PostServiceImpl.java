@@ -1,7 +1,8 @@
 package com.sawyou.api.service;
 
-import com.sawyou.api.response.PostRes;
 import com.sawyou.db.entity.Post;
+import com.sawyou.db.entity.User;
+import com.sawyou.api.response.PostRes;
 import com.sawyou.db.repository.PostRepository;
 import com.sawyou.db.repository.PostRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,25 @@ public class PostServiceImpl implements PostService {
 	
 	@Autowired
 	private PostRepositorySupport postRepositorySupport;
+
+	// 게시글 작성
+	@Override
+	public Post writePost(String postContent, Long userSeq) {
+		// TODO: 게시글에 들어갈 이미지 업로드, 이미지 경로 설정 작업, 게시글 내 해시태그 분리 작업 필요
+		// DB에 들어갈 데이터 설정
+		Post post = Post.builder()
+				.postContent(postContent)
+				.postPictureLink("dummyLink")
+				.user(
+						User.builder()
+								.userSeq(userSeq)
+								.build()
+				)
+				.build();
+
+		// 객체가 정상적으로 생성되었다면, 생성된 객체 return
+		return postRepository.save(post);
+	}
 
 	// 게시글 조회
 	@Override
