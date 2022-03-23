@@ -37,15 +37,15 @@ public class PostController {
 	})
 	public ResponseEntity<Result> getPostInfo(@ApiIgnore Authentication authentication, @ApiParam(value = "조회할 게시글 일련번호", required = true) @PathVariable Long postSeq) {
 		// 인증 토큰 확인, 올바르지 않은 토큰일 경우에도 401 자동 리턴
-		if (authentication == null) return ResponseEntity.status(401).body(Result.builder().message("인증 실패").build());
+		if (authentication == null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
 		// postSeq 값 기준으로 게시글 찾기
 		PostRes post = postService.getPostInfo(postSeq);
 
 		// 게시글 번호에 알맞는 데이터가 없을 경우
-		if (post == null) return ResponseEntity.status(404).body(Result.builder().message("찾는 게시글 없음").build());
+		if (post == null) return ResponseEntity.status(404).body(Result.builder().status(404).message("찾는 게시글 없음").build());
 		// 삭제된 게시글일 경우
-		if (post.isPostIsDelete()) return ResponseEntity.status(404).body(Result.builder().message("찾는 게시글 없음").build());
+		if (post.isPostIsDelete()) return ResponseEntity.status(404).body(Result.builder().status(404).message("찾는 게시글 없음").build());
 
 		return ResponseEntity.status(200).body(Result.builder().data(post).status(200).message("게시글 조회 성공").build());
 	}
