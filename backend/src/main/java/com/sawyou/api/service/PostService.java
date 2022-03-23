@@ -26,9 +26,15 @@ public interface PostService {
     // 게시글 삭제
     Post deletePost(Post post);
 
+    // 댓글 Seq 값으로 찾기
+    Comment getCommentByCommentSeq(Long commentSeq);
+
     // 댓글 작성
     Comment writeComment(String commentContent, Long postSeq, Long userSeq);
 
     // 댓글 조회
     List<CommentRes> getComments(Long postSeq);
+
+    // 댓글 수정
+    Comment updateComment(Comment comment, String commentContent);
 }

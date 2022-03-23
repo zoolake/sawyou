@@ -72,7 +72,6 @@ public class PostServiceImpl implements PostService {
                 .build();
     }
 
-
     // 게시글 수정
     @Override
     public Post updatePost(Post post, String postContent) {
@@ -91,6 +90,13 @@ public class PostServiceImpl implements PostService {
 
         // 쿼리가 정상적으로 실행되었다면, 쿼리에 사용된 객체 return
         return postRepository.save(post);
+    }
+
+    // 댓글 Seq 값으로 찾기
+    @Override
+    public Comment getCommentByCommentSeq(Long commentSeq) {
+        // JPA의 기본 메소드를 활용하여 commentRepo에 해당 메소드 명시 없이 PK값을 가지고 데이터 찾음
+        return commentRepository.getById(commentSeq);
     }
 
     // 댓글 작성
@@ -130,4 +136,14 @@ public class PostServiceImpl implements PostService {
                 )
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Comment updateComment(Comment comment, String commentContent) {
+        // 원본 객체에 댓글 내용만 변경
+        comment.setCommentContent(commentContent);
+
+        // 쿼리가 정상적으로 실행되었다면, 쿼리에 사용된 객체 return
+        return commentRepository.save(comment);
+    }
+
 }
