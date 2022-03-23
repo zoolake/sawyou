@@ -1,75 +1,119 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Wrapper from './styles';
+import { 
+  Avatar,
+  Button
+ } from '@material-ui/core';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import DeleteIcon from '@material-ui/icons/Delete';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+
+
 
 const Main = () => {
+  const [comment, setComment] = useState('');
+  const [commentArray, setCommentArray] = useState([]);
+  const [isValid, setIsValid] = useState(false);
+  const onChange = event => setComment(event.target.value);
+
+  const onSubmit = event => {
+    event.preventDefault();
+    if (comment === '') {
+      return;
+    }
+    setCommentArray(commentValueList => [comment, ...commentValueList]);
+    setComment('');
+    setIsValid(false);
+
+  };
 
   return (
     <Wrapper>
-      <div className="pfhd">
-        <header className="pf">
-          <div>
-            <a href="/userId/" className="pf-box">
-              <img alt="userId님의 프로필 사진" class="pf-img" src="/images/baseimg.jpg"></img>
-            </a>
-          </div>
-          <div className="id0">
-            <div className="id1">
-              <div className="id2">
-                <div className="id3">
-                  <span className="id4">
-                    <a href="/userId/" className="id5">User</a>
-                  </span>
-                </div>
-              </div>
+      <div className="post">
+        <div className="post_header">
+          <div className="post_pfuser">
+            <div>
+              <Avatar
+                className="post_avatar"
+                alt="User"
+                src="/images/baseimg.jpg"
+              />
+            </div>
+            <div className="post_user">
+            {/* <h3>{username}</h3> */}           
+              <h4>User</h4>
             </div>
           </div>
-        </header>
-        <div className="btn0">
-          <button className="btn0p" type="button">
-            <div className="btn1">
-              <div className="btn2">
-                <svg aria-label="옵션 더 보기" className="menu0p" role="img" viewBox="0 0 24 24" width="24" height="24" fill="#262626" color="#262626">
-                  <circle cx="12" cy="12" r="1.5"></circle>
-                  <circle cx="6" cy="12" r="1.5"></circle>
-                  <circle cx="18" cy="12" r="1.5"></circle>
-                </svg>
-              </div>
-            </div>
-          </button>          
-        </div>
-      </div>
-      <div className="img0"> 
-        <div role="button" className="img1" tabIndex="0">
-          <div className="img2">
-            <div className="img3">
-              <img alt="upload-img" className="ulimg" src="/images/hallstatt.jpg"></img>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="uc0">
-        <div className="uc1">
-          <div className="uc2">
-            <section className="uc3">
-              <span className="uc4">
-                <button className="uc5" type="button">
-                  <div className="uc6">
-                    <svg aria-label="좋아요" className="li" color="#8e8e8e" fill="#8e8e8e" height="24" role="img" viewBox="0 0 24 24" width="24">                      
-                    </svg>
-                  </div>
-                </button>
-              </span>
-            </section>
+          <div className="post_delete">
+            <DeleteIcon />
           </div>
         </div>
 
+        <img className="post_img" src="/images/hallstatt.jpg"></img>
+        <div className="post_article">
+          <div>          
+            <FavoriteBorderIcon 
+              className="post_like"
+            />
+          </div>
+          <div className="post_article_comment">
+            <div>
+              {/* <h4 className="post_txt"><strong>{username}</strong> {caption}</h4> */}
+              <h4 className="post_text"><strong>leesh123</strong> 테스트</h4>
+            </div>
+            {/* <ul>
+              <Comment />
+            </ul> */}
+          </div>
+        </div>
+
+        {/* <form className="post_comment_container" method="POST">
+          <input
+            value={comment}
+            className="post_comment"
+            type="text"
+            placeholder="댓글 달기..."
+            onChange={event => {
+              setComment(event.target.value);
+            }}
+            onKeyUp={event => {
+              event.target.value.length > 0
+                ? setIsValid(true)
+                : setIsValid(false);
+            }}
+          />
+          <text
+            type="button"
+            className={
+              isValid === true ? 'commentUploadBtnActive' : 'commentUploadBtnDeactive'
+            }
+            onClick={btnColor}
+            disabled={isValid ? false : true}
+          >
+            게시
+          </text>
+        </form> */}
+        <div className="commentContainer" onSubmit={onSubmit}>
+          <form className="commentWrap">
+            <input
+              type="text"
+              placeholder="댓글달기..."
+              className="commentInput"
+              value={comment}
+              onChange={onChange}
+            />
+            <text 
+              type="button"
+              className={
+                isValid === true ? 'commentUploadBtnActive' : 'commentUploadBtnDeactive'
+              }>
+              게시
+            </text>
+          </form>
+        </div>       
       </div>
-
-
-
     </Wrapper>
   ) 
-
 }
 
 export default Main;
