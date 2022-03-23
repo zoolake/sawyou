@@ -1,16 +1,28 @@
 package com.sawyou.api.service;
 
+import com.sawyou.db.entity.Post;
+import com.sawyou.db.repository.PostRepository;
+import com.sawyou.db.repository.PostRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 게시글 리스트, 검색 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
  */
 @Service("ListService")
 public class ListServiceImpl implements ListService {
-//	@Autowired
-//	private ListRepository listRepository;
-//
-//	@Autowired
-//	private ListRepositorySupport listRepositorySupport;
+	@Autowired
+	private PostRepository postRepository;
+
+	@Autowired
+	private PostRepositorySupport postRepositorySupport;
+
+    @Override
+    public List<Post> getPostListAll() {
+        return postRepository.findAll().stream().filter(post -> !post.isPostIsDelete()).collect(Collectors.toList());
+    }
+
 }
