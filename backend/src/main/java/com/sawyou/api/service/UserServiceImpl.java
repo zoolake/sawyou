@@ -3,19 +3,17 @@ package com.sawyou.api.service;
 import com.sawyou.api.request.UserUpdateInfoReq;
 import com.sawyou.api.request.UserUpdatePwdReq;
 import com.sawyou.api.response.UserRes;
-import com.sawyou.db.entity.Follower;
-import com.sawyou.db.entity.Following;
+import com.sawyou.db.entity.*;
 import com.sawyou.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.sawyou.api.request.UserRegisterPostReq;
-import com.sawyou.db.entity.User;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Objects;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -40,6 +38,24 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private FollowerRepositorySupport followerRepositorySupport;
+
+    @Autowired
+    private CommentLikeRepository commentLikeRepository;
+
+    @Autowired
+    private CommentLikeRepositorySupport commentLikeRepositorySupport;
+
+    @Autowired
+    private CommentRepositorySupport commentRepositorySupport;
+
+    @Autowired
+    private PostLikeRepository postLikeRepository;
+
+    @Autowired
+    private PostLikeRepositorySupport postLikeRepositorySupport;
+
+    @Autowired
+    private PostRepositorySupport postRepositorySupport;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -76,7 +92,7 @@ public class UserServiceImpl implements UserService {
         User user = oUser.get();
 
         boolean isFollowing = false;
-        if(followingRepositorySupport.findFollowingByUserSeq(userSeq, fromSeq).isPresent())  isFollowing = true;
+        if(followingRepositorySupport.findFollowingByUserSeqAndFromSeq(userSeq, fromSeq).isPresent())  isFollowing = true;
 
         return UserRes.builder()
                 .userId(user.getUserId())
@@ -132,7 +148,7 @@ public class UserServiceImpl implements UserService {
         System.out.println("user.getUserSeq() = " + user.getUserSeq());
         System.out.println("followingToSeq = " + followingToSeq);
         //followingRepositorySupport.findFollowingByUserSeq(상대 Seq, 본인 Seq)
-        Optional<Following> following = followingRepositorySupport.findFollowingByUserSeq(followingToSeq, user.getUserSeq());
+        Optional<Following> following = followingRepositorySupport.findFollowingByUserSeqAndFromSeq(followingToSeq, user.getUserSeq());
 
         if(following.isPresent()) {
             /**
@@ -141,7 +157,7 @@ public class UserServiceImpl implements UserService {
              * 3. 팔로잉 테이블에서 삭제
             */
             //followerRepositorySupport.findFollowerByUserSeq(상대 Seq, 본인 Seq)
-            Optional<Follower> follower = followerRepositorySupport.findFollowerByUserSeq(followingToSeq, user.getUserSeq());
+            Optional<Follower> follower = followerRepositorySupport.findFollowerByUserSeqAndToSeq(followingToSeq, user.getUserSeq());
             if(follower.isPresent())  followerRepository.delete(follower.get());
 
             followingRepository.delete(following.get());
@@ -158,5 +174,55 @@ public class UserServiceImpl implements UserService {
             followingRepository.save(newFollowing);
             return true;
         }
+    }
+
+    @Override
+    @Transactional
+    public User deleteUser(User user) {
+        // TODO : 댓글 삭제 처리 어떤 방식으로 할 건지 고민 (댓글의 isDelete true / 댓글은 남기고 유저 아이디를 클릭했을 때 찾을 수 없는 유저 표시)
+        /*
+         * 1. 유저의 팔로워/팔로잉 삭제
+         *    1-1. 팔로잉 테이블에서 fromSeq, toSeq가 userSeq인 거 찾아서 모두 삭제
+         *    1-2. 팔로워 테이블에서 fromSeq, toSeq가 userSeq인 거 찾아서 모두 삭제
+         * 2. 유저의 게시글/댓글 좋아요 삭제
+         * 3. 댓글 삭제
+         * 4. 유저의 게시글 중 NFT화 되지 않은 게시글 리스트를 찾고
+         *    4-1. 해당 게시글에 속한 댓글의 좋아요 delete
+         *    4-2. 해당 게시글에 속한 댓글 isDelete true 처리
+         *    4-3. 해당 게시글의 좋아요 delete
+         *    4-4. 해당 게시글 isDelete true 처리
+         * 5. 유저 isDelete true 처리
+         */
+        Long userSeq = user.getUserSeq();
+
+        // 1
+        followingRepositorySupport.deleteFollowingByFromSeq(userSeq);
+        followingRepository.deleteByFollowingToSeq(userSeq);
+
+        followerRepositorySupport.deleteFollowerByToSeq(userSeq);
+        followerRepository.deleteByFollowerFromSeq(userSeq);
+
+        // 2
+        commentLikeRepositorySupport.deleteCommentLikeByUserSeq(userSeq);
+        postLikeRepositorySupport.deletePostLikeByUserSeq(userSeq);
+
+        // 3 - 댓글 삭제 처리는 어떻게 할지 고민
+        commentRepositorySupport.findAllByUserSeq(userSeq).forEach(comment -> comment.setCommentIsDelete(true));
+
+        // 4
+        List<Post> posts = postRepositorySupport.findPostNotNFTByUserSeq(userSeq);
+        posts.forEach(post -> {
+            post.getComments().forEach(comment -> {
+                    comment.getCommentLikes().forEach(commentLike -> commentLikeRepository.delete(commentLike));
+                    comment.setCommentIsDelete(true);
+            });
+            post.getPostLikes().forEach(postLike -> postLikeRepository.delete(postLike));
+            post.setPostIsDelete(true);
+        });
+
+        // 5
+        user.setUserIsDelete(true);
+
+        return user;
     }
 }
