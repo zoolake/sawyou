@@ -24,4 +24,10 @@ public class FollowingRepositorySupport {
         if (following == null) return Optional.empty();
         return Optional.ofNullable(following);
     }
+
+    public Long deleteFollowingByFromSeq(Long fromSeq) {
+        // fromSeq : 본인 Seq
+        Long affectedRow = jpaQueryFactory.delete(qFollowing).where(qFollowing.user.userSeq.eq(fromSeq)).execute();
+        return affectedRow;
+    }
 }

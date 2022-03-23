@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface FollowingRepository extends JpaRepository<Following, Long> {
+    void deleteByFollowingToSeq(Long toSeq);
 }

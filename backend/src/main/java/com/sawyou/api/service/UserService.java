@@ -20,4 +20,6 @@ public interface UserService {
     User updateUserPwd(UserUpdatePwdReq updatePwd, Long userSeq);
 
     boolean followingUser(User user, Long followingToSeq);
+
+    User deleteUser(User user);
 }

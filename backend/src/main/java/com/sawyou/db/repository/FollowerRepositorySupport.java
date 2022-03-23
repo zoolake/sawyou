@@ -24,4 +24,9 @@ public class FollowerRepositorySupport {
         if (follower == null) return Optional.empty();
         return Optional.ofNullable(follower);
     }
+
+    public Long deleteFollowerByToSeq(Long toSeq) {
+        Long affectedRow = jpaQueryFactory.delete(qFollower).where(qFollower.user.userSeq.eq(toSeq)).execute();
+        return affectedRow;
+    }
 }
