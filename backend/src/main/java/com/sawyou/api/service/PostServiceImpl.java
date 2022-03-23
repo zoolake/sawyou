@@ -19,6 +19,13 @@ public class PostServiceImpl implements PostService {
 	@Autowired
 	private PostRepositorySupport postRepositorySupport;
 
+	// 게시글 Seq 값으로 찾기
+	@Override
+	public Post getPostByPostSeq(Long postSeq) {
+		// JPA의 기본 메소드를 활용하여 postRepo에 해당 메소드 명시 없이 PK값을 가지고 데이터 찾음
+		return postRepository.getById(postSeq);
+	}
+
 	// 게시글 작성
 	@Override
 	public Post writePost(String postContent, Long userSeq) {
@@ -34,7 +41,7 @@ public class PostServiceImpl implements PostService {
 				)
 				.build();
 
-		// 객체가 정상적으로 생성되었다면, 생성된 객체 return
+		// 쿼리가 정상적으로 실행되었다면, 쿼리에 사용된 객체 return
 		return postRepository.save(post);
 	}
 
@@ -54,5 +61,14 @@ public class PostServiceImpl implements PostService {
 				.userName(post.getUser().getUserName())
 				.userProfile(post.getUser().getUserProfile())
 				.build();
+	}
+
+	@Override
+	public Post updatePost(Post post, String postContent) {
+		// 원본 객체에 게시글 내용만 변경
+		post.setPostContent(postContent);
+
+		// 쿼리가 정상적으로 실행되었다면, 쿼리에 사용된 객체 return
+		return postRepository.save(post);
 	}
 }
