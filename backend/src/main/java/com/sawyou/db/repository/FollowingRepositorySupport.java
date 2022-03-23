@@ -3,7 +3,6 @@ package com.sawyou.db.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sawyou.db.entity.Following;
 import com.sawyou.db.entity.QFollowing;
-import com.sawyou.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,11 +17,17 @@ public class FollowingRepositorySupport {
     private JPAQueryFactory jpaQueryFactory;
     private QFollowing qFollowing = QFollowing.following;
 
-    public Optional<Following> findFollowingByUserSeq(Long userSeq, Long fromSeq) {
+    public Optional<Following> findFollowingByUserSeqAndFromSeq(Long userSeq, Long fromSeq) {
         // userSeq(toSeq) : 팔로잉 대상 seq / fromSeq : 본인 Seq
         Following following = jpaQueryFactory.select(qFollowing).from(qFollowing)
                 .where(qFollowing.followingToSeq.eq(userSeq).and(qFollowing.user.userSeq.eq(fromSeq))).fetchOne();
         if (following == null) return Optional.empty();
         return Optional.ofNullable(following);
+    }
+
+    public Long deleteFollowingByFromSeq(Long fromSeq) {
+        // fromSeq : 본인 Seq
+        Long affectedRow = jpaQueryFactory.delete(qFollowing).where(qFollowing.user.userSeq.eq(fromSeq)).execute();
+        return affectedRow;
     }
 }

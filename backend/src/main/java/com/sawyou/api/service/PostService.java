@@ -20,6 +20,9 @@ public interface PostService {
     // 게시글 수정
     Post updatePost(Post post, String postContent);
 
+    // 게시글 삭제
+    Post deletePost(Post post);
+
     // 댓글 작성
     Comment writeComment(String commentContent, Long postSeq, Long userSeq);
 }
