@@ -1,5 +1,6 @@
 package com.sawyou.api.controller;
 
+import com.sawyou.api.request.PostUpdateReq;
 import com.sawyou.api.request.PostWriteReq;
 import com.sawyou.api.service.PostService;
 import com.sawyou.common.auth.SawyouUserDetails;
@@ -12,10 +13,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -75,6 +73,45 @@ public class PostController {
 
 		return ResponseEntity.status(200).body(Result.builder().data(post).status(200).message("게시글 조회 성공").build());
 	}
+
+    @PatchMapping("{postSeq}")
+    @ApiOperation(value = "게시글 수정", notes = "요청 값에 따라 게시글을 수정한다.")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "게시글 수정 성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "수정할 게시글 없음"),
+            @ApiResponse(code = 409, message = "게시글 수정 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> updatePost(
+            @ApiIgnore Authentication authentication,
+            @PathVariable Long postSeq,
+            @RequestBody @ApiParam(value = "게시글 수정 데이터", required = true) PostUpdateReq postUpdate
+    ) {
+        // 인증 토큰 확인, 올바르지 않은 토큰일 경우에도 401 자동 리턴
+        if (authentication == null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+
+        // 토큰에서 사용자의 userSeq 값 추출
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        Long userSeq = userDetails.getUser().getUserSeq();
+
+        // postSeq 값 기준으로 수정할 게시글 찾기
+        Post oPost = postService.getPostByPostSeq(postSeq);
+
+        // 수정할 게시글 번호에 알맞는 데이터가 없을 경우
+        if (oPost == null) return ResponseEntity.status(404).body(Result.builder().status(404).message("수정할 게시글 없음").build());
+        // 삭제된 게시글일 경우
+        if (oPost.isPostIsDelete()) return ResponseEntity.status(404).body(Result.builder().status(404).message("수정할 게시글 없음").build());
+        // 토큰의 사용자와 수정할 게시글의 작성자가 다를 경우
+        if (oPost.getUser().getUserSeq() != userSeq) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+
+		// 게시글 수정
+        Post post = postService.updatePost(oPost, postUpdate.getPostContent());
+
+        // 게시글이 제대로 수정되지 않았을 경우
+        if (post == null) return ResponseEntity.status(409).body(Result.builder().status(409).message("게시글 수정 실패").build());
+        return ResponseEntity.status(201).body(Result.builder().status(201).message("게시글 수정 성공").build());
+    }
 
 	@Data
 	@AllArgsConstructor
