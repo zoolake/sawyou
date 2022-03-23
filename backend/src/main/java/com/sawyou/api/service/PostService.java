@@ -4,7 +4,7 @@ import com.sawyou.db.entity.Post;
 import com.sawyou.api.response.PostRes;
 
 /**
- *	게시글, 댓글 관련 비즈니스 로직 처리를 위한 서비스 인터페이스 정의.
+ * 게시글, 댓글 관련 비즈니스 로직 처리를 위한 서비스 인터페이스 정의.
  */
 public interface PostService {
     // 게시글 Seq 값으로 찾기
@@ -18,4 +18,7 @@ public interface PostService {
 
     // 게시글 수정
     Post updatePost(Post post, String postContent);
+
+    // 게시글 삭제
+    Post deletePost(Post post);
 }
