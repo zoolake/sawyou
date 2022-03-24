@@ -71,6 +71,24 @@ public class ListServiceImpl implements ListService {
         return postResList;
     }
 
+    // 유저 게시글 조회
+    @Override
+    public List<PostRes> getPostListUser(Long userSeq) {
+        User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
+        System.out.println("user.getPosts() = " + user.getPosts());
+        return user.getPosts().stream().filter(post -> !post.isPostIsDelete()).map(post ->
+                PostRes.builder()
+                        .postContent(post.getPostContent())
+                        .postPictureLink(post.getPostPictureLink())
+                        .postWritingTime(post.getPostWritingTime().toString())
+                        .postIsDelete(post.isPostIsDelete())
+                        .postIsNft(post.isPostIsNft())
+                        .userName(user.getUserName())
+                        .userId(user.getUserId())
+                        .userProfile(user.getUserProfile()).build()
+        ).collect(Collectors.toList());
+    }
+
     // 계정 검색
     @Override
     public List<UserListRes> searchUserList(String keyword) {
