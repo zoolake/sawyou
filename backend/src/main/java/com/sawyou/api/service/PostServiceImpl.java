@@ -1,15 +1,9 @@
 package com.sawyou.api.service;
 
 import com.sawyou.api.response.CommentRes;
-import com.sawyou.db.entity.Comment;
-import com.sawyou.db.entity.Post;
-import com.sawyou.db.entity.PostLike;
-import com.sawyou.db.entity.User;
+import com.sawyou.db.entity.*;
 import com.sawyou.api.response.PostRes;
-import com.sawyou.db.repository.CommentRepository;
-import com.sawyou.db.repository.PostLikeRepository;
-import com.sawyou.db.repository.PostRepository;
-import com.sawyou.db.repository.PostRepositorySupport;
+import com.sawyou.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +26,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private CommentLikeRepository commentLikeRepository;
 
     // 게시글 Seq 값으로 찾기
     @Override
@@ -179,6 +176,36 @@ public class PostServiceImpl implements PostService {
 
         // 쿼리가 정상적으로 실행되었다면, 쿼리에 사용된 객체 return
         return commentRepository.save(comment);
+    }
+
+    // 댓글 좋아요
+    @Override
+    public CommentLike likeComment(Long userSeq, Long commentSeq) {
+        // 이미 댓글에 좋아요를 눌렀는지 판단
+        CommentLike oCommentLike = commentLikeRepository.findByUser_UserSeqAndComment_CommentSeq(userSeq, commentSeq);
+
+        // 이미 좋아요를 누른 댓글이면
+        if(oCommentLike != null) {
+            // 댓글 좋아요 삭제
+            commentLikeRepository.delete(oCommentLike);
+            return oCommentLike;
+        }
+
+        // 댓글 좋아요 추가
+        CommentLike commentLike = CommentLike.builder()
+                .user(
+                        User.builder()
+                                .userSeq(userSeq)
+                                .build()
+                )
+                .comment(
+                        Comment.builder()
+                                .commentSeq(commentSeq)
+                                .build()
+                )
+                .build();
+
+        return commentLikeRepository.save(commentLike);
     }
 
 }
