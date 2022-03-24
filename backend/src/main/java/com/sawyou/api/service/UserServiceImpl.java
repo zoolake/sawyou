@@ -106,6 +106,7 @@ public class UserServiceImpl implements UserService {
             isFollowing = true;
 
         return UserRes.builder()
+                .userSeq(user.getUserSeq())
                 .userId(user.getUserId())
                 .userName(user.getUserName())
                 .userEmail(user.getUserEmail())
@@ -200,6 +201,7 @@ public class UserServiceImpl implements UserService {
             Long followingToSeq = following.getFollowingToSeq();
             User follow = userRepositorySupport.findUserByUserSeq(followingToSeq).get();
             return UserListRes.builder()
+                    .userSeq(follow.getUserSeq())
                     .userId(follow.getUserId())
                     .userName(follow.getUserName())
                     .userProfile(follow.getUserProfile())
@@ -216,6 +218,7 @@ public class UserServiceImpl implements UserService {
             Long followerFromSeq = follower.getFollowerFromSeq();
             User follow = userRepositorySupport.findUserByUserSeq(followerFromSeq).get();
             return UserListRes.builder()
+                    .userSeq(follow.getUserSeq())
                     .userId(follow.getUserId())
                     .userName(follow.getUserName())
                     .userProfile(follow.getUserProfile())

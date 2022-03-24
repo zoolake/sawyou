@@ -94,8 +94,10 @@ public class ListServiceImpl implements ListService {
     // 계정 검색
     @Override
     public List<UserListRes> searchUserList(String keyword) {
+        System.out.println("keyword = " + keyword);
         return userRepositorySupport.findUserByKeyword(keyword).stream().map(user ->
                 UserListRes.builder()
+                        .userSeq(user.getUserSeq())
                         .userId(user.getUserId())
                         .userName(user.getUserName())
                         .userProfile(user.getUserProfile()).build()

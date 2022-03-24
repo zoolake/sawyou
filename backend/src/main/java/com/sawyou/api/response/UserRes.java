@@ -14,6 +14,8 @@ import lombok.*;
 @AllArgsConstructor
 @ApiModel("UserResponse")
 public class UserRes {
+    @ApiModelProperty(name = "User Seq")
+    private Long userSeq;
     @ApiModelProperty(name = "User ID")
     private String userId;
     @ApiModelProperty(name = "User Name")
