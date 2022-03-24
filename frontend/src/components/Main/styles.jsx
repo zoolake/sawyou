@@ -21,7 +21,6 @@ const Wrapper = styled.div`
     height: 100%;
   } 
 
-
   .post_header {
     height: 50px;
     display: flex;
