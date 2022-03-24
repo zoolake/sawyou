@@ -196,6 +196,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserListRes> findUserFollower(Long userSeq) {
+        User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
+
+        return user.getFollowers().stream().map(follower -> {
+            Long followerFromSeq = follower.getFollowerFromSeq();
+            User follow = userRepositorySupport.findUserByUserSeq(followerFromSeq).get();
+            return UserListRes.builder()
+                    .userId(follow.getUserId())
+                    .userName(follow.getUserName())
+                    .userProfile(follow.getUserProfile())
+                    .build();
+        }).collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public User deleteUser(User user) {
         // TODO : 댓글 삭제 처리 어떤 방식으로 할 건지 고민 (댓글의 isDelete true / 댓글은 남기고 유저 아이디를 클릭했을 때 찾을 수 없는 유저 표시)

@@ -220,6 +220,16 @@ public class UserController {
         return ResponseEntity.status(200).body(Result.builder().data(userList).status(200).message("팔로잉 목록 조회 성공").build());
     }
 
+    @GetMapping("/follower")
+    public ResponseEntity<Result> findUserFollower(@ApiIgnore Authentication authentication) {
+        if(authentication == null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        Long userSeq = userDetails.getUser().getUserSeq();
+        List<UserListRes> userList = userService.findUserFollower(userSeq);
+
+        return ResponseEntity.status(200).body(Result.builder().data(userList).status(200).message("팔로워 목록 조회 성공").build());
+    }
+
 
     @Data
     @AllArgsConstructor
