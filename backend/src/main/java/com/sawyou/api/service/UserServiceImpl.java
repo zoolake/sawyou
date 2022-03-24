@@ -183,7 +183,7 @@ public class UserServiceImpl implements UserService {
 
     // 유저의 팔로잉 리스트 조회
     @Override
-    public List<UserListRes> findUserFollowingList(Long userSeq) {
+    public List<UserListRes> getUserFollowingList(Long userSeq) {
         User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
 
         return user.getFollowings().stream().map(following -> {
@@ -199,7 +199,7 @@ public class UserServiceImpl implements UserService {
 
     // 유저희 팔로워 리스트 조회
     @Override
-    public List<UserListRes> findUserFollowerList(Long userSeq) {
+    public List<UserListRes> getUserFollowerList(Long userSeq) {
         User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
 
         return user.getFollowers().stream().map(follower -> {

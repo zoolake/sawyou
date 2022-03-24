@@ -7,9 +7,6 @@ import com.sawyou.api.response.UserListRes;
 import com.sawyou.api.response.UserLoginPostRes;
 import com.sawyou.common.model.response.Result;
 import com.sawyou.common.util.JwtTokenUtil;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -222,7 +219,7 @@ public class UserController {
         if(authentication == null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         Long userSeq = userDetails.getUser().getUserSeq();
-        List<UserListRes> userList = userService.findUserFollowingList(userSeq);
+        List<UserListRes> userList = userService.getUserFollowingList(userSeq);
 
         return ResponseEntity.status(200).body(Result.builder().data(userList).status(200).message("팔로잉 목록 조회 성공").build());
     }
@@ -239,7 +236,7 @@ public class UserController {
         if(authentication == null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         Long userSeq = userDetails.getUser().getUserSeq();
-        List<UserListRes> userList = userService.findUserFollowerList(userSeq);
+        List<UserListRes> userList = userService.getUserFollowerList(userSeq);
 
         return ResponseEntity.status(200).body(Result.builder().data(userList).status(200).message("팔로워 목록 조회 성공").build());
     }

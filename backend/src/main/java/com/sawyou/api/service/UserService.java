@@ -32,9 +32,9 @@ public interface UserService {
     boolean followingUser(User user, Long followingToSeq);
 
     // 유저의 팔로잉 리스트 조회
-    List<UserListRes> findUserFollowingList(Long userSeq);
+    List<UserListRes> getUserFollowingList(Long userSeq);
     // 유저의 팔로워 리스트 조회
-    List<UserListRes> findUserFollowerList(Long userSeq);
+    List<UserListRes> getUserFollowerList(Long userSeq);
 
     // 회원 탈퇴
     User deleteUser(User user);
