@@ -4,10 +4,13 @@ import com.sawyou.api.response.CommentRes;
 import com.sawyou.db.entity.*;
 import com.sawyou.api.response.PostRes;
 import com.sawyou.db.repository.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -16,10 +19,16 @@ import java.util.stream.Collectors;
 @Service("PostService")
 public class PostServiceImpl implements PostService {
     @Autowired
+    private HashtagRepository hashtagRepository;
+
+    @Autowired
     private PostRepository postRepository;
 
     @Autowired
     private PostRepositorySupport postRepositorySupport;
+
+    @Autowired
+    private PostHashtagRepository postHashtagRepository;
 
     @Autowired
     private PostLikeRepository postLikeRepository;
@@ -43,8 +52,8 @@ public class PostServiceImpl implements PostService {
     // 게시글 작성
     @Override
     public Post writePost(String postContent, Long userSeq) {
-        // TODO: 게시글에 들어갈 이미지 업로드, 이미지 경로 설정 작업, 게시글 내 해시태그 분리 작업 필요
-        // DB에 들어갈 데이터 설정
+        // TODO: 게시글에 들어갈 이미지 업로드, 이미지 경로 설정 작업 필요
+        // DB에 들어갈 게시글 데이터 설정
         Post post = Post.builder()
                 .postContent(postContent)
                 .postPictureLink("dummyLink")
@@ -55,8 +64,49 @@ public class PostServiceImpl implements PostService {
                 )
                 .build();
 
-        // 쿼리가 정상적으로 실행되었다면, 쿼리에 사용된 객체 return
-        return postRepository.save(post);
+        // 생성된 데이터를 응답 받음(postSeq 생성 후 추출)
+        Post oPost = postRepository.save(post);
+
+        // 데이터가 제대로 생성되지 않았다면 null 리턴
+        if (oPost == null) return null;
+
+        // 게시글 내용에서 해시태그 분리
+        Pattern p = Pattern.compile("\\#([0-9a-zA-Z가-힣]*)");
+        Matcher m = p.matcher(postContent);
+        String extractHashtag;
+
+        // 정규화된 텍스트에서 해시태그 추출
+        while (m.find()) {
+            extractHashtag =
+                    StringUtils.replaceChars(m.group(), "-_+=!@#$%^&*()[]{}|\\;:'\"<>,.?/~`） ", "");
+
+            // 추출된 해시태그가 없으면 다음으로
+            if (extractHashtag.length() < 1)
+                continue;
+
+            // 이미 존재하는 해시태그 찾기(hashtagSeq 추출)
+            Hashtag oHashtag = hashtagRepository.findByHashtagNameEquals(extractHashtag);
+
+            // 해시태그 테이블에 없는 해시태그면 데이터 추가
+            if (oHashtag == null) {
+                Hashtag hashtag = Hashtag.builder()
+                        .hashtagName(extractHashtag)
+                        .build();
+
+                // 생성된 데이터를 응답 받음(hashtagSeq 생성 후 추출)
+                oHashtag = hashtagRepository.save(hashtag);
+            }
+
+            // 게시물에 들어가있는 해시태그를 연결하는 데이터 추가
+            PostHashtag postHashtag = PostHashtag.builder()
+                    .hashtag(oHashtag)
+                    .post(oPost)
+                    .build();
+            postHashtagRepository.save(postHashtag);
+        }
+
+        // 생성된 객체 return
+        return oPost;
     }
 
     // 게시글 조회
@@ -85,8 +135,52 @@ public class PostServiceImpl implements PostService {
         // 원본 객체에 게시글 내용만 변경
         post.setPostContent(postContent);
 
-        // 쿼리가 정상적으로 실행되었다면, 쿼리에 사용된 객체 return
-        return postRepository.save(post);
+        // 생성된 데이터를 응답 받음(postSeq 생성 후 추출)
+        Post oPost = postRepository.save(post);
+
+        // 데이터가 제대로 생성되지 않았다면 null 리턴
+        if (oPost == null) return null;
+
+        // 해당 게시글과 연결된 해시태그 테이블 데이터 전부 삭제
+        // 쿼리가 정상적으로 실행되었다면, 삭제한 데이터 갯수 반환
+        Long deletePostHashtagCount = postHashtagRepository.deleteByPost_PostSeqEquals(post.getPostSeq());
+
+        // 수정된 게시글 내용에서 해시태그 분리
+        Pattern p = Pattern.compile("\\#([0-9a-zA-Z가-힣]*)");
+        Matcher m = p.matcher(postContent);
+        String extractHashtag;
+
+        // 정규화된 텍스트에서 해시태그 추출
+        while (m.find()) {
+            extractHashtag =
+                    StringUtils.replaceChars(m.group(), "-_+=!@#$%^&*()[]{}|\\;:'\"<>,.?/~`） ", "");
+
+            // 추출된 해시태그가 없으면 다음으로
+            if (extractHashtag.length() < 1)
+                continue;
+
+            // 이미 존재하는 해시태그 찾기(hashtagSeq 추출)
+            Hashtag oHashtag = hashtagRepository.findByHashtagNameEquals(extractHashtag);
+
+            // 해시태그 테이블에 없는 해시태그면 데이터 추가
+            if (oHashtag == null) {
+                Hashtag hashtag = Hashtag.builder()
+                        .hashtagName(extractHashtag)
+                        .build();
+
+                // 생성된 데이터를 응답 받음(hashtagSeq 생성 후 추출)
+                oHashtag = hashtagRepository.save(hashtag);
+            }
+
+            // 게시물에 들어가있는 해시태그를 연결하는 데이터 추가
+            PostHashtag postHashtag = PostHashtag.builder()
+                    .hashtag(oHashtag)
+                    .post(oPost)
+                    .build();
+            postHashtagRepository.save(postHashtag);
+        }
+
+        return oPost;
     }
 
     // 게시글 삭제
@@ -103,6 +197,10 @@ public class PostServiceImpl implements PostService {
         // 해당 게시글의 좋아요 데이터 전부 삭제
         // 쿼리가 정상적으로 실행되었다면, 삭제한 데이터 갯수 반환
         Long deletePostLikeCount = postLikeRepository.deleteByPost_PostSeqEquals(post.getPostSeq());
+
+        // 해당 게시글과 연결된 해시태그 테이블 데이터 전부 삭제
+        // 쿼리가 정상적으로 실행되었다면, 삭제한 데이터 갯수 반환
+        Long deletePostHashtagCount = postHashtagRepository.deleteByPost_PostSeqEquals(post.getPostSeq());
 
         // 원본 객체에 게시글 삭제 여부만 변경
         post.setPostIsDelete(true);
