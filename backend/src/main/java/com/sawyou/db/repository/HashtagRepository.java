@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface HashtagRepository extends JpaRepository<Hashtag, Long> {
+    // hasttagName이 일치하는 데이터 찾기
+    Hashtag findByHashtagNameEquals(String hashtagName);
 }
