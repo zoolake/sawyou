@@ -1,6 +1,7 @@
 package com.sawyou.api.service;
 
 import com.sawyou.api.response.PostRes;
+import com.sawyou.api.response.UserListRes;
 import com.sawyou.db.entity.Post;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface ListService {
     List<PostRes> getPostListAll();
 
     List<PostRes> getPostListFollowing(Long userSeq);
+
+    List<UserListRes> searchUserList(String keyword);
 }

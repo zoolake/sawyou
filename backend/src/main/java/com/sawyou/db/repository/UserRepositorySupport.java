@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sawyou.db.entity.QUser;
 import com.sawyou.db.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,11 @@ public class UserRepositorySupport {
                 .where(qUser.userSeq.eq(userSeq)).fetchOne();
         if (user == null) return Optional.empty();
         return Optional.ofNullable(user);
+    }
+
+    public List<User> findUserByKeyword(String keyword) {
+        List<User> userList = jpaQueryFactory.select(qUser).from(qUser)
+                .where(qUser.userId.contains(keyword).or(qUser.userName.contains(keyword))).fetch();
+        return userList;
     }
 }
