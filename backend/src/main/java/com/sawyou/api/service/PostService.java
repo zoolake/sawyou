@@ -2,6 +2,7 @@ package com.sawyou.api.service;
 
 import com.sawyou.api.response.CommentRes;
 import com.sawyou.db.entity.Comment;
+import com.sawyou.db.entity.CommentLike;
 import com.sawyou.db.entity.Post;
 import com.sawyou.api.response.PostRes;
 import com.sawyou.db.entity.PostLike;
@@ -42,4 +43,6 @@ public interface PostService {
     // 댓글 수정
     Comment updateComment(Comment comment, String commentContent);
 
+    // 댓글 좋아요
+    CommentLike likeComment(Long userSeq, Long commentSeq);
 }

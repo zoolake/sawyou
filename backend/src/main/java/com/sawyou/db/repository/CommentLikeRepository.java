@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> {
+    CommentLike findByUser_UserSeqAndComment_CommentSeq(Long userSeq, Long commentSeq);
 }
