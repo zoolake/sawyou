@@ -36,6 +36,7 @@ public class ListServiceImpl implements ListService {
                 .map(post -> {
                     User user = post.getUser();
                     return PostRes.builder()
+                            .postSeq(post.getPostSeq())
                             .postContent(post.getPostContent())
                             .postPictureLink(post.getPostPictureLink())
                             .postWritingTime(post.getPostWritingTime().toString())
@@ -58,6 +59,7 @@ public class ListServiceImpl implements ListService {
             User user = userRepositorySupport.findUserByUserSeq(toSeq).get();
             postRepository.findByUser_UserSeqAndPostIsDeleteIsFalse(user.getUserSeq()).forEach(post ->
                     postResList.add(PostRes.builder()
+                            .postSeq(post.getPostSeq())
                             .postContent(post.getPostContent())
                             .postPictureLink(post.getPostPictureLink())
                             .postWritingTime(post.getPostWritingTime().toString())
@@ -77,6 +79,7 @@ public class ListServiceImpl implements ListService {
         User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
         return user.getPosts().stream().filter(post -> !post.isPostIsDelete()).map(post ->
                 PostRes.builder()
+                        .postSeq(post.getPostSeq())
                         .postContent(post.getPostContent())
                         .postPictureLink(post.getPostPictureLink())
                         .postWritingTime(post.getPostWritingTime().toString())
