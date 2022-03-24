@@ -14,6 +14,8 @@ import lombok.*;
 @AllArgsConstructor
 @ApiModel("CommentResponse")
 public class CommentRes {
+    @ApiModelProperty(name = "댓글 번호")
+    Long commentSeq;
     @ApiModelProperty(name = "댓글 내용")
     String commentContent;
     @ApiModelProperty(name = "댓글 작성 시간")

@@ -277,6 +277,7 @@ public class PostServiceImpl implements PostService {
                 .map(comment -> {
                     CommentLike commentLike = commentLikeRepository.findByUser_UserSeqAndComment_CommentSeq(userSeq, comment.getCommentSeq());
                     return CommentRes.builder()
+                            .commentSeq(comment.getCommentSeq())
                             .commentContent(comment.getCommentContent())
                             .commentWritingTime(comment.getCommentWritingTime().toString())
                             .commentIsDelete(comment.isCommentIsDelete())
