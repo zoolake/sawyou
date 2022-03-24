@@ -4,6 +4,7 @@ import com.sawyou.api.request.UserLoginPostReq;
 import com.sawyou.api.request.UserUpdateInfoReq;
 import com.sawyou.api.request.UserUpdatePwdReq;
 import com.sawyou.api.response.UserLoginPostRes;
+import com.sawyou.common.model.response.Result;
 import com.sawyou.common.util.JwtTokenUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -206,15 +207,5 @@ public class UserController {
         User cUser = userService.deleteUser(user);
 
         return ResponseEntity.status(204).body(Result.builder().data(cUser).status(200).message("회원 탈퇴 성공").build());
-    }
-
-
-    @Data
-    @AllArgsConstructor
-    @Builder
-    static class Result<T> {
-        private T data;
-        private int status;
-        private String message;
     }
 }

@@ -3,6 +3,7 @@ package com.sawyou.api.controller;
 import com.sawyou.api.response.PostRes;
 import com.sawyou.api.service.ListService;
 import com.sawyou.common.auth.SawyouUserDetails;
+import com.sawyou.common.model.response.Result;
 import com.sawyou.db.entity.Post;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
@@ -63,16 +64,4 @@ public class ListController {
 
         return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("전체 게시글 조회 성공").build());
     }
-
-
-
-    @Data
-    @AllArgsConstructor
-    @Builder
-    static class Result<T> {
-        private T data;
-        private int status;
-        private String message;
-    }
-
 }

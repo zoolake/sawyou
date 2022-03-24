@@ -7,6 +7,7 @@ import com.sawyou.api.request.PostWriteReq;
 import com.sawyou.api.response.CommentRes;
 import com.sawyou.api.service.PostService;
 import com.sawyou.common.auth.SawyouUserDetails;
+import com.sawyou.common.model.response.Result;
 import com.sawyou.db.entity.Comment;
 import com.sawyou.db.entity.CommentLike;
 import com.sawyou.db.entity.Post;
@@ -382,14 +383,5 @@ public class PostController {
         if (commentLike == null)
             return ResponseEntity.status(409).body(Result.builder().status(409).message("댓글 좋아요 수정 실패").build());
         return ResponseEntity.status(204).body(Result.builder().status(204).message("댓글 좋아요 수정 성공").build());
-    }
-
-    @Data
-    @AllArgsConstructor
-    @Builder
-    static class Result<T> {
-        private T data;
-        private int status;
-        private String message;
     }
 }
