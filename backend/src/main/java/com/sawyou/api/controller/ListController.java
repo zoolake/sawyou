@@ -72,6 +72,26 @@ public class ListController {
         return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("전체 게시글 조회 성공").build());
     }
 
+    @GetMapping("/{userSeq}")
+    @ApiOperation(value = "유저 게시글 조회", notes = "유저의 게시글 리스트를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "게시글 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> getPostListFollowing(@ApiIgnore Authentication authentication, @PathVariable @ApiParam(value = "게시글 조회할 유저", required = true) Long userSeq) {
+        if(authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+
+        List<PostRes> lists = listService.getPostListUser(userSeq);
+
+        if(lists.isEmpty())
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());
+
+        return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("전체 게시글 조회 성공").build());
+    }
+
     @GetMapping("/search/user")
     @ApiOperation(value = "계정 검색", notes = "검색어를 포함하는 아이디 또는 이름을 갖는 유저를 검색한다.")
     @ApiResponses({
