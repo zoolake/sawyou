@@ -14,6 +14,8 @@ import lombok.*;
 @AllArgsConstructor
 @ApiModel("PostResponse")
 public class PostRes {
+    @ApiModelProperty(name = "게시물 번호")
+    Long postSeq;
     @ApiModelProperty(name = "게시물 내용")
     String postContent;
     @ApiModelProperty(name = "게시물 이미지 링크")

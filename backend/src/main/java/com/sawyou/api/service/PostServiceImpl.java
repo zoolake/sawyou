@@ -117,6 +117,7 @@ public class PostServiceImpl implements PostService {
         PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(userSeq, postSeq);
 
         return PostRes.builder()
+                .postSeq(post.getPostSeq())
                 .postContent(post.getPostContent())
                 .postPictureLink(post.getPostPictureLink())
                 .postWritingTime(post.getPostWritingTime().toString())
