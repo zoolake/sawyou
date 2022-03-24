@@ -26,6 +26,12 @@ public class UserRes {
     @ApiModelProperty(name = "User Profile")
     private String userProfile;
 
+    @ApiModelProperty(name = "User Following Count")
+    private int followingCnt;
+
+    @ApiModelProperty(name = "User Follower Count")
+    private int followerCnt;
+
     @ApiModelProperty(name = "팔로잉 여부")
     private boolean isFollowing;
 }

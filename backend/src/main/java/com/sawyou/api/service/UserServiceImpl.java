@@ -100,6 +100,8 @@ public class UserServiceImpl implements UserService {
                 .userEmail(user.getUserEmail())
                 .userDesc(user.getUserDesc())
                 .userProfile(user.getUserProfile())
+                .followingCnt(user.getFollowings().size())
+                .followerCnt(user.getFollowers().size())
                 .isFollowing(isFollowing)
                 .build();
     }
