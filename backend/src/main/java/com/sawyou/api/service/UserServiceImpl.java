@@ -181,7 +181,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserListRes> findUserFollowing(Long userSeq) {
+    public List<UserListRes> findUserFollowingList(Long userSeq) {
         User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
 
         return user.getFollowings().stream().map(following -> {
@@ -196,7 +196,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserListRes> findUserFollower(Long userSeq) {
+    public List<UserListRes> findUserFollowerList(Long userSeq) {
         User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
 
         return user.getFollowers().stream().map(follower -> {

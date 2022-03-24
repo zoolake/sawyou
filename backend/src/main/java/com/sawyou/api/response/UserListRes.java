@@ -1,5 +1,6 @@
 package com.sawyou.api.response;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
+@ApiModel("UserListResponse")
 public class UserListRes {
     @ApiModelProperty(name = "User ID")
     private String userId;

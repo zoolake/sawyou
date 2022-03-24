@@ -24,8 +24,8 @@ public interface UserService {
 
     boolean followingUser(User user, Long followingToSeq);
 
-    List<UserListRes> findUserFollowing(Long userSeq);
-    List<UserListRes> findUserFollower(Long userSeq);
+    List<UserListRes> findUserFollowingList(Long userSeq);
+    List<UserListRes> findUserFollowerList(Long userSeq);
 
     User deleteUser(User user);
 }
