@@ -13,4 +13,10 @@ public class CommentLikeRepositorySupport {
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
     private QCommentLike qCommentLike = QCommentLike.commentLike;
+
+    public Long deleteCommentLikeByUserSeq(Long userSeq) {
+        Long affectedRow = jpaQueryFactory.delete(qCommentLike)
+                .where(qCommentLike.user.userSeq.eq(userSeq)).execute();
+        return affectedRow;
+    }
 }

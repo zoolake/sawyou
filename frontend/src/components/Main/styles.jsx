@@ -1,24 +1,24 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  // position: absolute;
+  position: relative;
   margin: auto;
-  top: 0;
+  top: 80px;
   bottom: 0;
   left: 0;
   right: 0;
-  width: 345px;
-  height: 442.156px;
+  width: 600px;
+  height:770px;
 
   .post {
     background-color: white;
-    max-width: 500px;
+    max-width: 600px;
     border: 1px solid lightgrey;
   }
   
   .post_img {
-    width: 100%;
-    height: 100%;
+    width: 600px;
+    height: 600px;
   } 
 
   .post_header {
