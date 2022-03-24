@@ -28,6 +28,9 @@ public class PostServiceImpl implements PostService {
     private CommentRepository commentRepository;
 
     @Autowired
+    private CommentRepositorySupport commentRepositorySupport;
+
+    @Autowired
     private CommentLikeRepository commentLikeRepository;
 
     // 게시글 Seq 값으로 찾기
@@ -87,6 +90,18 @@ public class PostServiceImpl implements PostService {
     // 게시글 삭제
     @Override
     public Post deletePost(Post post) {
+        // 해당 게시글의 댓글 전부 삭제(isDelete = true)
+        // 쿼리가 정상적으로 실행되었다면, 삭제한 데이터 갯수 반환
+        Long deleteCommentCount = commentRepositorySupport.updateIsDeleteAllTrueByPost_PostSeqEquals(post.getPostSeq());
+
+        // 해당 게시글의 댓글 좋아요 데이터 전부 삭제
+        // 쿼리가 정상적으로 실행되었다면, 삭제한 데이터 갯수 반환
+        Long deleteCommentLikeCount = commentLikeRepository.deleteByComment_Post_PostSeqEquals(post.getPostSeq());
+
+        // 해당 게시글의 좋아요 데이터 전부 삭제
+        // 쿼리가 정상적으로 실행되었다면, 삭제한 데이터 갯수 반환
+        Long deletePostLikeCount = postLikeRepository.deleteByPost_PostSeqEquals(post.getPostSeq());
+
         // 원본 객체에 게시글 삭제 여부만 변경
         post.setPostIsDelete(true);
 
