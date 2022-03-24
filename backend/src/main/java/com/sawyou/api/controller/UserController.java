@@ -7,6 +7,7 @@ import com.sawyou.api.response.UserListRes;
 import com.sawyou.api.response.UserLoginPostRes;
 import com.sawyou.common.model.response.Result;
 import com.sawyou.common.util.JwtTokenUtil;
+import com.sawyou.db.entity.Following;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -47,82 +48,77 @@ public class UserController {
     @PostMapping("/signup")
     @ApiOperation(value = "회원 가입", notes = "<strong>아이디와 패스워드</strong>를 통해 회원가입 한다.")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "성공"),
-            @ApiResponse(code = 401, message = "인증 실패"),
-            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 201, message = "회원가입 성공"),
+            @ApiResponse(code = 409, message = "회원가입 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> register(
+    public ResponseEntity<Result> register(
             @RequestBody @ApiParam(value = "회원가입 정보", required = true) UserRegisterPostReq registerInfo) {
-
-        //임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
         User user = userService.createUser(registerInfo);
-
-        return ResponseEntity.status(201).body(BaseResponseBody.of(201, "회원가입 성공"));
+        if(user == null) return ResponseEntity.status(409).body(Result.builder().status(409).message("회원가입 싪패").build());
+        return ResponseEntity.status(201).body(Result.builder().data(user).status(201).message("회원가입 성공").build());
     }
 
     @GetMapping("/idcheck")
     @ApiOperation(value = "아이디 중복 검사", notes = "현재 입력된 아이디가 이미 가입되어있는 아이디인지 확인한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 200, message = "중복 아이디 없음"),
+            @ApiResponse(code = 409, message = "중복 아이디 있음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Boolean> idCheck(@RequestBody @ApiParam(value = "중복체크할 아이디", required = true) Map<String, String> request) {
+    public ResponseEntity<Result> idCheck(@RequestBody @ApiParam(value = "중복체크할 아이디", required = true) Map<String, String> request) {
         User user = userService.getUserByUserId(request.get("userId"));
         // 중복 아이디가 없는 경우 true 반환
-        if(user == null) return ResponseEntity.ok(true);
+        if(user == null)
+            return ResponseEntity.status(200).body(Result.builder().data(true).status(200).message("중복 아이디 없음").build());
         // 중복 아이디가 있을 경우 false 반환
-        return ResponseEntity.status(409).body(false);
+        return ResponseEntity.status(409).body(Result.builder().data(false).status(409).message("중복 아이디 있음").build());
     }
 
     @PostMapping("/login")
     @ApiOperation(value = "로그인", notes = "<strong>아이디와 패스워드</strong>를 통해 로그인 한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
-            @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+            @ApiResponse(code = 200, message = "로그인 성공", response = UserLoginPostRes.class),
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<UserLoginPostRes> login(@RequestBody @ApiParam(value = "로그인 정보", required = true) UserLoginPostReq loginInfo) {
+    public ResponseEntity<Result> login(@RequestBody @ApiParam(value = "로그인 정보", required = true) UserLoginPostReq loginInfo) {
         String userId = loginInfo.getUserId();
         String password = loginInfo.getUserPwd();
 
         User user = userService.getUserByUserId(userId);
-        if(user.isUserIsDelete()) {
+        if(user.isUserIsDelete())
             // 삭제된 회원이라면 로그인 불가능
-            return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "삭제된 회원", null));
-        }
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("사용자 없음").build());
 
         // 로그인 요청한 유저로부터 입력된 패스워드 와 디비에 저장된 유저의 암호화된 패스워드가 같은지 확인.(유효한 패스워드인지 여부 확인)
-        if (passwordEncoder.matches(password, user.getUserPwd())) {
+        if (passwordEncoder.matches(password, user.getUserPwd()))
             // 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
-            return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(userId)));
-        }
+            return ResponseEntity.status(200).body(Result.builder().data(JwtTokenUtil.getToken(userId)).status(200).message("로그인 성공").build());
+
         // 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
-        return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null));
+        return ResponseEntity.status(409).body(Result.builder().status(409).message("로그인 실패").build());
     }
 
     @GetMapping("/{userSeq}")
     @ApiOperation(value = "프로필 조회", notes = "회원 정보를 응답한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 200, message = "프로필 조회 성공"),
             @ApiResponse(code = 401, message = "인증 실패"),
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<Result> getUserInfo(@ApiIgnore Authentication authentication, @ApiParam(value = "조회할 유저 일련번호", required = true) @PathVariable Long userSeq) {
-        /**
-         * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
-         * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
-         */
+        if(authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().message("인증 실패").build());
+
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         String userId = userDetails.getUsername();
         User user = userService.getUserByUserId(userId);
-        if(user == null) return ResponseEntity.status(401).body(Result.builder().message("인증실패").build());
 
         UserRes userRes = userService.getUser(userSeq, user.getUserSeq());
-        if(userRes == null) return ResponseEntity.status(404).body(Result.builder().status(404).message("사용자 없음").build());
+        if(userRes == null)
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("사용자 없음").build());
 
         return ResponseEntity.status(200).body(Result.builder()
                         .data(userRes).status(200).message("프로필 조회 성공").build());
@@ -131,20 +127,24 @@ public class UserController {
     @PatchMapping
     @ApiOperation(value = "프로필 수정", notes = "유저의 프로필 정보를 수정한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 200, message = "프로필 수정 성공"),
             @ApiResponse(code = 401, message = "인증 실패"),
-            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 409, message = "프로필 수정 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<UserLoginPostRes> updateUserInfo(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value = "수정할 유저 정보", required = true) UserUpdateInfoReq updateInfo) {
+    public ResponseEntity<Result> updateUserInfo(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value = "수정할 유저 정보", required = true) UserUpdateInfoReq updateInfo) {
+        if(authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().message("인증 실패").build());
+
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         String userId = userDetails.getUsername();
         User oUser = userService.getUserByUserId(userId);
-        if(oUser == null) return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null));
 
         User user = userService.updateUserInfo(updateInfo, oUser.getUserSeq());
+        if(user == null)
+            return ResponseEntity.status(409).body(Result.builder().status(409).message("프로필 수정 실패").build());
 
-        return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(user.getUserId())));
+        return ResponseEntity.status(200).body(Result.builder().data(JwtTokenUtil.getToken(user.getUserId())).status(200).message("프로필 수정 성공").build());
     }
 
     @PatchMapping("/pwd")
@@ -156,55 +156,76 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<Result> updateUserPwd(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value = "변경할 비밀번호", required = true) UserUpdatePwdReq updatePwd) {
+        if(authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().message("인증 실패").build());
+
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         String userId = userDetails.getUsername();
         User oUser = userService.getUserByUserId(userId);
-        if(oUser == null) return ResponseEntity.status(401).body(Result.builder().message("인증실패").build());
 
         User user = userService.updateUserPwd(updatePwd, oUser.getUserSeq());
-        return ResponseEntity.status(204).body(Result.builder().data(user).status(204).message("비밀번호 수정 성공").build());
+        if(user == null)
+            return ResponseEntity.status(409).body(Result.builder().status(409).message("비밀번호 수정 실패").build());
 
+        return ResponseEntity.status(204).body(Result.builder().data(user).status(204).message("비밀번호 수정 성공").build());
     }
 
 
     @PatchMapping("/following/{followingToSeq}")
     @ApiOperation(value = "팔로잉/취소", notes = "유저를 팔로잉/취소한다.")
     @ApiResponses({
-            @ApiResponse(code = 204, message = "성공"),
+            @ApiResponse(code = 204, message = "팔로잉/취소 성공"),
             @ApiResponse(code = 401, message = "인증 실패"),
             @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 409, message = "팔로잉 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<Result> followingUser(@ApiIgnore Authentication authentication, @PathVariable @ApiParam(value = "팔로잉(취소)할 유저", required = true) Long followingToSeq) {
-        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        if(authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().message("인증 실패").build());
 
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         String userId = userDetails.getUsername();
         User user = userService.getUserByUserId(userId);
+
+        // 팔로잉 하려는 userSeq가 본인인지 확인
         if(user.getUserSeq() == followingToSeq)
             return ResponseEntity.status(409).body(Result.builder().status(409).message("팔로잉 실패").build());
 
+        // 사용자가 존재하는지 확인
+        UserRes userRes = userService.getUser(followingToSeq, followingToSeq);
+        if(userRes == null)
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("사용자 없음").build());
+
         boolean state = userService.followingUser(user, followingToSeq);
 
-        if(state) return ResponseEntity.status(204).body(Result.builder().status(204).message("팔로잉 성공").build());
+        if(state)
+            return ResponseEntity.status(204).body(Result.builder().status(204).message("팔로잉 성공").build());
         return ResponseEntity.status(204).body(Result.builder().status(204).message("팔로잉 취소").build());
     }
 
     @DeleteMapping
     @ApiOperation(value = "회원탈퇴", notes = "회원탈퇴를 한다.")
     @ApiResponses({
-            @ApiResponse(code = 204, message = "성공"),
+            @ApiResponse(code = 204, message = "회원탈퇴 성공"),
             @ApiResponse(code = 401, message = "인증 실패"),
-            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 409, message = "회원탈퇴 실패패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<Result> deleteUser(@ApiIgnore Authentication authentication) {
+        if(authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().message("인증 실패").build());
+
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         String userId = userDetails.getUsername();
         User user = userService.getUserByUserId(userId);
 
-        User cUser = userService.deleteUser(user);
+        User dUser = userService.deleteUser(user);
 
-        return ResponseEntity.status(204).body(Result.builder().data(cUser).status(200).message("회원 탈퇴 성공").build());
+        if(dUser == null)
+            return ResponseEntity.status(409).body(Result.builder().status(409).message("회원탈퇴 실패").build());
+
+        return ResponseEntity.status(204).body(Result.builder().data(dUser).status(204).message("회원탈퇴 성공").build());
     }
 
     @GetMapping("/following")
@@ -216,7 +237,9 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<Result> findUserFollowing(@ApiIgnore Authentication authentication) {
-        if(authentication == null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+        if(authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         Long userSeq = userDetails.getUser().getUserSeq();
         List<UserListRes> userList = userService.getUserFollowingList(userSeq);
@@ -233,7 +256,8 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<Result> findUserFollower(@ApiIgnore Authentication authentication) {
-        if(authentication == null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+        if(authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         Long userSeq = userDetails.getUser().getUserSeq();
         List<UserListRes> userList = userService.getUserFollowerList(userSeq);
