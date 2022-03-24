@@ -154,6 +154,10 @@ public class PostServiceImpl implements PostService {
         // 쿼리가 정상적으로 실행되었다면, 삭제한 데이터 갯수 반환
         Long deletePostLikeCount = postLikeRepository.deleteByPost_PostSeqEquals(post.getPostSeq());
 
+        // 해당 게시글과 연결된 해시태그 테이블 데이터 전부 삭제
+        // 쿼리가 정상적으로 실행되었다면, 삭제한 데이터 갯수 반환
+        Long deletePostHashtagCount = postHashtagRepository.deleteByPost_PostSeqEquals(post.getPostSeq());
+
         // 원본 객체에 게시글 삭제 여부만 변경
         post.setPostIsDelete(true);
 
