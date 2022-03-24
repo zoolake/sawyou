@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 public class PostLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postLikeSeq = null;
+    private Long postLikeSeq;
 
     @JsonIgnore
     @ManyToOne

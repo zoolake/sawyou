@@ -14,12 +14,13 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "followerSeq")
 public class Follower {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long followerSeq = null;
+    private Long followerSeq;
 
     private Long followerFromSeq;
 

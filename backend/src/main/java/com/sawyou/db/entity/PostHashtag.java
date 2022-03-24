@@ -18,7 +18,7 @@ import javax.persistence.*;
 public class PostHashtag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postHashtagSeq = null;
+    private Long postHashtagSeq;
 
     @JsonIgnore
     @ManyToOne
