@@ -11,9 +11,12 @@ import java.util.List;
  */
 public interface ListService {
 
+    // 모든 게시글 조회
     List<PostRes> getPostListAll();
 
+    // 팔로잉 게시글 조회
     List<PostRes> getPostListFollowing(Long userSeq);
 
+    // 계정 검색
     List<UserListRes> searchUserList(String keyword);
 }

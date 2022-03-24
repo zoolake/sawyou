@@ -14,5 +14,6 @@ import java.util.List;
 public interface FollowingRepository extends JpaRepository<Following, Long> {
     void deleteByFollowingToSeq(Long toSeq);
 
+    // userSeq와 같은 데이터 조회
     List<Following> findByUser_UserSeq(Long userSeq);
 }

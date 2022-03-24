@@ -38,10 +38,13 @@ public class ListController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<Result> getPostListAll(@ApiIgnore Authentication authentication) {
-        if(authentication == null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+        if(authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
         List<PostRes> lists = listService.getPostListAll();
-        if(lists.isEmpty()) return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());
+
+        if(lists.isEmpty())
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());
 
         return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("전체 게시글 조회 성공").build());
     }
@@ -55,13 +58,16 @@ public class ListController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<Result> getPostListFollowing(@ApiIgnore Authentication authentication) {
-        if(authentication == null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+        if(authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         Long userSeq = userDetails.getUser().getUserSeq();
 
         List<PostRes> lists = listService.getPostListFollowing(userSeq);
-        if(lists.isEmpty()) return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());
+
+        if(lists.isEmpty())
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());
 
         return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("전체 게시글 조회 성공").build());
     }
@@ -75,10 +81,13 @@ public class ListController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<Result> searchUserList(@ApiIgnore Authentication authentication, @ApiParam(value = "검색할 아이디", required = true) @RequestBody String keyword) {
-        if(authentication == null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+        if(authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
         List<UserListRes> lists = listService.searchUserList(keyword);
-        if(lists.isEmpty()) return ResponseEntity.status(404).body(Result.builder().status(404).message("해당하는 계정 없음").build());
+
+        if(lists.isEmpty())
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("해당하는 계정 없음").build());
 
         return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("계정 검색 성공").build());
     }

@@ -62,10 +62,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // 회원가입
     @Override
     public User createUser(UserRegisterPostReq userRegisterInfo) {
-        System.out.println("userRegisterInfo.getUserDesc() = " + userRegisterInfo.getUserDesc());
-        
         User user = User.builder()
                 .userId(userRegisterInfo.getUserId())
                 // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
@@ -78,23 +77,33 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    // 유저 id로 유저 조회
     @Override
     public User getUserByUserId(String userId) {
-        // 디비에 유저 정보 조회 (userId 를 통한 조회).
+        // 디비에 유저 정보 조회 (userId로 조회).
         Optional<User> user = userRepositorySupport.findUserByUserId(userId);
-        if(!user.isPresent()) return null;
+        if(!user.isPresent())
+            return null;
 
         return user.get();
     }
 
+    // 유저 seq로 유저 조회 (조회할 유저의 userSeq, 나의 userSeq) - 나와 상대방 사이의 관계 파악
     @Override
     public UserRes getUser(Long userSeq, Long fromSeq) {
         Optional<User> oUser = userRepositorySupport.findUserByUserSeq(userSeq);
-        if(!oUser.isPresent()) return null;
+
+        if(!oUser.isPresent())
+            return null;
+
         User user = oUser.get();
 
+        if(user.isUserIsDelete())
+            return null;
+
         boolean isFollowing = false;
-        if(followingRepositorySupport.findFollowingByUserSeqAndFromSeq(userSeq, fromSeq).isPresent())  isFollowing = true;
+        if(followingRepositorySupport.findFollowingByUserSeqAndFromSeq(userSeq, fromSeq).isPresent())
+            isFollowing = true;
 
         return UserRes.builder()
                 .userId(user.getUserId())
@@ -108,66 +117,68 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-
+    // 유저 정보 수정
     @Override
     @Transactional
     public User updateUserInfo(UserUpdateInfoReq updateInfo, Long userSeq) {
         User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
 
-        if(StringUtils.hasText(updateInfo.getUserId())) {
+        if(StringUtils.hasText(updateInfo.getUserId()))
             user.setUserId(updateInfo.getUserId());
-        }
-        if(StringUtils.hasText(updateInfo.getUserName())) {
+
+        if(StringUtils.hasText(updateInfo.getUserName()))
             user.setUserName(updateInfo.getUserName());
-        }
-        if(StringUtils.hasText(updateInfo.getUserEmail())) {
+
+        if(StringUtils.hasText(updateInfo.getUserEmail()))
             user.setUserEmail(updateInfo.getUserEmail());
-        }
-        if(StringUtils.hasText(updateInfo.getUserDesc())) {
+
+        if(StringUtils.hasText(updateInfo.getUserDesc()))
             user.setUserDesc(updateInfo.getUserDesc());
-        }
-        if(StringUtils.hasText(updateInfo.getUserProfile())) {
+
+        if(StringUtils.hasText(updateInfo.getUserProfile()))
             user.setUserProfile(updateInfo.getUserProfile());
-        }
+
         return user;
     }
 
+    // 유저 비밀번호 수정
     @Override
     @Transactional
     public User updateUserPwd(UserUpdatePwdReq updatePwd, Long userSeq) {
         User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
 
-        if(StringUtils.hasText(updatePwd.getUserPwd())) {
+        if(StringUtils.hasText(updatePwd.getUserPwd()))
             user.setUserPwd(passwordEncoder.encode(updatePwd.getUserPwd()));
-        }
+
         return user;
     }
 
+    // 유저 팔로잉/취소
     @Override
     @Transactional
     public boolean followingUser(User user, Long followingToSeq) {
         // user = 본인, followingToSeq = 팔로잉할 상대 Seq
         // followingFromSeq == followerToSeq  /  followingToSeq == followerFromSeq
+        User followingUser = userRepositorySupport.findUserByUserSeq(followingToSeq).get();
 
-        System.out.println("user.getUserSeq() = " + user.getUserSeq());
-        System.out.println("followingToSeq = " + followingToSeq);
         //followingRepositorySupport.findFollowingByUserSeq(상대 Seq, 본인 Seq)
         Optional<Following> following = followingRepositorySupport.findFollowingByUserSeqAndFromSeq(followingToSeq, user.getUserSeq());
 
         if(following.isPresent()) {
-            /**
+            /*
              * 1. 팔로잉이 존재하면
              * 2. 팔로워 테이블에서 삭제하고
              * 3. 팔로잉 테이블에서 삭제
             */
             //followerRepositorySupport.findFollowerByUserSeq(상대 Seq, 본인 Seq)
             Optional<Follower> follower = followerRepositorySupport.findFollowerByUserSeqAndToSeq(followingToSeq, user.getUserSeq());
-            if(follower.isPresent())  followerRepository.delete(follower.get());
+            if(follower.isPresent())
+                followerRepository.delete(follower.get());
 
             followingRepository.delete(following.get());
             return false;
         } else {
-            /**
+            /*
              * 1. 팔로잉이 존재하지 않으면
              * 2. 팔로워 테이블에 추가하고
              * 3. 팔로잉 테이블에 추가
@@ -180,8 +191,9 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    // 유저의 팔로잉 리스트 조회
     @Override
-    public List<UserListRes> findUserFollowingList(Long userSeq) {
+    public List<UserListRes> getUserFollowingList(Long userSeq) {
         User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
 
         return user.getFollowings().stream().map(following -> {
@@ -195,8 +207,9 @@ public class UserServiceImpl implements UserService {
         }).collect(Collectors.toList());
     }
 
+    // 유저희 팔로워 리스트 조회
     @Override
-    public List<UserListRes> findUserFollowerList(Long userSeq) {
+    public List<UserListRes> getUserFollowerList(Long userSeq) {
         User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
 
         return user.getFollowers().stream().map(follower -> {
@@ -210,6 +223,7 @@ public class UserServiceImpl implements UserService {
         }).collect(Collectors.toList());
     }
 
+    // 회원 탈퇴
     @Override
     @Transactional
     public User deleteUser(User user) {

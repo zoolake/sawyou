@@ -19,6 +19,7 @@ public class UserRepositorySupport {
     private JPAQueryFactory jpaQueryFactory;
     private QUser qUser = QUser.user;
 
+    // userId와 같은 데이터 조회
     public Optional<User> findUserByUserId(String userId) {
         User user = jpaQueryFactory.select(qUser).from(qUser)
                 .where(qUser.userId.eq(userId)).fetchOne();
@@ -26,6 +27,7 @@ public class UserRepositorySupport {
         return Optional.ofNullable(user);
     }
 
+    // userSeq와 같은 데이터 조회
     public Optional<User> findUserByUserSeq(Long userSeq) {
         User user = jpaQueryFactory.select(qUser).from(qUser)
                 .where(qUser.userSeq.eq(userSeq)).fetchOne();
@@ -33,6 +35,7 @@ public class UserRepositorySupport {
         return Optional.ofNullable(user);
     }
 
+    // keyword를 포함하는 아이디/이름을 갖는 데이터 조회
     public List<User> findUserByKeyword(String keyword) {
         List<User> userList = jpaQueryFactory.select(qUser).from(qUser)
                 .where(qUser.userId.contains(keyword).or(qUser.userName.contains(keyword))).fetch();

@@ -19,6 +19,7 @@ public class CommentRepositorySupport {
     private JPAQueryFactory jpaQueryFactory;
     private QComment qComment = QComment.comment;
 
+    // userSeq가 같은 데이터 조회
     public List<Comment> findAllByUserSeq(Long userSeq) {
         List<Comment> comments = jpaQueryFactory.select(qComment).from(qComment)
                 .where(qComment.user.userSeq.eq(userSeq)).fetch();

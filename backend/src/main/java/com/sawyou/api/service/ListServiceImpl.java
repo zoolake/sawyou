@@ -29,6 +29,7 @@ public class ListServiceImpl implements ListService {
 	@Autowired
 	private PostRepositorySupport postRepositorySupport;
 
+    // 모든 게시글 조회
     @Override
     public List<PostRes> getPostListAll() {
         return postRepository.findAll().stream().filter(post -> !post.isPostIsDelete())
@@ -46,6 +47,7 @@ public class ListServiceImpl implements ListService {
                 }).collect(Collectors.toList());
     }
 
+    // 팔로잉 게시글 조회
     @Override
     public List<PostRes> getPostListFollowing(Long userSeq) {
         // 팔로잉 리스트에서 유저가 팔로잉하는 유저 목록을 찾고 -> 그 유저가 작성한 글 리스트를 뽑는다.
@@ -54,7 +56,6 @@ public class ListServiceImpl implements ListService {
         followingRepository.findByUser_UserSeq(userSeq).forEach(following -> {
             Long toSeq = following.getFollowingToSeq();
             User user = userRepositorySupport.findUserByUserSeq(toSeq).get();
-            System.out.println("user.getUserSeq() = " + user.getUserSeq());
             postRepository.findByUser_UserSeqAndPostIsDeleteIsFalse(user.getUserSeq()).forEach(post ->
                     postResList.add(PostRes.builder()
                             .postContent(post.getPostContent())
@@ -70,9 +71,9 @@ public class ListServiceImpl implements ListService {
         return postResList;
     }
 
+    // 계정 검색
     @Override
     public List<UserListRes> searchUserList(String keyword) {
-        System.out.println("keyword = " + keyword);
         return userRepositorySupport.findUserByKeyword(keyword).stream().map(user ->
                 UserListRes.builder()
                         .userId(user.getUserId())
