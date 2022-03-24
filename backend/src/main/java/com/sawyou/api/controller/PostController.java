@@ -10,6 +10,7 @@ import com.sawyou.common.auth.SawyouUserDetails;
 import com.sawyou.db.entity.Comment;
 import com.sawyou.db.entity.Post;
 import com.sawyou.api.response.PostRes;
+import com.sawyou.db.entity.PostLike;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -174,6 +175,34 @@ public class PostController {
         return ResponseEntity.status(200).body(Result.builder().status(200).message("게시글 삭제 성공").build());
     }
 
+    @PatchMapping("/{postSeq}/like")
+    @ApiOperation(value = "게시글 좋아요", notes = "게시글에 좋아요 여부를 반영한다.")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "게시글 좋아요 수정 성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 409, message = "게시글 좋아요 수정 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> likePost(
+            @ApiIgnore Authentication authentication,
+            @PathVariable Long postSeq
+    ) {
+        // 인증 토큰 확인, 올바르지 않은 토큰일 경우에도 401 자동 리턴
+        if (authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+
+        // 토큰에서 사용자의 userSeq 값 추출
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        Long userSeq = userDetails.getUser().getUserSeq();
+
+        PostLike postLike = postService.likePost(userSeq, postSeq);
+
+        // 좋아요가 제대로 반영되지 않았을 경우
+        if (postLike == null)
+            return ResponseEntity.status(409).body(Result.builder().status(409).message("게시글 좋아요 수정 실패").build());
+        return ResponseEntity.status(204).body(Result.builder().status(204).message("게시글 좋아요 수정 성공").build());
+    }
+
     @PostMapping("/comment/{postSeq}")
     @ApiOperation(value = "댓글 작성", notes = "요청 값에 따라 댓글을 작성한다.")
     @ApiResponses({
@@ -273,10 +302,10 @@ public class PostController {
         if (oComment.getUser().getUserSeq() != userSeq)
             return ResponseEntity.status(403).body(Result.builder().status(403).message("접근 권한 없음").build());
 
-        // 게시글 수정
+        // 댓글 수정
         Comment comment = postService.updateComment(oComment, commentUpdate.getCommentContent());
 
-        // 게시글이 제대로 수정되지 않았을 경우
+        // 댓글이 제대로 수정되지 않았을 경우
         if (comment == null)
             return ResponseEntity.status(409).body(Result.builder().status(409).message("댓글 수정 실패").build());
         return ResponseEntity.status(200).body(Result.builder().status(200).message("댓글 수정 성공").build());

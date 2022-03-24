@@ -3,9 +3,11 @@ package com.sawyou.api.service;
 import com.sawyou.api.response.CommentRes;
 import com.sawyou.db.entity.Comment;
 import com.sawyou.db.entity.Post;
+import com.sawyou.db.entity.PostLike;
 import com.sawyou.db.entity.User;
 import com.sawyou.api.response.PostRes;
 import com.sawyou.db.repository.CommentRepository;
+import com.sawyou.db.repository.PostLikeRepository;
 import com.sawyou.db.repository.PostRepository;
 import com.sawyou.db.repository.PostRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +25,13 @@ public class PostServiceImpl implements PostService {
     private PostRepository postRepository;
 
     @Autowired
-    private CommentRepository commentRepository;
+    private PostRepositorySupport postRepositorySupport;
 
     @Autowired
-    private PostRepositorySupport postRepositorySupport;
+    private PostLikeRepository postLikeRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     // 게시글 Seq 값으로 찾기
     @Override
@@ -90,6 +95,36 @@ public class PostServiceImpl implements PostService {
 
         // 쿼리가 정상적으로 실행되었다면, 쿼리에 사용된 객체 return
         return postRepository.save(post);
+    }
+
+    // 게시글 좋아요
+    @Override
+    public PostLike likePost(Long userSeq, Long postSeq) {
+        // 이미 게시글에 좋아요를 눌렀는지 판단
+        PostLike oPostLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(userSeq, postSeq);
+
+        // 이미 좋아요를 누른 게시글이면
+        if(oPostLike != null) {
+            // 게시글 좋아요 삭제
+            postLikeRepository.delete(oPostLike);
+            return oPostLike;
+        }
+
+        // 게시글 좋아요 추가
+        PostLike postLike = PostLike.builder()
+                .user(
+                        User.builder()
+                                .userSeq(userSeq)
+                                .build()
+                )
+                .post(
+                        Post.builder()
+                                .postSeq(postSeq)
+                                .build()
+                )
+                .build();
+
+        return postLikeRepository.save(postLike);
     }
 
     // 댓글 Seq 값으로 찾기

@@ -4,6 +4,7 @@ import com.sawyou.api.response.CommentRes;
 import com.sawyou.db.entity.Comment;
 import com.sawyou.db.entity.Post;
 import com.sawyou.api.response.PostRes;
+import com.sawyou.db.entity.PostLike;
 
 import java.util.List;
 
@@ -26,6 +27,9 @@ public interface PostService {
     // 게시글 삭제
     Post deletePost(Post post);
 
+    // 게시글 좋아요
+    PostLike likePost(Long userSeq, Long postSeq);
+
     // 댓글 Seq 값으로 찾기
     Comment getCommentByCommentSeq(Long commentSeq);
 
@@ -37,4 +41,5 @@ public interface PostService {
 
     // 댓글 수정
     Comment updateComment(Comment comment, String commentContent);
+
 }
