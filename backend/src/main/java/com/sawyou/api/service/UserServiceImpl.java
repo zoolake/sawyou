@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // 회원가입
     @Override
     public User createUser(UserRegisterPostReq userRegisterInfo) {
         System.out.println("userRegisterInfo.getUserDesc() = " + userRegisterInfo.getUserDesc());
@@ -78,6 +79,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    // 유저 id로 유저 조회
     @Override
     public User getUserByUserId(String userId) {
         // 디비에 유저 정보 조회 (userId 를 통한 조회).
@@ -87,6 +89,7 @@ public class UserServiceImpl implements UserService {
         return user.get();
     }
 
+    // 유저 seq로 유저 조회 (조회할 유저의 userSeq, 나의 userSeq) - 나와 상대방 사이의 관계 파악
     @Override
     public UserRes getUser(Long userSeq, Long fromSeq) {
         Optional<User> oUser = userRepositorySupport.findUserByUserSeq(userSeq);
@@ -108,7 +111,7 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-
+    // 유저 정보 수정
     @Override
     @Transactional
     public User updateUserInfo(UserUpdateInfoReq updateInfo, Long userSeq) {
@@ -132,6 +135,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    // 유저 비밀번호 수정
     @Override
     @Transactional
     public User updateUserPwd(UserUpdatePwdReq updatePwd, Long userSeq) {
@@ -143,6 +147,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    // 유저 팔로잉/취소
     @Override
     @Transactional
     public boolean followingUser(User user, Long followingToSeq) {
@@ -180,6 +185,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    // 유저의 팔로잉 리스트 조회
     @Override
     public List<UserListRes> findUserFollowingList(Long userSeq) {
         User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
@@ -195,6 +201,7 @@ public class UserServiceImpl implements UserService {
         }).collect(Collectors.toList());
     }
 
+    // 유저희 팔로워 리스트 조회
     @Override
     public List<UserListRes> findUserFollowerList(Long userSeq) {
         User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
@@ -210,6 +217,7 @@ public class UserServiceImpl implements UserService {
         }).collect(Collectors.toList());
     }
 
+    // 회원 탈퇴
     @Override
     @Transactional
     public User deleteUser(User user) {
