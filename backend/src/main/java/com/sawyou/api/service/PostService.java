@@ -20,7 +20,7 @@ public interface PostService {
     Post writePost(String postContent, Long userSeq);
 
     // 게시글 조회
-    PostRes getPostInfo(Long postSeq);
+    PostRes getPost(Long postSeq);
 
     // 게시글 수정
     Post updatePost(Post post, String postContent);
@@ -38,7 +38,7 @@ public interface PostService {
     Comment writeComment(String commentContent, Long postSeq, Long userSeq);
 
     // 댓글 조회
-    List<CommentRes> getComments(Long postSeq);
+    List<CommentRes> getCommentList(Long postSeq);
 
     // 댓글 수정
     Comment updateComment(Comment comment, String commentContent);

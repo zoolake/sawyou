@@ -61,7 +61,7 @@ public class PostServiceImpl implements PostService {
 
     // 게시글 조회
     @Override
-    public PostRes getPostInfo(Long postSeq) {
+    public PostRes getPost(Long postSeq) {
         // JPA의 기본 메소드를 활용하여 postRepo에 해당 메소드 명시 없이 PK값을 가지고 데이터 찾음
         Post post = postRepository.getById(postSeq);
 
@@ -168,8 +168,9 @@ public class PostServiceImpl implements PostService {
         return commentRepository.save(comment);
     }
 
+    // 댓글 조회
     @Override
-    public List<CommentRes> getComments(Long postSeq) {
+    public List<CommentRes> getCommentList(Long postSeq) {
         List<Comment> comments = commentRepository.findByPost_PostSeqIsAndCommentIsDeleteIsFalse(postSeq);
         return comments.stream().
                 map(comment -> CommentRes.builder()
@@ -184,6 +185,7 @@ public class PostServiceImpl implements PostService {
                 .collect(Collectors.toList());
     }
 
+    // 댓글 수정
     @Override
     public Comment updateComment(Comment comment, String commentContent) {
         // 원본 객체에 댓글 내용만 변경
