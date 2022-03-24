@@ -17,6 +17,7 @@ public class FollowerRepositorySupport {
     private JPAQueryFactory jpaQueryFactory;
     private QFollower qFollower = QFollower.follower;
 
+    // userSeq와 toSeq가 같은 데이터 조회
     public Optional<Follower> findFollowerByUserSeqAndToSeq(Long userSeq, Long toSeq) {
         // userSeq(fromSeq) : 팔로잉 대상 seq / toSeq : 본인 Seq
         Follower follower = jpaQueryFactory.select(qFollower).from(qFollower)
@@ -25,6 +26,7 @@ public class FollowerRepositorySupport {
         return Optional.ofNullable(follower);
     }
 
+    // toSeq와 같은 데이터 삭제
     public Long deleteFollowerByToSeq(Long toSeq) {
         Long affectedRow = jpaQueryFactory.delete(qFollower).where(qFollower.user.userSeq.eq(toSeq)).execute();
         return affectedRow;

@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface FollowerRepository extends JpaRepository<Follower, Long> {
+    // fromSeq가 같은 데이터 삭제
     void deleteByFollowerFromSeq(Long fromSeq);
 }

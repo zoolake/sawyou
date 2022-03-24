@@ -11,5 +11,6 @@ import java.util.List;
  */
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
+    // userSeq와 같고 삭제 처리 되지 않은 데이터 조회
     List<Post> findByUser_UserSeqAndPostIsDeleteIsFalse(Long userSeq);
 }

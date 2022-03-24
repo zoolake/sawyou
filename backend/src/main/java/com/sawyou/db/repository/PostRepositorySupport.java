@@ -18,6 +18,7 @@ public class PostRepositorySupport {
     private JPAQueryFactory jpaQueryFactory;
     private QPost qPost = QPost.post;
 
+    // userSeq와 같고 NFT화 되지 않은 데이터 조회
     public List<Post> findPostNotNFTByUserSeq(Long userSeq) {
          List<Post> posts = jpaQueryFactory.select(qPost).from(qPost)
                  .where(qPost.user.userSeq.eq(userSeq).and(qPost.postIsNft.eq(false))).fetch();
