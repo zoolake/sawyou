@@ -168,6 +168,7 @@ public class PostServiceImpl implements PostService {
         return commentRepository.save(comment);
     }
 
+    // 댓글 조회
     @Override
     public List<CommentRes> getComments(Long postSeq) {
         List<Comment> comments = commentRepository.findByPost_PostSeqIsAndCommentIsDeleteIsFalse(postSeq);
@@ -184,6 +185,7 @@ public class PostServiceImpl implements PostService {
                 .collect(Collectors.toList());
     }
 
+    // 댓글 수정
     @Override
     public Comment updateComment(Comment comment, String commentContent) {
         // 원본 객체에 댓글 내용만 변경
