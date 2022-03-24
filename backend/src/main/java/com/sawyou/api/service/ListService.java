@@ -11,4 +11,6 @@ import java.util.List;
 public interface ListService {
 
     List<PostRes> getPostListAll();
+
+    List<PostRes> getPostListFollowing(Long userSeq);
 }
