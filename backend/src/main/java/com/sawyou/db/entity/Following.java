@@ -15,12 +15,13 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "followingSeq")
 public class Following {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long followingSeq = null;
+    private Long followingSeq;
 
     @JsonIgnore
     @ManyToOne

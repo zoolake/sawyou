@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
-@NoArgsConstructor @AllArgsConstructor
 @ApiModel("UserUpdateInfoRequest")
 public class UserUpdateInfoReq {
     @ApiModelProperty(name = "유저 ID", example = "your_new_id")

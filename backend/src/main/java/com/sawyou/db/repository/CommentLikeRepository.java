@@ -16,4 +16,10 @@ public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> 
     // commentSeq가 같은 데이터 전부 삭제
     @Transactional
     long deleteByComment_CommentSeqEquals(Long commentSeq);
+
+    // postSeq가 같은 데이터 전부 삭제
+    @Transactional
+    long deleteByComment_Post_PostSeqEquals(Long postSeq);
+
+
 }

@@ -1,6 +1,7 @@
 package com.sawyou.api.service;
 
 import com.sawyou.api.response.PostRes;
+import com.sawyou.api.response.UserListRes;
 import com.sawyou.db.entity.Post;
 import com.sawyou.db.entity.User;
 import com.sawyou.db.repository.*;
@@ -67,6 +68,17 @@ public class ListServiceImpl implements ListService {
             );
         });
         return postResList;
+    }
+
+    @Override
+    public List<UserListRes> searchUserList(String keyword) {
+        System.out.println("keyword = " + keyword);
+        return userRepositorySupport.findUserByKeyword(keyword).stream().map(user ->
+                UserListRes.builder()
+                        .userId(user.getUserId())
+                        .userName(user.getUserName())
+                        .userProfile(user.getUserProfile()).build()
+        ).collect(Collectors.toList());
     }
 
 }

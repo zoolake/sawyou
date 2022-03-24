@@ -7,7 +7,6 @@ import lombok.*;
 /**
  * 댓글 정보 조회 API ([GET] /api/v1/post/comment/{postSeq}) 요청에 대한 응답값 정의.
  */
-@Getter
 @Setter
 @Builder
 @NoArgsConstructor
