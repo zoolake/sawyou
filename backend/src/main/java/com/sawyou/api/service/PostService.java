@@ -43,6 +43,10 @@ public interface PostService {
     // 댓글 수정
     Comment updateComment(Comment comment, String commentContent);
 
+    // 댓글 삭제
+    Comment deleteComment(Comment comment);
+
     // 댓글 좋아요
     CommentLike likeComment(Long userSeq, Long commentSeq);
+
 }

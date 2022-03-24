@@ -178,6 +178,20 @@ public class PostServiceImpl implements PostService {
         return commentRepository.save(comment);
     }
 
+    // 댓글 삭제
+    @Override
+    public Comment deleteComment(Comment comment) {
+        // 원본 객체에 댓글 삭제 여부만 변경
+        comment.setCommentIsDelete(true);
+
+        // 해당 댓글의 좋아요 데이터 전부 삭제
+        // 쿼리가 정상적으로 실행되었다면, 삭제한 데이터 갯수 반환
+        Long deleteCount = commentLikeRepository.deleteByComment_CommentSeqEquals(comment.getCommentSeq());
+
+        // 쿼리가 정상적으로 실행되었다면, 쿼리에 사용된 객체 return
+        return commentRepository.save(comment);
+    }
+
     // 댓글 좋아요
     @Override
     public CommentLike likeComment(Long userSeq, Long commentSeq) {

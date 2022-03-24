@@ -312,6 +312,50 @@ public class PostController {
         return ResponseEntity.status(200).body(Result.builder().status(200).message("댓글 수정 성공").build());
     }
 
+    @DeleteMapping("/comment/{commentSeq}")
+    @ApiOperation(value = "댓글 삭제", notes = "요청 값에 따라 댓글을 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "댓글 삭제 성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 403, message = "접근 권한 없음"),
+            @ApiResponse(code = 404, message = "삭제할 댓글 없음"),
+            @ApiResponse(code = 409, message = "댓글 삭제 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> deleteComment(
+            @ApiIgnore Authentication authentication,
+            @PathVariable Long commentSeq
+    ) {
+        // 인증 토큰 확인, 올바르지 않은 토큰일 경우에도 401 자동 리턴
+        if (authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+
+        // 토큰에서 사용자의 userSeq 값 추출
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        Long userSeq = userDetails.getUser().getUserSeq();
+
+        // commentSeq 값 기준으로 삭제할 댓글 찾기
+        Comment oComment = postService.getCommentByCommentSeq(commentSeq);
+
+        // 삭제할 댓글 번호에 알맞는 데이터가 없을 경우
+        if (oComment == null)
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("삭제할 댓글 없음").build());
+        // 이미 삭제된 댓글일 경우
+        if (oComment.isCommentIsDelete())
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("삭제할 댓글 없음").build());
+        // 토큰의 사용자와 삭제할 게시글의 작성자가 다를 경우
+        if (oComment.getUser().getUserSeq() != userSeq)
+            return ResponseEntity.status(403).body(Result.builder().status(403).message("접근 권한 없음").build());
+
+        // 댓글 삭제
+        Comment comment = postService.deleteComment(oComment);
+
+        // 댓글이 제대로 삭제되지 않았을 경우
+        if (comment == null)
+            return ResponseEntity.status(409).body(Result.builder().status(409).message("댓글 삭제 실패").build());
+        return ResponseEntity.status(200).body(Result.builder().status(200).message("댓글 삭제 성공").build());
+    }
+
     @PatchMapping("/comment/{commentSeq}/like")
     @ApiOperation(value = "댓글 좋아요", notes = "댓글에 좋아요 여부를 반영한다.")
     @ApiResponses({
