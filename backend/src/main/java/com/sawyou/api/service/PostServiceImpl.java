@@ -61,9 +61,10 @@ public class PostServiceImpl implements PostService {
 
     // 게시글 조회
     @Override
-    public PostRes getPost(Long postSeq) {
+    public PostRes getPost(Long postSeq, Long userSeq) {
         // JPA의 기본 메소드를 활용하여 postRepo에 해당 메소드 명시 없이 PK값을 가지고 데이터 찾음
         Post post = postRepository.getById(postSeq);
+        PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(userSeq, postSeq);
 
         return PostRes.builder()
                 .postContent(post.getPostContent())
@@ -71,6 +72,7 @@ public class PostServiceImpl implements PostService {
                 .postWritingTime(post.getPostWritingTime().toString())
                 .postIsDelete(post.isPostIsDelete())
                 .postIsNft(post.isPostIsNft())
+                .postIsLike(postLike != null)
                 .userId(post.getUser().getUserId())
                 .userName(post.getUser().getUserName())
                 .userProfile(post.getUser().getUserProfile())
@@ -116,7 +118,7 @@ public class PostServiceImpl implements PostService {
         PostLike oPostLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(userSeq, postSeq);
 
         // 이미 좋아요를 누른 게시글이면
-        if(oPostLike != null) {
+        if (oPostLike != null) {
             // 게시글 좋아요 삭제
             postLikeRepository.delete(oPostLike);
             return oPostLike;
@@ -170,18 +172,21 @@ public class PostServiceImpl implements PostService {
 
     // 댓글 조회
     @Override
-    public List<CommentRes> getCommentList(Long postSeq) {
+    public List<CommentRes> getCommentList(Long postSeq, Long userSeq) {
         List<Comment> comments = commentRepository.findByPost_PostSeqIsAndCommentIsDeleteIsFalse(postSeq);
-        return comments.stream().
-                map(comment -> CommentRes.builder()
-                        .commentContent(comment.getCommentContent())
-                        .commentWritingTime(comment.getCommentWritingTime().toString())
-                        .commentIsDelete(comment.isCommentIsDelete())
-                        .userId(comment.getUser().getUserId())
-                        .userName(comment.getUser().getUserName())
-                        .userProfile(comment.getUser().getUserProfile())
-                        .build()
-                )
+        return comments.stream()
+                .map(comment -> {
+                    CommentLike commentLike = commentLikeRepository.findByUser_UserSeqAndComment_CommentSeq(userSeq, comment.getCommentSeq());
+                    return CommentRes.builder()
+                            .commentContent(comment.getCommentContent())
+                            .commentWritingTime(comment.getCommentWritingTime().toString())
+                            .commentIsDelete(comment.isCommentIsDelete())
+                            .commentIsLike(commentLike != null)
+                            .userId(comment.getUser().getUserId())
+                            .userName(comment.getUser().getUserName())
+                            .userProfile(comment.getUser().getUserProfile())
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 
@@ -216,7 +221,7 @@ public class PostServiceImpl implements PostService {
         CommentLike oCommentLike = commentLikeRepository.findByUser_UserSeqAndComment_CommentSeq(userSeq, commentSeq);
 
         // 이미 좋아요를 누른 댓글이면
-        if(oCommentLike != null) {
+        if (oCommentLike != null) {
             // 댓글 좋아요 삭제
             commentLikeRepository.delete(oCommentLike);
             return oCommentLike;

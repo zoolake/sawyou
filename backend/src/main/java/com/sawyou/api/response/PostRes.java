@@ -24,6 +24,8 @@ public class PostRes {
     boolean postIsDelete;
     @ApiModelProperty(name = "게시물 NFT 여부")
     boolean postIsNft;
+    @ApiModelProperty(name = "게시물 좋아요 체크 여부")
+    boolean postIsLike;
     @ApiModelProperty(name = "게시물 작성자 ID")
     String userId;
     @ApiModelProperty(name = "게시물 작성자 이름/닉네임")
