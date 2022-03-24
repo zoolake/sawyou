@@ -56,7 +56,6 @@ public class ListServiceImpl implements ListService {
         followingRepository.findByUser_UserSeq(userSeq).forEach(following -> {
             Long toSeq = following.getFollowingToSeq();
             User user = userRepositorySupport.findUserByUserSeq(toSeq).get();
-            System.out.println("user.getUserSeq() = " + user.getUserSeq());
             postRepository.findByUser_UserSeqAndPostIsDeleteIsFalse(user.getUserSeq()).forEach(post ->
                     postResList.add(PostRes.builder()
                             .postContent(post.getPostContent())
@@ -75,7 +74,6 @@ public class ListServiceImpl implements ListService {
     // 계정 검색
     @Override
     public List<UserListRes> searchUserList(String keyword) {
-        System.out.println("keyword = " + keyword);
         return userRepositorySupport.findUserByKeyword(keyword).stream().map(user ->
                 UserListRes.builder()
                         .userId(user.getUserId())

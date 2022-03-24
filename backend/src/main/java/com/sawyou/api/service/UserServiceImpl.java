@@ -65,8 +65,6 @@ public class UserServiceImpl implements UserService {
     // 회원가입
     @Override
     public User createUser(UserRegisterPostReq userRegisterInfo) {
-        System.out.println("userRegisterInfo.getUserDesc() = " + userRegisterInfo.getUserDesc());
-        
         User user = User.builder()
                 .userId(userRegisterInfo.getUserId())
                 // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
@@ -82,7 +80,7 @@ public class UserServiceImpl implements UserService {
     // 유저 id로 유저 조회
     @Override
     public User getUserByUserId(String userId) {
-        // 디비에 유저 정보 조회 (userId 를 통한 조회).
+        // 디비에 유저 정보 조회 (userId로 조회).
         Optional<User> user = userRepositorySupport.findUserByUserId(userId);
         if(!user.isPresent()) return null;
 
@@ -154,8 +152,6 @@ public class UserServiceImpl implements UserService {
         // user = 본인, followingToSeq = 팔로잉할 상대 Seq
         // followingFromSeq == followerToSeq  /  followingToSeq == followerFromSeq
 
-        System.out.println("user.getUserSeq() = " + user.getUserSeq());
-        System.out.println("followingToSeq = " + followingToSeq);
         //followingRepositorySupport.findFollowingByUserSeq(상대 Seq, 본인 Seq)
         Optional<Following> following = followingRepositorySupport.findFollowingByUserSeqAndFromSeq(followingToSeq, user.getUserSeq());
 
