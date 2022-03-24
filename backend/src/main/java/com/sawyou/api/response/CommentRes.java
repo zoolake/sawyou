@@ -14,18 +14,20 @@ import lombok.*;
 @AllArgsConstructor
 @ApiModel("CommentResponse")
 public class CommentRes {
+    @ApiModelProperty(name = "댓글 번호")
+    private Long commentSeq;
     @ApiModelProperty(name = "댓글 내용")
-    String commentContent;
+    private String commentContent;
     @ApiModelProperty(name = "댓글 작성 시간")
-    String commentWritingTime;
+    private String commentWritingTime;
     @ApiModelProperty(name = "댓글 삭제 여부")
-    boolean commentIsDelete;
+    private boolean commentIsDelete;
     @ApiModelProperty(name = "댓글 좋아요 체크 여부")
-    boolean commentIsLike;
+    private boolean commentIsLike;
     @ApiModelProperty(name = "댓글 작성자 ID")
-    String userId;
+    private String userId;
     @ApiModelProperty(name = "댓글 작성자 이름/닉네임")
-    String userName;
+    private String userName;
     @ApiModelProperty(name = "댓글 작성자 프로필 이미지 링크")
-    String userProfile;
+    private String userProfile;
 }
