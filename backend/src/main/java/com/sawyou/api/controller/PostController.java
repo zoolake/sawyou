@@ -14,9 +14,6 @@ import com.sawyou.db.entity.Post;
 import com.sawyou.api.response.PostRes;
 import com.sawyou.db.entity.PostLike;
 import io.swagger.annotations.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -53,6 +50,7 @@ public class PostController {
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         Long userSeq = userDetails.getUser().getUserSeq();
 
+        // 게시글 작성
         Post post = postService.writePost(postWrite.getPostContent(), userSeq);
 
         // 게시글이 제대로 작성되지 않았을 경우
@@ -76,7 +74,7 @@ public class PostController {
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
         // postSeq 값 기준으로 게시글 찾기
-        PostRes post = postService.getPostInfo(postSeq);
+        PostRes post = postService.getPost(postSeq);
 
         // 게시글 번호에 알맞는 데이터가 없을 경우
         if (post == null)
@@ -197,6 +195,7 @@ public class PostController {
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         Long userSeq = userDetails.getUser().getUserSeq();
 
+        // 게시글 좋아요 반영
         PostLike postLike = postService.likePost(userSeq, postSeq);
 
         // 게시글 좋아요가 제대로 반영되지 않았을 경우
@@ -226,6 +225,7 @@ public class PostController {
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         Long userSeq = userDetails.getUser().getUserSeq();
 
+        // 댓글 작성
         Comment comment = postService.writeComment(commentWrite.getCommentContent(), postSeq, userSeq);
 
         // 게시글이 제대로 작성되지 않았을 경우
@@ -243,7 +243,7 @@ public class PostController {
             @ApiResponse(code = 409, message = "댓글 조회 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> getComments(
+    public ResponseEntity<Result> getCommentList(
             @ApiIgnore Authentication authentication,
             @ApiParam(value = "조회할 댓글의 게시글 일련번호", required = true) @PathVariable Long postSeq
     ) {
@@ -262,9 +262,11 @@ public class PostController {
             return ResponseEntity.status(404).body(Result.builder().status(404).message("찾는 게시글 없음").build());
 
         // postSeq 값 기준으로 게시글 찾기
-        List<CommentRes> comments = postService.getComments(postSeq);
+        List<CommentRes> comments = postService.getCommentList(postSeq);
 
-        if (comments.isEmpty()) ResponseEntity.status(409).body(Result.builder().data(comments).status(409).message("댓글 조회 실패").build());
+        // 댓글 조회가 제대로 안되었을 경우
+        if (comments.isEmpty())
+            return ResponseEntity.status(409).body(Result.builder().data(comments).status(409).message("댓글 조회 실패").build());
         return ResponseEntity.status(200).body(Result.builder().data(comments).status(200).message("댓글 조회 성공").build());
     }
 
@@ -377,6 +379,7 @@ public class PostController {
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         Long userSeq = userDetails.getUser().getUserSeq();
 
+        // 댓글 좋아요 반영
         CommentLike commentLike = postService.likeComment(userSeq, commentSeq);
 
         // 댓글 좋아요가 제대로 반영되지 않았을 경우
