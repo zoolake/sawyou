@@ -2,6 +2,7 @@ package com.sawyou.api.service;
 
 import com.sawyou.api.request.UserUpdateInfoReq;
 import com.sawyou.api.request.UserUpdatePwdReq;
+import com.sawyou.api.response.UserListRes;
 import com.sawyou.api.response.UserRes;
 import com.sawyou.db.entity.*;
 import com.sawyou.db.repository.*;
@@ -15,6 +16,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -176,6 +178,21 @@ public class UserServiceImpl implements UserService {
             followingRepository.save(newFollowing);
             return true;
         }
+    }
+
+    @Override
+    public List<UserListRes> findUserFollowing(Long userSeq) {
+        User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
+
+        return user.getFollowings().stream().map(following -> {
+            Long followingToSeq = following.getFollowingToSeq();
+            User follow = userRepositorySupport.findUserByUserSeq(followingToSeq).get();
+            return UserListRes.builder()
+                    .userId(follow.getUserId())
+                    .userName(follow.getUserName())
+                    .userProfile(follow.getUserProfile())
+                    .build();
+        }).collect(Collectors.toList());
     }
 
     @Override

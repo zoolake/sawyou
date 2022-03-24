@@ -3,6 +3,7 @@ package com.sawyou.api.controller;
 import com.sawyou.api.request.UserLoginPostReq;
 import com.sawyou.api.request.UserUpdateInfoReq;
 import com.sawyou.api.request.UserUpdatePwdReq;
+import com.sawyou.api.response.UserListRes;
 import com.sawyou.api.response.UserLoginPostRes;
 import com.sawyou.common.util.JwtTokenUtil;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -206,6 +208,16 @@ public class UserController {
         User cUser = userService.deleteUser(user);
 
         return ResponseEntity.status(204).body(Result.builder().data(cUser).status(200).message("회원 탈퇴 성공").build());
+    }
+
+    @GetMapping("/following")
+    public ResponseEntity<Result> findUserFollowing(@ApiIgnore Authentication authentication) {
+        if(authentication == null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        Long userSeq = userDetails.getUser().getUserSeq();
+        List<UserListRes> userList = userService.findUserFollowing(userSeq);
+
+        return ResponseEntity.status(200).body(Result.builder().data(userList).status(200).message("팔로잉 목록 조회 성공").build());
     }
 
 
