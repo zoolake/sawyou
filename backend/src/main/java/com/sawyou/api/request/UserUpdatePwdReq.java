@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor @AllArgsConstructor
 @ApiModel("UserUpdatePwdRequest")
 public class UserUpdatePwdReq {
     @ApiModelProperty(name = "유저 비밀번호", example = "your_new_password")
