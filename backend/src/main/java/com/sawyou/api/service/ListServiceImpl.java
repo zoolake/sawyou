@@ -75,7 +75,6 @@ public class ListServiceImpl implements ListService {
     @Override
     public List<PostRes> getPostListUser(Long userSeq) {
         User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
-        System.out.println("user.getPosts() = " + user.getPosts());
         return user.getPosts().stream().filter(post -> !post.isPostIsDelete()).map(post ->
                 PostRes.builder()
                         .postContent(post.getPostContent())
