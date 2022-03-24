@@ -73,8 +73,12 @@ public class PostController {
         if (authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
+        // 토큰에서 사용자의 userSeq 값 추출
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        Long userSeq = userDetails.getUser().getUserSeq();
+
         // postSeq 값 기준으로 게시글 찾기
-        PostRes post = postService.getPost(postSeq);
+        PostRes post = postService.getPost(postSeq, userSeq);
 
         // 게시글 번호에 알맞는 데이터가 없을 경우
         if (post == null)
@@ -118,6 +122,9 @@ public class PostController {
         // 삭제된 게시글일 경우
         if (oPost.isPostIsDelete())
             return ResponseEntity.status(404).body(Result.builder().status(404).message("수정할 게시글 없음").build());
+        // NFT화 된 게시글일 경우
+        if (oPost.isPostIsNft())
+            return ResponseEntity.status(409).body(Result.builder().status(409).message("게시글 수정 실패").build());
         // 토큰의 사용자와 수정할 게시글의 작성자가 다를 경우
         if (oPost.getUser().getUserSeq() != userSeq)
             return ResponseEntity.status(403).body(Result.builder().status(403).message("접근 권한 없음").build());
@@ -162,6 +169,9 @@ public class PostController {
         // 이미 삭제된 게시글일 경우
         if (oPost.isPostIsDelete())
             return ResponseEntity.status(404).body(Result.builder().status(404).message("삭제할 게시글 없음").build());
+        // NFT화 된 게시글일 경우
+        if (oPost.isPostIsNft())
+            return ResponseEntity.status(409).body(Result.builder().status(409).message("게시글 삭제 실패").build());
         // 토큰의 사용자와 삭제할 게시글의 작성자가 다를 경우
         if (oPost.getUser().getUserSeq() != userSeq)
             return ResponseEntity.status(403).body(Result.builder().status(403).message("접근 권한 없음").build());
@@ -261,13 +271,17 @@ public class PostController {
         if (post.isPostIsDelete())
             return ResponseEntity.status(404).body(Result.builder().status(404).message("찾는 게시글 없음").build());
 
+        // 토큰에서 사용자의 userSeq 값 추출
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        Long userSeq = userDetails.getUser().getUserSeq();
+
         // postSeq 값 기준으로 게시글 찾기
-        List<CommentRes> comments = postService.getCommentList(postSeq);
+        List<CommentRes> commentList = postService.getCommentList(postSeq, userSeq);
 
         // 댓글 조회가 제대로 안되었을 경우
-        if (comments.isEmpty())
-            return ResponseEntity.status(409).body(Result.builder().data(comments).status(409).message("댓글 조회 실패").build());
-        return ResponseEntity.status(200).body(Result.builder().data(comments).status(200).message("댓글 조회 성공").build());
+        if (commentList.isEmpty())
+            return ResponseEntity.status(409).body(Result.builder().data(commentList).status(409).message("댓글 조회 실패").build());
+        return ResponseEntity.status(200).body(Result.builder().data(commentList).status(200).message("댓글 조회 성공").build());
     }
 
     @PatchMapping("/comment/{commentSeq}")

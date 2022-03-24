@@ -7,6 +7,7 @@ import lombok.*;
 /**
  * 댓글 정보 조회 API ([GET] /api/v1/post/comment/{postSeq}) 요청에 대한 응답값 정의.
  */
+@Getter
 @Setter
 @Builder
 @NoArgsConstructor
@@ -19,6 +20,8 @@ public class CommentRes {
     String commentWritingTime;
     @ApiModelProperty(name = "댓글 삭제 여부")
     boolean commentIsDelete;
+    @ApiModelProperty(name = "댓글 좋아요 체크 여부")
+    boolean commentIsLike;
     @ApiModelProperty(name = "댓글 작성자 ID")
     String userId;
     @ApiModelProperty(name = "댓글 작성자 이름/닉네임")
