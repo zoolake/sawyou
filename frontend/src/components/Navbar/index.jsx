@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Wrapper from './styles';
 import { Link } from 'react-router-dom'
 import Search from './Search/index'
+import Postmodal from './Postmodal/index'
 
 // MUI
 import AppBar from '@mui/material/AppBar';
@@ -58,25 +59,24 @@ const UserHeader = (props) => {
                   style={{
                     maxWidth: "60px",
                     maxHeight: "60px",
-                    minWidth: "30px",
-                    minHeight: "30px"
+                    minWidth: "40px",
+                    minHeight: "40px"
                   }}
                   >
                     <HomeIcon sx={{ fontSize: 27, color : 'black' }}/>
                 </Button>
 
-                <Button
-                  key={"add"}
-                  onClick={onClickRedirectPathHandler('/add')}
+                <Box
                   style={{
                     maxWidth: "60px",
                     maxHeight: "60px",
-                    minWidth: "30px",
-                    minHeight: "30px"
+                    minWidth: "40px",
+                    minHeight: "40px"
+                    
                   }}
                   >
-                    <AddBoxOutlinedIcon sx={{ fontSize: 27, color : 'black' }}/>
-                </Button>
+                  <Postmodal></Postmodal>
+                </Box>
 
                 <Button
                   key={"trade"}
@@ -84,8 +84,8 @@ const UserHeader = (props) => {
                   style={{
                     maxWidth: "60px",
                     maxHeight: "60px",
-                    minWidth: "30px",
-                    minHeight: "30px"
+                    minWidth: "40px",
+                    minHeight: "40px"
                   }}
                   >
                   <img src="/images/eth.png" />
@@ -96,8 +96,8 @@ const UserHeader = (props) => {
                   style={{
                     maxWidth: "60px",
                     maxHeight: "60px",
-                    minWidth: "30px",
-                    minHeight: "30px"
+                    minWidth: "40px",
+                    minHeight: "40px"
                   }}  >
                   <img src="/images/baseimg_nav.jpg" />
                 </Button>
@@ -132,8 +132,8 @@ const UserHeader = (props) => {
                   style={{
                     maxWidth: "60px",
                     maxHeight: "60px",
-                    minWidth: "30px",
-                    minHeight: "30px"
+                    minWidth: "40px",
+                    minHeight: "40px"
                   }}
                   >
                     <AccountBalanceWalletIcon sx={{ fontSize: 27, color : 'black' }}/>
