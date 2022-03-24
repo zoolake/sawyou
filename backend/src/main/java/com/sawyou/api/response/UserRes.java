@@ -14,19 +14,21 @@ import lombok.*;
 @AllArgsConstructor
 @ApiModel("UserResponse")
 public class UserRes {
-    @ApiModelProperty(name = "User ID")
+    @ApiModelProperty(name = "유저 번호")
+    private Long userSeq;
+    @ApiModelProperty(name = "유저 아이디")
     private String userId;
-    @ApiModelProperty(name = "User Name")
+    @ApiModelProperty(name = "유저 이름/닉네임")
     private String userName;
-    @ApiModelProperty(name = "User Email")
+    @ApiModelProperty(name = "유저 이메일")
     private String userEmail;
-    @ApiModelProperty(name = "User Desc")
+    @ApiModelProperty(name = "유저 소개")
     private String userDesc;
-    @ApiModelProperty(name = "User Profile")
+    @ApiModelProperty(name = "유저 프로필 이미지 링크")
     private String userProfile;
-    @ApiModelProperty(name = "User Following Count")
+    @ApiModelProperty(name = "유저 팔로잉 수")
     private int followingCnt;
-    @ApiModelProperty(name = "User Follower Count")
+    @ApiModelProperty(name = "유저 팔로워 수")
     private int followerCnt;
     @ApiModelProperty(name = "팔로잉 여부")
     private boolean isFollowing;
