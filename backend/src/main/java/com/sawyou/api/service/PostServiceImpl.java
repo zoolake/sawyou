@@ -135,8 +135,52 @@ public class PostServiceImpl implements PostService {
         // 원본 객체에 게시글 내용만 변경
         post.setPostContent(postContent);
 
-        // 쿼리가 정상적으로 실행되었다면, 쿼리에 사용된 객체 return
-        return postRepository.save(post);
+        // 생성된 데이터를 응답 받음(postSeq 생성 후 추출)
+        Post oPost = postRepository.save(post);
+
+        // 데이터가 제대로 생성되지 않았다면 null 리턴
+        if (oPost == null) return null;
+
+        // 해당 게시글과 연결된 해시태그 테이블 데이터 전부 삭제
+        // 쿼리가 정상적으로 실행되었다면, 삭제한 데이터 갯수 반환
+        Long deletePostHashtagCount = postHashtagRepository.deleteByPost_PostSeqEquals(post.getPostSeq());
+
+        // 수정된 게시글 내용에서 해시태그 분리
+        Pattern p = Pattern.compile("\\#([0-9a-zA-Z가-힣]*)");
+        Matcher m = p.matcher(postContent);
+        String extractHashtag;
+
+        // 정규화된 텍스트에서 해시태그 추출
+        while (m.find()) {
+            extractHashtag =
+                    StringUtils.replaceChars(m.group(), "-_+=!@#$%^&*()[]{}|\\;:'\"<>,.?/~`） ", "");
+
+            // 추출된 해시태그가 없으면 다음으로
+            if (extractHashtag.length() < 1)
+                continue;
+
+            // 이미 존재하는 해시태그 찾기(hashtagSeq 추출)
+            Hashtag oHashtag = hashtagRepository.findByHashtagNameEquals(extractHashtag);
+
+            // 해시태그 테이블에 없는 해시태그면 데이터 추가
+            if (oHashtag == null) {
+                Hashtag hashtag = Hashtag.builder()
+                        .hashtagName(extractHashtag)
+                        .build();
+
+                // 생성된 데이터를 응답 받음(hashtagSeq 생성 후 추출)
+                oHashtag = hashtagRepository.save(hashtag);
+            }
+
+            // 게시물에 들어가있는 해시태그를 연결하는 데이터 추가
+            PostHashtag postHashtag = PostHashtag.builder()
+                    .hashtag(oHashtag)
+                    .post(oPost)
+                    .build();
+            postHashtagRepository.save(postHashtag);
+        }
+
+        return oPost;
     }
 
     // 게시글 삭제
