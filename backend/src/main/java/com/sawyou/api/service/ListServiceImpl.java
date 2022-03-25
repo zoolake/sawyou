@@ -112,6 +112,7 @@ public class ListServiceImpl implements ListService {
         return hashtagRepository.findByHashtagNameContains(keyword).stream().map(hashtag -> {
             int cnt = postHashtagRepository.countPostHashtagByHashtag_HashtagSeq(hashtag.getHashtagSeq());
             return HashtagRes.builder()
+                    .hashtagSeq(hashtag.getHashtagSeq())
                     .hashtagName(hashtag.getHashtagName())
                     .hashtagCnt(cnt).build();
         }).collect(Collectors.toList());

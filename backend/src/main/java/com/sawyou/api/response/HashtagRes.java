@@ -11,6 +11,9 @@ import lombok.*;
 @AllArgsConstructor
 @ApiModel("HashtagResponse")
 public class HashtagRes {
+    @ApiModelProperty(name = "해시태그 번호")
+    private Long hashtagSeq;
+
     @ApiModelProperty(name = "해시태그 이름")
     private String hashtagName;
 
