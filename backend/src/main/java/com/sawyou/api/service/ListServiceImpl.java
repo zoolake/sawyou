@@ -52,6 +52,12 @@ public class ListServiceImpl implements ListService {
                             .postIsDelete(post.isPostIsDelete())
                             .postIsNft(post.isPostIsNft())
                             .postIsLike(postLike != null)
+                            .postLikeCnt(post.getPostLikes().size())
+                            .postCommentCnt(
+                                    post.getComments().stream().filter(comment
+                                            -> !comment.isCommentIsDelete()
+                                    ).collect(Collectors.toList()).size()
+                            )
                             .userSeq(user.getUserSeq())
                             .userId(user.getUserId())
                             .userName(user.getUserName())
@@ -78,6 +84,12 @@ public class ListServiceImpl implements ListService {
                         .postIsDelete(post.isPostIsDelete())
                         .postIsNft(post.isPostIsNft())
                         .postIsLike(postLike != null)
+                        .postLikeCnt(post.getPostLikes().size())
+                        .postCommentCnt(
+                                post.getComments().stream().filter(comment
+                                        -> !comment.isCommentIsDelete()
+                                ).collect(Collectors.toList()).size()
+                        )
                         .userSeq(user.getUserSeq())
                         .userId(user.getUserId())
                         .userName(user.getUserName())
@@ -101,6 +113,12 @@ public class ListServiceImpl implements ListService {
                     .postIsDelete(post.isPostIsDelete())
                     .postIsNft(post.isPostIsNft())
                     .postIsLike(postLike != null)
+                    .postLikeCnt(post.getPostLikes().size())
+                    .postCommentCnt(
+                            post.getComments().stream().filter(comment
+                                    -> !comment.isCommentIsDelete()
+                            ).collect(Collectors.toList()).size()
+                    )
                     .userSeq(user.getUserSeq())
                     .userName(user.getUserName())
                     .userId(user.getUserId())
@@ -123,6 +141,12 @@ public class ListServiceImpl implements ListService {
                     .postIsDelete(post.isPostIsDelete())
                     .postIsNft(post.isPostIsNft())
                     .postIsLike(postLike != null)
+                    .postLikeCnt(post.getPostLikes().size())
+                    .postCommentCnt(
+                            post.getComments().stream().filter(comment
+                                    -> !comment.isCommentIsDelete()
+                            ).collect(Collectors.toList()).size()
+                    )
                     .userSeq(user.getUserSeq())
                     .userId(user.getUserId())
                     .userName(user.getUserName())
