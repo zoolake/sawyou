@@ -43,6 +43,7 @@ public class ListServiceImpl implements ListService {
         return postRepository.findAll().stream().filter(post -> !post.isPostIsDelete())
                 .map(post -> {
                     User user = post.getUser();
+                    PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
                     return PostRes.builder()
                             .postSeq(post.getPostSeq())
                             .postContent(post.getPostContent())
@@ -50,6 +51,8 @@ public class ListServiceImpl implements ListService {
                             .postWritingTime(post.getPostWritingTime().toString())
                             .postIsDelete(post.isPostIsDelete())
                             .postIsNft(post.isPostIsNft())
+                            .postIsLike(postLike != null)
+                            .userSeq(user.getUserSeq())
                             .userId(user.getUserId())
                             .userName(user.getUserName())
                             .userProfile(user.getUserProfile()).build();
@@ -65,18 +68,21 @@ public class ListServiceImpl implements ListService {
         followingRepository.findByUser_UserSeq(userSeq).forEach(following -> {
             Long toSeq = following.getFollowingToSeq();
             User user = userRepositorySupport.findUserByUserSeq(toSeq).get();
-            postRepository.findByUser_UserSeqAndPostIsDeleteIsFalse(user.getUserSeq()).forEach(post ->
-                    postResList.add(PostRes.builder()
-                            .postSeq(post.getPostSeq())
-                            .postContent(post.getPostContent())
-                            .postPictureLink(post.getPostPictureLink())
-                            .postWritingTime(post.getPostWritingTime().toString())
-                            .postIsDelete(post.isPostIsDelete())
-                            .postIsNft(post.isPostIsNft())
-                            .userId(user.getUserId())
-                            .userName(user.getUserName())
-                            .userProfile(user.getUserProfile()).build())
-            );
+            postRepository.findByUser_UserSeqAndPostIsDeleteIsFalse(user.getUserSeq()).forEach(post -> {
+                PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
+                postResList.add(PostRes.builder()
+                        .postSeq(post.getPostSeq())
+                        .postContent(post.getPostContent())
+                        .postPictureLink(post.getPostPictureLink())
+                        .postWritingTime(post.getPostWritingTime().toString())
+                        .postIsDelete(post.isPostIsDelete())
+                        .postIsNft(post.isPostIsNft())
+                        .postIsLike(postLike != null)
+                        .userSeq(user.getUserSeq())
+                        .userId(user.getUserId())
+                        .userName(user.getUserName())
+                        .userProfile(user.getUserProfile()).build());
+            });
         });
         return postResList;
     }
@@ -85,18 +91,21 @@ public class ListServiceImpl implements ListService {
     @Override
     public List<PostRes> getPostListUser(Long userSeq) {
         User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
-        return user.getPosts().stream().filter(post -> !post.isPostIsDelete()).map(post ->
-                PostRes.builder()
-                        .postSeq(post.getPostSeq())
-                        .postContent(post.getPostContent())
-                        .postPictureLink(post.getPostPictureLink())
-                        .postWritingTime(post.getPostWritingTime().toString())
-                        .postIsDelete(post.isPostIsDelete())
-                        .postIsNft(post.isPostIsNft())
-                        .userName(user.getUserName())
-                        .userId(user.getUserId())
-                        .userProfile(user.getUserProfile()).build()
-        ).collect(Collectors.toList());
+        return user.getPosts().stream().filter(post -> !post.isPostIsDelete()).map(post -> {
+            PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
+            return PostRes.builder()
+                    .postSeq(post.getPostSeq())
+                    .postContent(post.getPostContent())
+                    .postPictureLink(post.getPostPictureLink())
+                    .postWritingTime(post.getPostWritingTime().toString())
+                    .postIsDelete(post.isPostIsDelete())
+                    .postIsNft(post.isPostIsNft())
+                    .postIsLike(postLike != null)
+                    .userSeq(user.getUserSeq())
+                    .userName(user.getUserName())
+                    .userId(user.getUserId())
+                    .userProfile(user.getUserProfile()).build();
+        }).collect(Collectors.toList());
     }
 
     // 해시태그 게시글 조회
@@ -114,6 +123,7 @@ public class ListServiceImpl implements ListService {
                     .postIsDelete(post.isPostIsDelete())
                     .postIsNft(post.isPostIsNft())
                     .postIsLike(postLike != null)
+                    .userSeq(user.getUserSeq())
                     .userId(user.getUserId())
                     .userName(user.getUserName())
                     .userProfile(user.getUserProfile()).build();
@@ -143,5 +153,4 @@ public class ListServiceImpl implements ListService {
                     .hashtagCnt(cnt).build();
         }).collect(Collectors.toList());
     }
-
 }
