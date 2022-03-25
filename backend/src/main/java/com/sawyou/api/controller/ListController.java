@@ -66,7 +66,7 @@ public class ListController {
         if(lists.isEmpty())
             return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());
 
-        return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("전체 게시글 조회 성공").build());
+        return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("팔로잉 게시글 조회 성공").build());
     }
 
     @GetMapping("/{userSeq}")
@@ -77,7 +77,7 @@ public class ListController {
             @ApiResponse(code = 404, message = "게시글 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> getPostListFollowing(@ApiIgnore Authentication authentication, @PathVariable @ApiParam(value = "게시글 조회할 유저", required = true) Long userSeq) {
+    public ResponseEntity<Result> getPostListUser(@ApiIgnore Authentication authentication, @PathVariable @ApiParam(value = "조회할 유저", required = true) Long userSeq) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
@@ -86,7 +86,27 @@ public class ListController {
         if(lists.isEmpty())
             return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());
 
-        return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("전체 게시글 조회 성공").build());
+        return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("유저 게시글 조회 성공").build());
+    }
+
+    @GetMapping("/hashtag/{hashtagSeq}")
+    @ApiOperation(value = "해시태그 게시글 조회", notes = "해시태그를 포함한 게시글 리스트를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "게시글 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> getPostListHashtag(@ApiIgnore Authentication authentication, @PathVariable @ApiParam(value = "조회할 해시태그", required = true) Long hashtagSeq) {
+        if(authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+
+        List<PostRes> lists = listService.getPostListHashtag(hashtagSeq);
+
+        if(lists.isEmpty())
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());
+
+        return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("해시태그 게시글 조회 성공").build());
     }
 
     @GetMapping("/search/user")

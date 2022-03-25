@@ -20,6 +20,9 @@ public interface ListService {
     // 유저 게시글 조회
     List<PostRes> getPostListUser(Long userSeq);
 
+    // 해시태그 게시글 조회
+    List<PostRes> getPostListHashtag(Long hashtagSeq);
+
     // 계정 검색
     List<UserListRes> searchUserList(String keyword);
 
