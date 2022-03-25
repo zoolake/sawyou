@@ -17,6 +17,6 @@ public class HashtagRes {
     @ApiModelProperty(name = "해시태그 이름")
     private String hashtagName;
 
-    @ApiModelProperty(name = "해시태그 게시글 갯수")
+    @ApiModelProperty(name = "해시태그 게시글 개수")
     private int hashtagCnt;
 }

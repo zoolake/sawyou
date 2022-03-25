@@ -24,6 +24,11 @@ public class CommentRes {
     private boolean commentIsDelete;
     @ApiModelProperty(name = "댓글 좋아요 체크 여부")
     private boolean commentIsLike;
+    @ApiModelProperty(name = "댓글 좋아요 수")
+    private int commentLikeCnt;
+
+    @ApiModelProperty(name = "댓글 작성자 번호")
+    private Long userSeq;
     @ApiModelProperty(name = "댓글 작성자 ID")
     private String userId;
     @ApiModelProperty(name = "댓글 작성자 이름/닉네임")
