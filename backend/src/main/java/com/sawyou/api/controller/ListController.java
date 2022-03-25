@@ -6,11 +6,7 @@ import com.sawyou.api.response.UserListRes;
 import com.sawyou.api.service.ListService;
 import com.sawyou.common.auth.SawyouUserDetails;
 import com.sawyou.common.model.response.Result;
-import com.sawyou.db.entity.Post;
 import io.swagger.annotations.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -108,7 +104,7 @@ public class ListController {
         List<UserListRes> lists = listService.searchUserList(keyword);
 
         if(lists.isEmpty())
-            return ResponseEntity.status(404).body(Result.builder().status(404).message("해당하는 계정 없음").build());
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("해당 계정 없음").build());
 
         return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("계정 검색 성공").build());
     }
@@ -128,7 +124,7 @@ public class ListController {
         List<HashtagRes> lists = listService.searchHashtagList(keyword);
 
         if(lists.isEmpty())
-            return ResponseEntity.status(404).body(Result.builder().status(404).message("해당하는 해시태그 없음").build());
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("해당 해시태그 없음").build());
 
         return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("해시태그 검색 성공").build());
     }
