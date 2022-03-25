@@ -1,8 +1,8 @@
 package com.sawyou.api.service;
 
+import com.sawyou.api.response.HashtagRes;
 import com.sawyou.api.response.PostRes;
 import com.sawyou.api.response.UserListRes;
-import com.sawyou.db.entity.Post;
 
 import java.util.List;
 
@@ -22,4 +22,7 @@ public interface ListService {
 
     // 계정 검색
     List<UserListRes> searchUserList(String keyword);
+
+    // 해시태그 검색
+    List<HashtagRes> searchHashtagList(String keyword);
 }

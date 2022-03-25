@@ -13,4 +13,7 @@ public interface PostHashtagRepository extends JpaRepository<PostHashtag, Long> 
     // postSeq가 같은 데이터 전부 삭제
     @Transactional
     long deleteByPost_PostSeqEquals(Long postSeq);
+
+    // hashtagSeq를 가지고 있는 데이터 count 세기
+    int countPostHashtagByHashtag_HashtagSeq(Long hashtagSeq);
 }
