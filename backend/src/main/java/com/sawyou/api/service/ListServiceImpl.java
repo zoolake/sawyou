@@ -3,6 +3,8 @@ package com.sawyou.api.service;
 import com.sawyou.api.response.HashtagRes;
 import com.sawyou.api.response.PostRes;
 import com.sawyou.api.response.UserListRes;
+import com.sawyou.db.entity.Post;
+import com.sawyou.db.entity.PostLike;
 import com.sawyou.db.entity.User;
 import com.sawyou.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class ListServiceImpl implements ListService {
 
     @Autowired
     private PostHashtagRepository postHashtagRepository;
+
+    @Autowired
+    private PostLikeRepository postLikeRepository;
 
     // 모든 게시글 조회
     @Override
@@ -94,6 +99,27 @@ public class ListServiceImpl implements ListService {
         ).collect(Collectors.toList());
     }
 
+    // 해시태그 게시글 조회
+    @Override
+    public List<PostRes> getPostListHashtag(Long hashtagSeq) {
+        return postHashtagRepository.findPostHashtagByHashtag_HashtagSeq(hashtagSeq).stream().map(postHashtag -> {
+            Post post = postHashtag.getPost();
+            User user = post.getUser();
+            PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
+            return PostRes.builder()
+                    .postSeq(post.getPostSeq())
+                    .postContent(post.getPostContent())
+                    .postPictureLink(post.getPostPictureLink())
+                    .postWritingTime(post.getPostWritingTime().toString())
+                    .postIsDelete(post.isPostIsDelete())
+                    .postIsNft(post.isPostIsNft())
+                    .postIsLike(postLike != null)
+                    .userId(user.getUserId())
+                    .userName(user.getUserName())
+                    .userProfile(user.getUserProfile()).build();
+        }).collect(Collectors.toList());
+    }
+
     // 계정 검색
     @Override
     public List<UserListRes> searchUserList(String keyword) {
@@ -112,6 +138,7 @@ public class ListServiceImpl implements ListService {
         return hashtagRepository.findByHashtagNameContains(keyword).stream().map(hashtag -> {
             int cnt = postHashtagRepository.countPostHashtagByHashtag_HashtagSeq(hashtag.getHashtagSeq());
             return HashtagRes.builder()
+                    .hashtagSeq(hashtag.getHashtagSeq())
                     .hashtagName(hashtag.getHashtagName())
                     .hashtagCnt(cnt).build();
         }).collect(Collectors.toList());
