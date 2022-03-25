@@ -1,8 +1,8 @@
 package com.sawyou.api.service;
 
+import com.sawyou.api.response.HashtagRes;
 import com.sawyou.api.response.PostRes;
 import com.sawyou.api.response.UserListRes;
-import com.sawyou.db.entity.Post;
 import com.sawyou.db.entity.User;
 import com.sawyou.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +26,11 @@ public class ListServiceImpl implements ListService {
     @Autowired
     private FollowingRepository followingRepository;
 
-	@Autowired
-	private PostRepositorySupport postRepositorySupport;
+    @Autowired
+    private HashtagRepository hashtagRepository;
+
+    @Autowired
+    private PostHashtagRepository postHashtagRepository;
 
     // 모든 게시글 조회
     @Override
@@ -94,7 +97,6 @@ public class ListServiceImpl implements ListService {
     // 계정 검색
     @Override
     public List<UserListRes> searchUserList(String keyword) {
-        System.out.println("keyword = " + keyword);
         return userRepositorySupport.findUserByKeyword(keyword).stream().map(user ->
                 UserListRes.builder()
                         .userSeq(user.getUserSeq())
@@ -102,6 +104,17 @@ public class ListServiceImpl implements ListService {
                         .userName(user.getUserName())
                         .userProfile(user.getUserProfile()).build()
         ).collect(Collectors.toList());
+    }
+
+    // 해시태그 검색
+    @Override
+    public List<HashtagRes> searchHashtagList(String keyword) {
+        return hashtagRepository.findByHashtagNameContains(keyword).stream().map(hashtag -> {
+            int cnt = postHashtagRepository.countPostHashtagByHashtag_HashtagSeq(hashtag.getHashtagSeq());
+            return HashtagRes.builder()
+                    .hashtagName(hashtag.getHashtagName())
+                    .hashtagCnt(cnt).build();
+        }).collect(Collectors.toList());
     }
 
 }
