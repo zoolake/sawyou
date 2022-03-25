@@ -7,7 +7,9 @@ import com.sawyou.db.entity.Post;
 import com.sawyou.db.entity.PostLike;
 import com.sawyou.db.entity.User;
 import com.sawyou.db.repository.*;
+import org.checkerframework.checker.units.qual.Length;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,6 +24,9 @@ import java.util.stream.Collectors;
 public class ListServiceImpl implements ListService {
 	@Autowired
 	private PostRepository postRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private UserRepositorySupport userRepositorySupport;
@@ -159,12 +164,37 @@ public class ListServiceImpl implements ListService {
     // 계정 검색
     @Override
     public List<UserListRes> searchUserList(String keyword) {
-        return userRepositorySupport.findUserByKeyword(keyword).stream().map(user ->
-                UserListRes.builder()
-                        .userSeq(user.getUserSeq())
-                        .userId(user.getUserId())
-                        .userName(user.getUserName())
-                        .userProfile(user.getUserProfile()).build()
+        List<User> userList = new ArrayList<>();
+        List<Long> userSeqList = new ArrayList<>();
+
+        // 최상단에 가장 유사한 아이디 3개, 이름 3개 먼저 출력 후 나머지 출력
+        List<User> userIdList = userRepository.findByUserIdStartsWith(keyword, JpaSort.unsafe("Length(userId)"));
+        userIdList.stream().limit(3).forEach(user -> {
+            userList.add(user);
+            userSeqList.add(user.getUserSeq());
+        });
+
+        final int[] cnt = {0};
+        List<User> userNameList = userRepository.findByUserNameStartsWith(keyword, JpaSort.unsafe("Length(userName)"));
+        userNameList.forEach(user -> {
+            if(cnt[0] == 3)
+                return;
+            if(userSeqList.contains(user.getUserSeq()))
+                return;
+            userList.add(user);
+            userSeqList.add(user.getUserSeq());
+            cnt[0]++;
+        });
+
+        userRepositorySupport.findUserByKeyword(keyword).stream().filter(user-> !userSeqList.contains(user.getUserSeq()))
+                .forEach(user -> userList.add(user));
+
+        return userList.stream().map(user ->
+                        UserListRes.builder()
+                                .userSeq(user.getUserSeq())
+                                .userId(user.getUserId())
+                                .userName(user.getUserName())
+                                .userProfile(user.getUserProfile()).build()
         ).collect(Collectors.toList());
     }
 

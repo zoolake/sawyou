@@ -38,7 +38,7 @@ public class UserRepositorySupport {
     // keyword를 포함하는 아이디/이름을 갖는 데이터 조회
     public List<User> findUserByKeyword(String keyword) {
         List<User> userList = jpaQueryFactory.select(qUser).from(qUser)
-                .where(qUser.userId.startsWith(keyword).or(qUser.userName.contains(keyword))).fetch();
+                .where(qUser.userId.startsWith(keyword).or(qUser.userName.startsWith(keyword))).fetch();
         return userList;
     }
 }
