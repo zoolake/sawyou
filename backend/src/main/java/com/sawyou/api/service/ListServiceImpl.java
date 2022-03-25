@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,7 +63,7 @@ public class ListServiceImpl implements ListService {
                             .userId(user.getUserId())
                             .userName(user.getUserName())
                             .userProfile(user.getUserProfile()).build();
-                }).collect(Collectors.toList());
+                }).sorted(Comparator.comparing(PostRes::getPostWritingTime).reversed()).collect(Collectors.toList());
     }
 
     // 팔로잉 게시글 조회
@@ -96,7 +97,7 @@ public class ListServiceImpl implements ListService {
                         .userProfile(user.getUserProfile()).build());
             });
         });
-        return postResList;
+        return postResList.stream().sorted(Comparator.comparing(PostRes::getPostWritingTime).reversed()).collect(Collectors.toList());
     }
 
     // 유저 게시글 조회
@@ -123,7 +124,7 @@ public class ListServiceImpl implements ListService {
                     .userName(user.getUserName())
                     .userId(user.getUserId())
                     .userProfile(user.getUserProfile()).build();
-        }).collect(Collectors.toList());
+        }).sorted(Comparator.comparing(PostRes::getPostWritingTime).reversed()).collect(Collectors.toList());
     }
 
     // 해시태그 게시글 조회
@@ -151,7 +152,8 @@ public class ListServiceImpl implements ListService {
                     .userId(user.getUserId())
                     .userName(user.getUserName())
                     .userProfile(user.getUserProfile()).build();
-        }).collect(Collectors.toList());
+        }).sorted(Comparator.comparing(PostRes::getPostLikeCnt).reversed().thenComparing(Comparator.comparing(PostRes::getPostWritingTime).reversed())).collect(Collectors.toList());
+        // 게시글 좋아요 역순으로 정렬 -> 같으면 시간 역순 정렬
     }
 
     // 계정 검색
@@ -175,6 +177,6 @@ public class ListServiceImpl implements ListService {
                     .hashtagSeq(hashtag.getHashtagSeq())
                     .hashtagName(hashtag.getHashtagName())
                     .hashtagCnt(cnt).build();
-        }).collect(Collectors.toList());
+        }).sorted().collect(Collectors.toList());
     }
 }
