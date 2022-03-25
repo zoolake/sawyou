@@ -3,6 +3,7 @@ import Wrapper from './styles';
 import { Link } from 'react-router-dom'
 import Search from './Search/index'
 import Postmodal from './Postmodal/index'
+import Wallet from './Wallet/index'
 
 // MUI
 import AppBar from '@mui/material/AppBar';
@@ -126,9 +127,8 @@ const UserHeader = (props) => {
                       <Typography textAlign="center">로그아웃</Typography>
                     </MenuItem>    
                 </Menu>
-                <Button
+                <Box
                   key={"wallet"}
-                  onClick={onClickRedirectPathHandler('/wallet')}
                   style={{
                     maxWidth: "60px",
                     maxHeight: "60px",
@@ -136,8 +136,8 @@ const UserHeader = (props) => {
                     minHeight: "40px"
                   }}
                   >
-                    <AccountBalanceWalletIcon sx={{ fontSize: 27, color : 'black' }}/>
-                </Button>
+                    <Wallet sx={{ fontSize: 27, color : 'black' }}/>
+                </Box>
 
             </Box>
 
