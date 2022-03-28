@@ -53,7 +53,8 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<Result> register(
-            @RequestBody @ApiParam(value = "회원가입 정보", required = true) UserRegisterPostReq registerInfo) {
+            @RequestBody @ApiParam(value = "회원가입 정보", required = true) UserRegisterPostReq registerInfo
+    ) {
         User user = userService.createUser(registerInfo);
         if(user == null) return ResponseEntity.status(409).body(Result.builder().status(409).message("회원가입 싪패").build());
         return ResponseEntity.status(201).body(Result.builder().data(user).status(201).message("회원가입 성공").build());
@@ -66,7 +67,9 @@ public class UserController {
             @ApiResponse(code = 409, message = "중복 아이디 있음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> idCheck(@RequestBody @ApiParam(value = "중복체크할 아이디", required = true) Map<String, String> request) {
+    public ResponseEntity<Result> idCheck(
+            @RequestBody @ApiParam(value = "중복체크할 아이디", required = true) Map<String, String> request
+    ) {
         User user = userService.getUserByUserId(request.get("userId"));
         // 중복 아이디가 없는 경우 true 반환
         if(user == null)
@@ -82,7 +85,9 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-    public ResponseEntity<Result> login(@RequestBody @ApiParam(value = "로그인 정보", required = true) UserLoginPostReq loginInfo) {
+    public ResponseEntity<Result> login(
+            @RequestBody @ApiParam(value = "로그인 정보", required = true) UserLoginPostReq loginInfo
+    ) {
         String userId = loginInfo.getUserId();
         String password = loginInfo.getUserPwd();
 
@@ -108,7 +113,10 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> getUserInfo(@ApiIgnore Authentication authentication, @ApiParam(value = "조회할 유저 일련번호", required = true) @PathVariable Long userSeq) {
+    public ResponseEntity<Result> getUserInfo(
+            @ApiIgnore Authentication authentication,
+            @PathVariable @ApiParam(value = "조회할 유저 일련번호", required = true) Long userSeq
+    ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().message("인증 실패").build());
 
@@ -132,7 +140,10 @@ public class UserController {
             @ApiResponse(code = 409, message = "프로필 수정 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> updateUserInfo(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value = "수정할 유저 정보", required = true) UserUpdateInfoReq updateInfo) {
+    public ResponseEntity<Result> updateUserInfo(
+            @ApiIgnore Authentication authentication,
+            @RequestBody @ApiParam(value = "수정할 유저 정보", required = true) UserUpdateInfoReq updateInfo
+    ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().message("인증 실패").build());
 
@@ -155,7 +166,10 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> updateUserPwd(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value = "변경할 비밀번호", required = true) UserUpdatePwdReq updatePwd) {
+    public ResponseEntity<Result> updateUserPwd(
+            @ApiIgnore Authentication authentication,
+            @RequestBody @ApiParam(value = "변경할 비밀번호", required = true) UserUpdatePwdReq updatePwd
+    ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().message("인증 실패").build());
 
@@ -180,7 +194,10 @@ public class UserController {
             @ApiResponse(code = 409, message = "팔로잉 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> followingUser(@ApiIgnore Authentication authentication, @PathVariable @ApiParam(value = "팔로잉(취소)할 유저", required = true) Long followingToSeq) {
+    public ResponseEntity<Result> followingUser(
+            @ApiIgnore Authentication authentication,
+            @PathVariable @ApiParam(value = "팔로잉(취소)할 유저", required = true) Long followingToSeq
+    ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().message("인증 실패").build());
 
@@ -212,7 +229,9 @@ public class UserController {
             @ApiResponse(code = 409, message = "회원탈퇴 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> deleteUser(@ApiIgnore Authentication authentication) {
+    public ResponseEntity<Result> deleteUser(
+            @ApiIgnore Authentication authentication
+    ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().message("인증 실패").build());
 
@@ -237,7 +256,10 @@ public class UserController {
             @ApiResponse(code = 409, message = "목록 조회 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> findUserFollowing(@ApiIgnore Authentication authentication, @PathVariable @ApiParam(value = "팔로잉 목록 조회할 유저", required = true) Long userSeq) {
+    public ResponseEntity<Result> findUserFollowing(
+            @ApiIgnore Authentication authentication,
+            @PathVariable @ApiParam(value = "팔로잉 목록 조회할 유저", required = true) Long userSeq
+    ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
@@ -258,7 +280,10 @@ public class UserController {
             @ApiResponse(code = 409, message = "목록 조회 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> findUserFollower(@ApiIgnore Authentication authentication, @PathVariable @ApiParam(value = "팔로워 목록 조회할 유저", required = true) Long userSeq) {
+    public ResponseEntity<Result> findUserFollower(
+            @ApiIgnore Authentication authentication,
+            @PathVariable @ApiParam(value = "팔로워 목록 조회할 유저", required = true) Long userSeq
+    ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
