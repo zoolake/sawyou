@@ -16,6 +16,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 삭제 처리 되지 않은 게시글 작성시간 역순으로 정렬 후 조회
     Page<Post> findAllByPostIsDeleteFalseOrderByPostWritingTimeDesc(Pageable pageable);
 
-    // userSeq와 같고 삭제 처리 되지 않은 데이터 조회
-    List<Post> findByUser_UserSeqAndPostIsDeleteIsFalse(Long userSeq);
+    // userSeq와 같고 삭제 처리 되지 않은 데이터 작성시간 역순으로 조회
+    List<Post> findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(Long userSeq);
+
+    // userSeq와 같고 삭제 처리 되지 않은 데이터 작성시간 역순으로 조회 (페이징)
+    List<Post> findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(Long userSeq, Pageable pageable);
 }

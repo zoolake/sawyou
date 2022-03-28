@@ -80,7 +80,7 @@ public class ListServiceImpl implements ListService {
         followingRepository.findByUser_UserSeq(userSeq).forEach(following -> {
             Long toSeq = following.getFollowingToSeq();
             User user = userRepositorySupport.findUserByUserSeq(toSeq).get();
-            postRepository.findByUser_UserSeqAndPostIsDeleteIsFalse(user.getUserSeq()).forEach(post -> {
+            postRepository.findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(user.getUserSeq()).forEach(post -> {
                 PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
                 postResList.add(PostRes.builder()
                         .postSeq(post.getPostSeq())
@@ -102,14 +102,15 @@ public class ListServiceImpl implements ListService {
                         .userProfile(user.getUserProfile()).build());
             });
         });
-        return postResList.stream().sorted(Comparator.comparing(PostRes::getPostWritingTime).reversed()).collect(Collectors.toList());
+        return postResList;
     }
 
     // 유저 게시글 조회
     @Override
-    public List<PostRes> getPostListUser(Long userSeq) {
-        User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
-        return user.getPosts().stream().filter(post -> !post.isPostIsDelete()).map(post -> {
+    public List<PostRes> getPostListUser(Long userSeq, Pageable pageable) {
+//        return user.getPosts().stream().filter(post -> !post.isPostIsDelete()).map(post -> {
+        return postRepository.findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(userSeq, pageable).stream().map(post -> {
+            User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
             PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
             return PostRes.builder()
                     .postSeq(post.getPostSeq())
@@ -129,7 +130,7 @@ public class ListServiceImpl implements ListService {
                     .userName(user.getUserName())
                     .userId(user.getUserId())
                     .userProfile(user.getUserProfile()).build();
-        }).sorted(Comparator.comparing(PostRes::getPostWritingTime).reversed()).collect(Collectors.toList());
+        }).collect(Collectors.toList());
     }
 
     // 해시태그 게시글 조회
