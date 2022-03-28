@@ -16,7 +16,7 @@ public interface ListService {
     List<PostRes> getPostListAll(Pageable pageable);
 
     // 팔로잉 게시글 조회
-    List<PostRes> getPostListFollowing(Long userSeq);
+    List<PostRes> getPostListFollowing(Long userSeq, Pageable pageable);
 
     // 유저 게시글 조회
     List<PostRes> getPostListUser(Long userSeq, Pageable pageable);

@@ -59,7 +59,8 @@ public class ListController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<Result> getPostListFollowing(
-            @ApiIgnore Authentication authentication
+            @ApiIgnore Authentication authentication,
+            Pageable pageable
     ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
@@ -67,7 +68,7 @@ public class ListController {
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         Long userSeq = userDetails.getUser().getUserSeq();
 
-        List<PostRes> lists = listService.getPostListFollowing(userSeq);
+        List<PostRes> lists = listService.getPostListFollowing(userSeq, pageable);
 
         if(lists.isEmpty())
             return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());

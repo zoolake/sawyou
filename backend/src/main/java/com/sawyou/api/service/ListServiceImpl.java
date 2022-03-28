@@ -73,7 +73,10 @@ public class ListServiceImpl implements ListService {
 
     // 팔로잉 게시글 조회
     @Override
-    public List<PostRes> getPostListFollowing(Long userSeq) {
+    public List<PostRes> getPostListFollowing(Long userSeq, Pageable pageable) {
+        Long offset = pageable.getOffset();
+        int size = pageable.getPageSize();
+
         // 팔로잉 리스트에서 유저가 팔로잉하는 유저 목록을 찾고 -> 그 유저가 작성한 글 리스트를 뽑는다.
         List<PostRes> postResList = new ArrayList<>();
 
@@ -102,7 +105,7 @@ public class ListServiceImpl implements ListService {
                         .userProfile(user.getUserProfile()).build());
             });
         });
-        return postResList;
+        return postResList.stream().skip(offset).limit(size).collect(Collectors.toList());
     }
 
     // 유저 게시글 조회
