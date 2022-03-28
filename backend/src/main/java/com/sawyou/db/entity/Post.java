@@ -51,4 +51,7 @@ public class Post {
     @JsonIgnore
     @OneToMany(mappedBy = "post")
     private List<PostLike> postLikes;
+
+    @OneToOne(mappedBy = "post")
+    private NFT nft;
 }
