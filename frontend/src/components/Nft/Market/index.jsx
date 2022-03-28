@@ -2,15 +2,14 @@ import React from 'react';
 import Wrapper from './styles';
 import './slick.css';
 import './slick-theme.css'
-import Box from '@material-ui/core/Box';
-import { 
-  Card,
-  CardActionArea,
-  CardHeader,
-  CardMedia,
-  Avatar,
-  Typography,
- } from '@material-ui/core';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
+import Avatar from '@mui/material/Avatar';
+import Typography from '@mui/material/Typography';
+
 import Slider from "react-slick";
 // import "slick-carousel/slick/slick.css"; 
 // import "slick-carousel/slick/slick-theme.css";
