@@ -8,6 +8,7 @@ import com.sawyou.common.auth.SawyouUserDetails;
 import com.sawyou.common.model.response.Result;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -35,12 +36,13 @@ public class ListController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<Result> getPostListAll(
-            @ApiIgnore Authentication authentication
+            @ApiIgnore Authentication authentication,
+            Pageable pageable
     ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
-        List<PostRes> lists = listService.getPostListAll();
+        List<PostRes> lists = listService.getPostListAll(pageable);
 
         if(lists.isEmpty())
             return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());

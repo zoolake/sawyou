@@ -3,6 +3,7 @@ package com.sawyou.api.service;
 import com.sawyou.api.response.HashtagRes;
 import com.sawyou.api.response.PostRes;
 import com.sawyou.api.response.UserListRes;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public interface ListService {
 
     // 모든 게시글 조회
-    List<PostRes> getPostListAll();
+    List<PostRes> getPostListAll(Pageable pageable);
 
     // 팔로잉 게시글 조회
     List<PostRes> getPostListFollowing(Long userSeq);
