@@ -5,6 +5,7 @@ import Login from './pages/User/LoginPage';
 import Main from './pages/MainPage';
 import Profile from './pages/ProfilePage';
 import Market from './pages/Nft/MarketPage';
+import Product from './pages/Nft/ProductPage';
 
 function App() {
   let isLoggedIn = false;
@@ -17,6 +18,7 @@ function App() {
         <Route path="*" element={<NotFound/>} />
         <Route path="/profile/" element={<Profile/>} />
         <Route path="/nft/market" element={<Market/>} />
+        <Route path="/nft/market/product" element={<Product/>} />
       </Routes>
     </BrowserRouter>
   );
