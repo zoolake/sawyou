@@ -135,8 +135,14 @@ public class ListServiceImpl implements ListService {
 
     // 해시태그 게시글 조회
     @Override
-    public List<PostRes> getPostListHashtag(Long hashtagSeq) {
-        return postHashtagRepository.findPostHashtagByHashtag_HashtagSeq(hashtagSeq).stream().map(postHashtag -> {
+    public List<PostRes> getPostListHashtag(Long hashtagSeq, Pageable pageable) {
+        int page = pageable.getPageNumber();
+        Long offset = pageable.getOffset();
+        int size = pageable.getPageSize();
+        System.out.println("page = " + page);
+        System.out.println("offset = " + offset);
+        System.out.println("size = " + size);
+        List<PostRes> list =  postHashtagRepository.findPostHashtagByHashtag_HashtagSeq(hashtagSeq).stream().map(postHashtag -> {
             Post post = postHashtag.getPost();
             User user = post.getUser();
             PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
@@ -160,6 +166,8 @@ public class ListServiceImpl implements ListService {
                     .userProfile(user.getUserProfile()).build();
         }).sorted(Comparator.comparing(PostRes::getPostLikeCnt).reversed().thenComparing(Comparator.comparing(PostRes::getPostWritingTime).reversed())).collect(Collectors.toList());
         // 게시글 좋아요 역순으로 정렬 -> 같으면 시간 역순 정렬
+        return list.stream().skip(offset).limit(size).collect(Collectors.toList());
+//        return list;
     }
 
     // 계정 검색

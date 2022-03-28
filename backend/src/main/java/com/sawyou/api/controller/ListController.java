@@ -109,12 +109,13 @@ public class ListController {
     })
     public ResponseEntity<Result> getPostListHashtag(
             @ApiIgnore Authentication authentication,
-            @PathVariable @ApiParam(value = "조회할 해시태그", required = true) Long hashtagSeq
+            @PathVariable @ApiParam(value = "조회할 해시태그", required = true) Long hashtagSeq,
+            Pageable pageable
     ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
-        List<PostRes> lists = listService.getPostListHashtag(hashtagSeq);
+        List<PostRes> lists = listService.getPostListHashtag(hashtagSeq, pageable);
 
         if(lists.isEmpty())
             return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());
