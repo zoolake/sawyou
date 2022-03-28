@@ -34,7 +34,9 @@ public class ListController {
             @ApiResponse(code = 404, message = "게시글 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> getPostListAll(@ApiIgnore Authentication authentication) {
+    public ResponseEntity<Result> getPostListAll(
+            @ApiIgnore Authentication authentication
+    ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
@@ -54,7 +56,9 @@ public class ListController {
             @ApiResponse(code = 404, message = "게시글 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> getPostListFollowing(@ApiIgnore Authentication authentication) {
+    public ResponseEntity<Result> getPostListFollowing(
+            @ApiIgnore Authentication authentication
+    ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
@@ -77,7 +81,10 @@ public class ListController {
             @ApiResponse(code = 404, message = "게시글 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> getPostListUser(@ApiIgnore Authentication authentication, @PathVariable @ApiParam(value = "조회할 유저", required = true) Long userSeq) {
+    public ResponseEntity<Result> getPostListUser(
+            @ApiIgnore Authentication authentication,
+            @PathVariable @ApiParam(value = "조회할 유저", required = true) Long userSeq
+    ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
@@ -97,7 +104,10 @@ public class ListController {
             @ApiResponse(code = 404, message = "게시글 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> getPostListHashtag(@ApiIgnore Authentication authentication, @PathVariable @ApiParam(value = "조회할 해시태그", required = true) Long hashtagSeq) {
+    public ResponseEntity<Result> getPostListHashtag(
+            @ApiIgnore Authentication authentication,
+            @PathVariable @ApiParam(value = "조회할 해시태그", required = true) Long hashtagSeq
+    ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
@@ -117,7 +127,10 @@ public class ListController {
             @ApiResponse(code = 404, message = "유저 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> searchUserList(@ApiIgnore Authentication authentication, @ApiParam(value = "검색할 키워드", required = true) @RequestBody String keyword) {
+    public ResponseEntity<Result> searchUserList(
+            @ApiIgnore Authentication authentication,
+            @RequestBody @ApiParam(value = "검색할 키워드", required = true) String keyword
+    ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
@@ -137,7 +150,10 @@ public class ListController {
             @ApiResponse(code = 404, message = "해시태그 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> searchHashtagList(@ApiIgnore Authentication authentication, @ApiParam(value = "검색할 키워드", required = true) @RequestBody String keyword) {
+    public ResponseEntity<Result> searchHashtagList(
+            @ApiIgnore Authentication authentication,
+            @RequestBody @ApiParam(value = "검색할 키워드", required = true) String keyword
+    ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 

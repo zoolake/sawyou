@@ -41,7 +41,10 @@ public class PostController {
             @ApiResponse(code = 409, message = "게시글 작성 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> writePost(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value = "게시글 작성 데이터", required = true) PostWriteReq postWrite) {
+    public ResponseEntity<Result> writePost(
+            @ApiIgnore Authentication authentication,
+            @RequestBody @ApiParam(value = "게시글 작성 데이터", required = true) PostWriteReq postWrite
+    ) {
         // 인증 토큰 확인, 올바르지 않은 토큰일 경우에도 401 자동 리턴
         if (authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
@@ -68,7 +71,10 @@ public class PostController {
             @ApiResponse(code = 409, message = "게시글 조회 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> getPostInfo(@ApiIgnore Authentication authentication, @ApiParam(value = "조회할 게시글 일련번호", required = true) @PathVariable Long postSeq) {
+    public ResponseEntity<Result> getPostInfo(
+            @ApiIgnore Authentication authentication,
+            @PathVariable @ApiParam(value = "조회할 게시글 일련번호", required = true) Long postSeq
+    ) {
         // 인증 토큰 확인, 올바르지 않은 토큰일 경우에도 401 자동 리턴
         if (authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());

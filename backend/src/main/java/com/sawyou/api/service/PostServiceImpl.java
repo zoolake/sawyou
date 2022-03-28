@@ -124,6 +124,13 @@ public class PostServiceImpl implements PostService {
                 .postIsDelete(post.isPostIsDelete())
                 .postIsNft(post.isPostIsNft())
                 .postIsLike(postLike != null)
+                .postLikeCnt(post.getPostLikes().size())
+                .postCommentCnt(
+                        post.getComments().stream().filter(comment
+                                -> !comment.isCommentIsDelete()
+                        ).collect(Collectors.toList()).size()
+                )
+                .userSeq(post.getUser().getUserSeq())
                 .userId(post.getUser().getUserId())
                 .userName(post.getUser().getUserName())
                 .userProfile(post.getUser().getUserProfile())
@@ -282,6 +289,8 @@ public class PostServiceImpl implements PostService {
                             .commentWritingTime(comment.getCommentWritingTime().toString())
                             .commentIsDelete(comment.isCommentIsDelete())
                             .commentIsLike(commentLike != null)
+                            .commentLikeCnt(comment.getCommentLikes().size())
+                            .userSeq(comment.getUser().getUserSeq())
                             .userId(comment.getUser().getUserId())
                             .userName(comment.getUser().getUserName())
                             .userProfile(comment.getUser().getUserProfile())
