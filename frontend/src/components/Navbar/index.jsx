@@ -81,7 +81,7 @@ const UserHeader = (props) => {
 
                 <Button
                   key={"trade"}
-                  onClick={onClickRedirectPathHandler('/trade')}
+                  onClick={onClickRedirectPathHandler('/nft/market')}
                   style={{
                     maxWidth: "60px",
                     maxHeight: "60px",
@@ -118,7 +118,7 @@ const UserHeader = (props) => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                    <MenuItem key={"profile"} onClick={onClickRedirectPathHandler('/')}>
+                    <MenuItem key={"profile"} onClick={onClickRedirectPathHandler('/profile')}>
                       <Typography textAlign="center">프로필</Typography>
                     </MenuItem>
 
