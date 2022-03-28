@@ -7,7 +7,7 @@ import Profile from './pages/ProfilePage';
 import Market from './pages/Nft/MarketPage';
 
 function App() {
-  let isLoggedIn = false;
+  let isLoggedIn = true;
 
   return (
     <BrowserRouter>

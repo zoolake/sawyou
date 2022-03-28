@@ -1,6 +1,9 @@
 import React from 'react';
 import Wrapper from './styles';
-import { ImageList, ImageListItem, makeStyles, Grid } from '@material-ui/core';
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
+import { makeStyles } from '@mui/styles';
+import Grid from "@mui/material/Grid";
 
 
 const useStyles = makeStyles((theme) => ({

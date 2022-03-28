@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import Wrapper from './styles';
-import { 
-  Avatar,
-  Button
- } from '@material-ui/core';
+import Avatar from '@mui/material/Avatar';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
