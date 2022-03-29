@@ -60,7 +60,8 @@ public class ListServiceImpl implements ListService {
                     .postIsLike(postLike != null)
                     .postLikeCnt(post.getPostLikes().size())
                     .postCommentCnt(
-                            post.getComments().stream().filter(comment -> !comment.isCommentIsDelete()
+                            post.getComments().stream().filter(comment ->
+                                            !comment.isCommentIsDelete()
                                     ).collect(Collectors.toList()).size()
                             )
                     .userSeq(user.getUserSeq())
@@ -94,8 +95,8 @@ public class ListServiceImpl implements ListService {
                         .postIsLike(postLike != null)
                         .postLikeCnt(post.getPostLikes().size())
                         .postCommentCnt(
-                                post.getComments().stream().filter(comment
-                                        -> !comment.isCommentIsDelete()
+                                post.getComments().stream().filter(comment ->
+                                        !comment.isCommentIsDelete()
                                 ).collect(Collectors.toList()).size()
                         )
                         .userSeq(user.getUserSeq())
@@ -124,8 +125,8 @@ public class ListServiceImpl implements ListService {
                     .postIsLike(postLike != null)
                     .postLikeCnt(post.getPostLikes().size())
                     .postCommentCnt(
-                            post.getComments().stream().filter(comment
-                                    -> !comment.isCommentIsDelete()
+                            post.getComments().stream().filter(comment ->
+                                    !comment.isCommentIsDelete()
                             ).collect(Collectors.toList()).size()
                     )
                     .userSeq(user.getUserSeq())
@@ -158,8 +159,8 @@ public class ListServiceImpl implements ListService {
                     .postIsLike(postLike != null)
                     .postLikeCnt(post.getPostLikes().size())
                     .postCommentCnt(
-                            post.getComments().stream().filter(comment
-                                    -> !comment.isCommentIsDelete()
+                            post.getComments().stream().filter(comment ->
+                                    !comment.isCommentIsDelete()
                             ).collect(Collectors.toList()).size()
                     )
                     .userSeq(user.getUserSeq())
