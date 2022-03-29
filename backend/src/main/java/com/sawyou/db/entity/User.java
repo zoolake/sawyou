@@ -60,4 +60,7 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<PostLike> postLikes;
+
+    @OneToMany(mappedBy = "user")
+    private List<NFT> NFTs;
 }
