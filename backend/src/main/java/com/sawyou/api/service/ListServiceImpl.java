@@ -111,7 +111,6 @@ public class ListServiceImpl implements ListService {
     // 유저 게시글 조회
     @Override
     public List<PostRes> getPostListUser(Long userSeq, Pageable pageable) {
-//        return user.getPosts().stream().filter(post -> !post.isPostIsDelete()).map(post -> {
         return postRepository.findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(userSeq, pageable).stream().map(post -> {
             User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
             PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
@@ -139,13 +138,10 @@ public class ListServiceImpl implements ListService {
     // 해시태그 게시글 조회
     @Override
     public List<PostRes> getPostListHashtag(Long hashtagSeq, Pageable pageable) {
-        int page = pageable.getPageNumber();
         Long offset = pageable.getOffset();
         int size = pageable.getPageSize();
-        System.out.println("page = " + page);
-        System.out.println("offset = " + offset);
-        System.out.println("size = " + size);
-        List<PostRes> list =  postHashtagRepository.findPostHashtagByHashtag_HashtagSeq(hashtagSeq).stream().map(postHashtag -> {
+
+        List<PostRes> list = postHashtagRepository.findPostHashtagByHashtag_HashtagSeq(hashtagSeq).stream().map(postHashtag -> {
             Post post = postHashtag.getPost();
             User user = post.getUser();
             PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
@@ -170,7 +166,6 @@ public class ListServiceImpl implements ListService {
         }).sorted(Comparator.comparing(PostRes::getPostLikeCnt).reversed().thenComparing(Comparator.comparing(PostRes::getPostWritingTime).reversed())).collect(Collectors.toList());
         // 게시글 좋아요 역순으로 정렬 -> 같으면 시간 역순 정렬
         return list.stream().skip(offset).limit(size).collect(Collectors.toList());
-//        return list;
     }
 
     // 계정 검색
