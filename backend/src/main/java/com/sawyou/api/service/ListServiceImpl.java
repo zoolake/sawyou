@@ -9,6 +9,7 @@ import com.sawyou.db.entity.User;
 import com.sawyou.db.repository.*;
 import org.checkerframework.checker.units.qual.Length;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 
@@ -45,71 +46,9 @@ public class ListServiceImpl implements ListService {
 
     // 모든 게시글 조회
     @Override
-    public List<PostRes> getPostListAll() {
-        return postRepository.findAll().stream().filter(post -> !post.isPostIsDelete())
-                .map(post -> {
-                    User user = post.getUser();
-                    PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
-                    return PostRes.builder()
-                            .postSeq(post.getPostSeq())
-                            .postContent(post.getPostContent())
-                            .postPictureLink(post.getPostPictureLink())
-                            .postWritingTime(post.getPostWritingTime().toString())
-                            .postIsDelete(post.isPostIsDelete())
-                            .postIsNft(post.isPostIsNft())
-                            .postIsLike(postLike != null)
-                            .postLikeCnt(post.getPostLikes().size())
-                            .postCommentCnt(
-                                    post.getComments().stream().filter(comment
-                                            -> !comment.isCommentIsDelete()
-                                    ).collect(Collectors.toList()).size()
-                            )
-                            .userSeq(user.getUserSeq())
-                            .userId(user.getUserId())
-                            .userName(user.getUserName())
-                            .userProfile(user.getUserProfile()).build();
-                }).sorted(Comparator.comparing(PostRes::getPostWritingTime).reversed()).collect(Collectors.toList());
-    }
-
-    // 팔로잉 게시글 조회
-    @Override
-    public List<PostRes> getPostListFollowing(Long userSeq) {
-        // 팔로잉 리스트에서 유저가 팔로잉하는 유저 목록을 찾고 -> 그 유저가 작성한 글 리스트를 뽑는다.
-        List<PostRes> postResList = new ArrayList<>();
-
-        followingRepository.findByUser_UserSeq(userSeq).forEach(following -> {
-            Long toSeq = following.getFollowingToSeq();
-            User user = userRepositorySupport.findUserByUserSeq(toSeq).get();
-            postRepository.findByUser_UserSeqAndPostIsDeleteIsFalse(user.getUserSeq()).forEach(post -> {
-                PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
-                postResList.add(PostRes.builder()
-                        .postSeq(post.getPostSeq())
-                        .postContent(post.getPostContent())
-                        .postPictureLink(post.getPostPictureLink())
-                        .postWritingTime(post.getPostWritingTime().toString())
-                        .postIsDelete(post.isPostIsDelete())
-                        .postIsNft(post.isPostIsNft())
-                        .postIsLike(postLike != null)
-                        .postLikeCnt(post.getPostLikes().size())
-                        .postCommentCnt(
-                                post.getComments().stream().filter(comment
-                                        -> !comment.isCommentIsDelete()
-                                ).collect(Collectors.toList()).size()
-                        )
-                        .userSeq(user.getUserSeq())
-                        .userId(user.getUserId())
-                        .userName(user.getUserName())
-                        .userProfile(user.getUserProfile()).build());
-            });
-        });
-        return postResList.stream().sorted(Comparator.comparing(PostRes::getPostWritingTime).reversed()).collect(Collectors.toList());
-    }
-
-    // 유저 게시글 조회
-    @Override
-    public List<PostRes> getPostListUser(Long userSeq) {
-        User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
-        return user.getPosts().stream().filter(post -> !post.isPostIsDelete()).map(post -> {
+    public List<PostRes> getPostListAll(Pageable pageable) {
+        return postRepository.findAllByPostIsDeleteFalseOrderByPostWritingTimeDesc(pageable).stream().map(post -> {
+            User user = post.getUser();
             PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
             return PostRes.builder()
                     .postSeq(post.getPostSeq())
@@ -121,21 +60,88 @@ public class ListServiceImpl implements ListService {
                     .postIsLike(postLike != null)
                     .postLikeCnt(post.getPostLikes().size())
                     .postCommentCnt(
-                            post.getComments().stream().filter(comment
-                                    -> !comment.isCommentIsDelete()
+                            post.getComments().stream().filter(comment ->
+                                            !comment.isCommentIsDelete()
+                                    ).collect(Collectors.toList()).size()
+                            )
+                    .userSeq(user.getUserSeq())
+                    .userId(user.getUserId())
+                    .userName(user.getUserName())
+                    .userProfile(user.getUserProfile()).build();
+        }).sorted(Comparator.comparing(PostRes::getPostWritingTime).reversed()).collect(Collectors.toList());
+    }
+
+    // 팔로잉 게시글 조회
+    @Override
+    public List<PostRes> getPostListFollowing(Long userSeq, Pageable pageable) {
+        Long offset = pageable.getOffset();
+        int size = pageable.getPageSize();
+
+        // 팔로잉 리스트에서 유저가 팔로잉하는 유저 목록을 찾고 -> 그 유저가 작성한 글 리스트를 뽑는다.
+        List<PostRes> postResList = new ArrayList<>();
+
+        followingRepository.findByUser_UserSeq(userSeq).forEach(following -> {
+            Long toSeq = following.getFollowingToSeq();
+            User user = userRepositorySupport.findUserByUserSeq(toSeq).get();
+            postRepository.findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(user.getUserSeq()).forEach(post -> {
+                PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
+                postResList.add(PostRes.builder()
+                        .postSeq(post.getPostSeq())
+                        .postContent(post.getPostContent())
+                        .postPictureLink(post.getPostPictureLink())
+                        .postWritingTime(post.getPostWritingTime().toString())
+                        .postIsDelete(post.isPostIsDelete())
+                        .postIsNft(post.isPostIsNft())
+                        .postIsLike(postLike != null)
+                        .postLikeCnt(post.getPostLikes().size())
+                        .postCommentCnt(
+                                post.getComments().stream().filter(comment ->
+                                        !comment.isCommentIsDelete()
+                                ).collect(Collectors.toList()).size()
+                        )
+                        .userSeq(user.getUserSeq())
+                        .userId(user.getUserId())
+                        .userName(user.getUserName())
+                        .userProfile(user.getUserProfile()).build());
+            });
+        });
+        return postResList.stream().skip(offset).limit(size).collect(Collectors.toList());
+    }
+
+    // 유저 게시글 조회
+    @Override
+    public List<PostRes> getPostListUser(Long userSeq, Pageable pageable) {
+        return postRepository.findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(userSeq, pageable).stream().map(post -> {
+            User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
+            PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
+            return PostRes.builder()
+                    .postSeq(post.getPostSeq())
+                    .postContent(post.getPostContent())
+                    .postPictureLink(post.getPostPictureLink())
+                    .postWritingTime(post.getPostWritingTime().toString())
+                    .postIsDelete(post.isPostIsDelete())
+                    .postIsNft(post.isPostIsNft())
+                    .postIsLike(postLike != null)
+                    .postLikeCnt(post.getPostLikes().size())
+                    .postCommentCnt(
+                            post.getComments().stream().filter(comment ->
+                                    !comment.isCommentIsDelete()
                             ).collect(Collectors.toList()).size()
                     )
                     .userSeq(user.getUserSeq())
                     .userName(user.getUserName())
                     .userId(user.getUserId())
                     .userProfile(user.getUserProfile()).build();
-        }).sorted(Comparator.comparing(PostRes::getPostWritingTime).reversed()).collect(Collectors.toList());
+        }).collect(Collectors.toList());
     }
 
     // 해시태그 게시글 조회
     @Override
-    public List<PostRes> getPostListHashtag(Long hashtagSeq) {
-        return postHashtagRepository.findPostHashtagByHashtag_HashtagSeq(hashtagSeq).stream().map(postHashtag -> {
+    public List<PostRes> getPostListHashtag(Long hashtagSeq, Pageable pageable) {
+        Long offset = pageable.getOffset();
+        int size = pageable.getPageSize();
+
+        List<PostRes> list = postHashtagRepository.findPostHashtagByHashtag_HashtagSeq(hashtagSeq).stream().map(postHashtag -> {
             Post post = postHashtag.getPost();
             User user = post.getUser();
             PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
@@ -149,8 +155,8 @@ public class ListServiceImpl implements ListService {
                     .postIsLike(postLike != null)
                     .postLikeCnt(post.getPostLikes().size())
                     .postCommentCnt(
-                            post.getComments().stream().filter(comment
-                                    -> !comment.isCommentIsDelete()
+                            post.getComments().stream().filter(comment ->
+                                    !comment.isCommentIsDelete()
                             ).collect(Collectors.toList()).size()
                     )
                     .userSeq(user.getUserSeq())
@@ -159,6 +165,7 @@ public class ListServiceImpl implements ListService {
                     .userProfile(user.getUserProfile()).build();
         }).sorted(Comparator.comparing(PostRes::getPostLikeCnt).reversed().thenComparing(Comparator.comparing(PostRes::getPostWritingTime).reversed())).collect(Collectors.toList());
         // 게시글 좋아요 역순으로 정렬 -> 같으면 시간 역순 정렬
+        return list.stream().skip(offset).limit(size).collect(Collectors.toList());
     }
 
     // 계정 검색
@@ -190,11 +197,11 @@ public class ListServiceImpl implements ListService {
                 .forEach(user -> userList.add(user));
 
         return userList.stream().map(user ->
-                        UserListRes.builder()
-                                .userSeq(user.getUserSeq())
-                                .userId(user.getUserId())
-                                .userName(user.getUserName())
-                                .userProfile(user.getUserProfile()).build()
+                UserListRes.builder()
+                        .userSeq(user.getUserSeq())
+                        .userId(user.getUserId())
+                        .userName(user.getUserName())
+                        .userProfile(user.getUserProfile()).build()
         ).collect(Collectors.toList());
     }
 
