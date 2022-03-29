@@ -694,3 +694,6 @@ gradle-app.setting
 **/application.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,java,solidity,soliditytruffle,react,reactnative,intellij,intellij+iml,intellij+all,visualstudiocode,gradle
+backend/src/generated
+*.gz
+backend/src/main/resources/application.properties
