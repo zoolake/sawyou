@@ -48,27 +48,26 @@ public class ListServiceImpl implements ListService {
     @Override
     public List<PostRes> getPostListAll(Pageable pageable) {
         return postRepository.findAllByPostIsDeleteFalseOrderByPostWritingTimeDesc(pageable).stream().map(post -> {
-                    User user = post.getUser();
-                    PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
-                    return PostRes.builder()
-                            .postSeq(post.getPostSeq())
-                            .postContent(post.getPostContent())
-                            .postPictureLink(post.getPostPictureLink())
-                            .postWritingTime(post.getPostWritingTime().toString())
-                            .postIsDelete(post.isPostIsDelete())
-                            .postIsNft(post.isPostIsNft())
-                            .postIsLike(postLike != null)
-                            .postLikeCnt(post.getPostLikes().size())
-                            .postCommentCnt(
-                                    post.getComments().stream().filter(comment
-                                            -> !comment.isCommentIsDelete()
+            User user = post.getUser();
+            PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
+            return PostRes.builder()
+                    .postSeq(post.getPostSeq())
+                    .postContent(post.getPostContent())
+                    .postPictureLink(post.getPostPictureLink())
+                    .postWritingTime(post.getPostWritingTime().toString())
+                    .postIsDelete(post.isPostIsDelete())
+                    .postIsNft(post.isPostIsNft())
+                    .postIsLike(postLike != null)
+                    .postLikeCnt(post.getPostLikes().size())
+                    .postCommentCnt(
+                            post.getComments().stream().filter(comment -> !comment.isCommentIsDelete()
                                     ).collect(Collectors.toList()).size()
                             )
-                            .userSeq(user.getUserSeq())
-                            .userId(user.getUserId())
-                            .userName(user.getUserName())
-                            .userProfile(user.getUserProfile()).build();
-                }).sorted(Comparator.comparing(PostRes::getPostWritingTime).reversed()).collect(Collectors.toList());
+                    .userSeq(user.getUserSeq())
+                    .userId(user.getUserId())
+                    .userName(user.getUserName())
+                    .userProfile(user.getUserProfile()).build();
+        }).sorted(Comparator.comparing(PostRes::getPostWritingTime).reversed()).collect(Collectors.toList());
     }
 
     // 팔로잉 게시글 조회
@@ -202,11 +201,11 @@ public class ListServiceImpl implements ListService {
                 .forEach(user -> userList.add(user));
 
         return userList.stream().map(user ->
-                        UserListRes.builder()
-                                .userSeq(user.getUserSeq())
-                                .userId(user.getUserId())
-                                .userName(user.getUserName())
-                                .userProfile(user.getUserProfile()).build()
+                UserListRes.builder()
+                        .userSeq(user.getUserSeq())
+                        .userId(user.getUserId())
+                        .userName(user.getUserName())
+                        .userProfile(user.getUserProfile()).build()
         ).collect(Collectors.toList());
     }
 
