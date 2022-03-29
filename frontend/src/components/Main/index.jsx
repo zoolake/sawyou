@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import Wrapper from './styles';
 import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-
+// import { cat } from '../../api/user.jsx'
 
 
 const Main = () => {
@@ -12,6 +13,17 @@ const Main = () => {
   const [commentArray, setCommentArray] = useState([]);
   const [isValid, setIsValid] = useState(false);
   const onChange = event => setComment(event.target.value);
+  const [imgurl, setImgurl] = useState([''])
+
+  // const onCat = (e) => {
+  //   e.preventDefault();
+  //   const data = 'AT'
+  //   async function A(){
+  //     const res = await cat(data)
+  //     console.log(res.data) 
+  // }
+  // A()
+  // }
 
   const onSubmit = event => {
     event.preventDefault();
