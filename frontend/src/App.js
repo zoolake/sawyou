@@ -13,12 +13,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/accounts/signup" element={<Signup/>} />
+        <Route path="/signup" element={<Signup/>} />
         <Route exact path="/" element={isLoggedIn ? <Main/> : <Login/>} />
         <Route path="*" element={<NotFound/>} />
-        <Route path="/profile/" element={<Profile/>} />
-        <Route path="/nft/market" element={<Market/>} />
-        <Route path="/nft/market/product" element={<Product/>} />
+        <Route path="/profile" element={<Profile/>} />
+        <Route path="/nft" element={<Market/>} />
+        <Route path="/nft/product" element={<Product/>} />
       </Routes>
     </BrowserRouter>
   );
