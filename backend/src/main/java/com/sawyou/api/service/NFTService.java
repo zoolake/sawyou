@@ -1,4 +1,6 @@
 package com.sawyou.api.service;
+
+import com.sawyou.api.response.NftInfoRes;
 import com.sawyou.api.response.NftListRes;
 import com.sawyou.api.response.NftOnSaleDetailRes;
 import com.sawyou.api.response.NftOnSaleRes;
@@ -13,4 +15,7 @@ public interface NFTService {
     // 유저가 보유중인 NFT 조회
     List<NftListRes> getNftList(Long userSeq);
     public NftOnSaleDetailRes getOnSale (Long nftSeq);
+
+    // NFT 상세 조회 성공
+    NftInfoRes getNftInfo(Long nftSeq);
 }
