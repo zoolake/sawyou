@@ -3,6 +3,7 @@ package com.sawyou.db.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 
@@ -18,11 +19,11 @@ public class NFT {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nftSeq;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq")
     private User user;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_seq")
     private Post post;
 
@@ -34,7 +35,7 @@ public class NFT {
     private String nftDesc;
     private String nftOwnerAddress;
     private Long nftTokenId;
-    private String nftCreatedAT;
+    private String nftCreatedAt;
     private String nftPictureLink;
 
 
