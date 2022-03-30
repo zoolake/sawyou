@@ -1,22 +1,30 @@
 import React from 'react';
 import Wrapper from './styles';
-import { ImageList, ImageListItem, makeStyles, Grid } from '@material-ui/core';
+import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import ListModal from './ListModal/index'
+import NftModal from './NftModal/index'
 
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    height: 140,
-    width: 100,
-  },
-  control: {
-    padding: theme.spacing(2),
-  },
-}));
 
 const Profile = () => {
+
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      height: 140,
+      width: 100,
+    },
+    control: {
+      padding: theme.spacing(2),
+    },
+  }));
+  
   const itemData = [
     {
       img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
@@ -67,11 +75,95 @@ const Profile = () => {
       title: 'Bike',
     },
   ]
+
+  const itemData2 = [
+    {
+      img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
+      title: 'Burger',
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+      title: 'Breakfast',
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
+      title: 'Camera',
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
+      title: 'Tomato basil',
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
+      title: 'Sea star',
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
+      title: 'Bike',
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
+      title: 'Honey',
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
+      title: 'Basketball',
+    },
+  ]
+  
   const [spacing, setSpacing] = React.useState(2);
   const classes = useStyles();
+  const [alignment, setAlignment] = React.useState('1');
+
+
+  const handleAlignment = (event, newAlignment) => {
+    if (newAlignment !== null) {
+      setAlignment(newAlignment);
+    }
+  };
 
   const handleChange = (event) => {
     setSpacing(Number(event.target.value));
+  }
+
+  const My = () => {
+
+    return (    
+      <div>
+      <Grid container className={classes.root} spacing={2}>
+        <Grid item xs={12}>
+          <ImageList cols={3} gap={16}>
+            {itemData.map((item) => (
+              <ImageListItem className="myimg" key={item.img}>
+                <ListModal item={item}>
+                </ListModal>
+              </ImageListItem>
+            ))}
+          </ImageList>              
+        </Grid>              
+      </Grid>
+    </div>
+    )    
+  }
+  
+  const Nft = () => {
+
+    return (    
+      <div>
+      <Grid container className={classes.root} spacing={2}>
+        <Grid item xs={12}>
+          <ImageList cols={3} gap={16}>
+            {itemData2.map((item) => (
+              <ImageListItem className="myimg">
+                <NftModal key={item.img} item={item}>
+                </NftModal>
+              </ImageListItem>
+            ))}
+          </ImageList>              
+        </Grid>              
+      </Grid>
+    </div>
+    )    
   }
 
   return (
@@ -132,24 +224,30 @@ const Profile = () => {
               </div>
             </section>
           </header>
-          <div>
-            <Grid container className={classes.root} spacing={2}>
-              <Grid item xs={12}>
-                <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164} gap={16}>
-                  {itemData.map((item) => (
-                    <ImageListItem key={item.img} className="myimg">
-                      <img
-                        src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-                        srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                        alt={item.title}
-                        loading="lazy"
-                      />
-                    </ImageListItem>
-                  ))}
-                </ImageList>              
-              </Grid>              
-            </Grid>
-          </div>
+    <Box
+    sx={{display: 'flex', borderTop: 1, borderColor: 'grey.300', height:50, mb:3}}>
+      <ToggleButtonGroup
+        value={alignment}
+        exclusive
+        onChange={handleAlignment}
+        size={'small'}
+        sx={{mx: "auto", width:'40%' }}
+      >
+        <ToggleButton value="1" aria-label="left aligned"
+        sx={{width:'33%',border:0}}>
+          내 게시글
+        </ToggleButton>
+        <ToggleButton value="2" aria-label="centered" sx={{width:'33%', border:0}}>
+          소유한 NFT
+        </ToggleButton>
+        <ToggleButton value="3" aria-label="right aligned" sx={{width:'33%', border:0}}>
+          판매중 NFT
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </Box>
+      { alignment === '1' && <My></My> }
+      { alignment === '2' && <Nft></Nft> }
+      { alignment === '3' && <Nft></Nft> }
         </div>
       </main>
     </Wrapper>
