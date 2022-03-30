@@ -4,6 +4,7 @@ import com.sawyou.db.entity.NFT;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface NFTRepository extends JpaRepository<NFT, Long> {
 
@@ -12,5 +13,5 @@ public interface NFTRepository extends JpaRepository<NFT, Long> {
 
     List<NFT> findByUser_UserSeq(Long userSeq);
 
-    NFT findByNftSeq(Long nftSeq);
+    Optional<NFT> findByNftSeq(Long nftSeq);
 }

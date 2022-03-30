@@ -54,7 +54,7 @@ public class NftOnSaleDetailRes {
         this.nftTitle = sale.getNft().getNftTitle();
         this.nftDesc = sale.getNft().getNftDesc();
         this.nftTokenId = sale.getNft().getNftTokenId();
-        this.nftCreatedAt = sale.getNft().getNftCreatedAt();
+        this.nftCreatedAt = sale.getNft().getNftCreatedAt().toString();
     }
 
 

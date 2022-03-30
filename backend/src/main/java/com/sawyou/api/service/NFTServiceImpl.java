@@ -1,18 +1,23 @@
 package com.sawyou.api.service;
 
+import com.sawyou.api.request.NftMintReq;
 import com.sawyou.api.response.NftInfoRes;
 import com.sawyou.api.response.NftListRes;
 import com.sawyou.api.response.NftOnSaleDetailRes;
 import com.sawyou.api.response.NftOnSaleRes;
 import com.sawyou.db.entity.NFT;
+import com.sawyou.db.entity.Post;
 import com.sawyou.db.entity.User;
 import com.sawyou.db.repository.NFTRepository;
+import com.sawyou.db.repository.PostRepository;
 import com.sawyou.db.repository.SaleRepository;
+import com.sawyou.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -24,6 +29,10 @@ public class NFTServiceImpl implements NFTService {
     private NFTRepository nftRepository;
     @Autowired
     private SaleRepository saleRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private PostRepository postRepository;
 
     //  판매여부를 확인하여 판매중인 sale 정보를 가져온다.
     //  sale정보를 통해 NftOnSaleRes를 완성시킨다.
@@ -50,7 +59,7 @@ public class NFTServiceImpl implements NFTService {
 
     //  판매여부를 확인하여 판매중인 sale 정보를 가져온다.
     //  sale정보를 통해 NftOnSaleRes를 완성시킨다.
-    public NftOnSaleDetailRes getOnSale (Long nftSeq) {
+    public NftOnSaleDetailRes getOnSale(Long nftSeq) {
         NftOnSaleDetailRes sale = new NftOnSaleDetailRes(saleRepository.findByNftNftSeqAndIsSold(nftSeq, true));
         return sale;
     }
@@ -62,7 +71,10 @@ public class NFTServiceImpl implements NFTService {
     @Override
     @Transactional(readOnly = true)
     public NftInfoRes getNftInfo(Long nftSeq) {
-        NFT nft = nftRepository.findByNftSeq(nftSeq);
+        Optional<NFT> optionalNFT = nftRepository.findByNftSeq(nftSeq);
+        if(optionalNFT.isEmpty()) return null;
+
+        NFT nft = optionalNFT.get();
         User user = nft.getUser();
         return NftInfoRes.builder()
                 .userSeq(user.getUserSeq())
@@ -73,8 +85,19 @@ public class NFTServiceImpl implements NFTService {
                 .nftTitle(nft.getNftTitle())
                 .nftDesc(nft.getNftAuthorName())
                 .nftTokenId(nft.getNftTokenId())
-                .nftCreateAt(nft.getNftCreatedAt())
+                .nftCreateAt(nft.getNftCreatedAt().toString())
                 .build();
+    }
+
+    @Override
+    public NFT mintNft(NftMintReq request, Long userSeq) {
+        Optional<User> user = userRepository.findByUserSeq(userSeq);
+        if (user.isEmpty()) return null;
+
+        Optional<Post> post = postRepository.findById(request.getPostSeq());
+        if (post.isEmpty()) return null;
+
+        return nftRepository.save(request.toEntity(user.get(), post.get()));
     }
 
 }
