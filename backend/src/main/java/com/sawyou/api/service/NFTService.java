@@ -1,8 +1,7 @@
 package com.sawyou.api.service;
-
 import com.sawyou.api.response.NftListRes;
+import com.sawyou.api.response.NftOnSaleDetailRes;
 import com.sawyou.api.response.NftOnSaleRes;
-
 import java.util.List;
 
 /**
@@ -11,7 +10,7 @@ import java.util.List;
 public interface NFTService {
     //판매중인 NFT 조회
     public List<NftOnSaleRes> getOnSaleList ();
-
     // 유저가 보유중인 NFT 조회
     List<NftListRes> getNftList(Long userSeq);
+    public NftOnSaleDetailRes getOnSale (Long nftSeq);
 }

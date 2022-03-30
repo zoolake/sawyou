@@ -20,6 +20,8 @@ public class NftOnSaleRes {
     private Long nftSeq;
     @ApiModelProperty(name="판매자 이름")
     private String sellerName;
+    @ApiModelProperty(name="판매자 아이디")
+    private String sellerId;
     @ApiModelProperty(name="판매자 프로필 이미지 링크 ")
     private String sellerProfile;
     @ApiModelProperty(name="판매 가격")
@@ -34,11 +36,13 @@ public class NftOnSaleRes {
     public NftOnSaleRes(Sale sale){
         this.nftSeq = sale.getNft().getNftSeq();
         this.sellerName = sale.getNft().getUser().getUserName();
+        this.sellerId = sale.getNft().getUser().getUserId();
         this.sellerProfile = sale.getNft().getUser().getUserProfile();
         this.salePrice = sale.getSalePrice();
         this.salestartDate = sale.getSaleStartDate();
         this.saleEndDate = sale.getSaleEndDate();
         this.nftPictureLink = sale.getNft().getNftPictureLink();
+
     }
 
 }

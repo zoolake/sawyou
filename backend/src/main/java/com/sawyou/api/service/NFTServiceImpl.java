@@ -1,6 +1,7 @@
 package com.sawyou.api.service;
 
 import com.sawyou.api.response.NftListRes;
+import com.sawyou.api.response.NftOnSaleDetailRes;
 import com.sawyou.api.response.NftOnSaleRes;
 import com.sawyou.db.entity.NFT;
 import com.sawyou.db.repository.NFTRepository;
@@ -43,6 +44,13 @@ public class NFTServiceImpl implements NFTService {
         return nftList.stream()
                 .map(nft -> new NftListRes(nft.getNftSeq(), nft.getNftPictureLink()))
                 .collect(Collectors.toList());
+    }
+
+    //  판매여부를 확인하여 판매중인 sale 정보를 가져온다.
+    //  sale정보를 통해 NftOnSaleRes를 완성시킨다.
+    public NftOnSaleDetailRes getOnSale (Long nftSeq){
+        NftOnSaleDetailRes sale = new NftOnSaleDetailRes(saleRepository.findByNftNftSeqAndIsSold(nftSeq,true));
+        return sale;
     }
 
 }
