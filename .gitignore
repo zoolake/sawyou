@@ -697,3 +697,4 @@ gradle-app.setting
 backend/src/generated
 *.gz
 backend/src/main/resources/application.properties
+backend/src/main/resources/application.properties

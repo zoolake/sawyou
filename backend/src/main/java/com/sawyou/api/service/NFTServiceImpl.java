@@ -1,10 +1,13 @@
 package com.sawyou.api.service;
 
+import com.sawyou.api.response.NftInfoRes;
 import com.sawyou.api.response.NftListRes;
 import com.sawyou.api.response.NftOnSaleRes;
 import com.sawyou.db.entity.NFT;
+import com.sawyou.db.entity.User;
 import com.sawyou.db.repository.NFTRepository;
 import com.sawyou.db.repository.SaleRepository;
+import com.sawyou.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +46,28 @@ public class NFTServiceImpl implements NFTService {
         return nftList.stream()
                 .map(nft -> new NftListRes(nft.getNftSeq(), nft.getNftPictureLink()))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * NFT 상세 조회
+     * written by 문준호
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public NftInfoRes getNftInfo(Long nftSeq) {
+        NFT nft = nftRepository.findByNftSeq(nftSeq);
+        User user = nft.getUser();
+        return NftInfoRes.builder()
+                .userSeq(user.getUserSeq())
+                .nftOwnerAddress(nft.getNftOwnerAddress())
+                .nftOwnerName(user.getUserName())
+                .nftPictureLink(nft.getNftPictureLink())
+                .nftAuthorName(nft.getNftAuthorName())
+                .nftTitle(nft.getNftTitle())
+                .nftDesc(nft.getNftAuthorName())
+                .nftTokenId(nft.getNftTokenId())
+                .nftCreateAt(nft.getNftCreatedAt())
+                .build();
     }
 
 }

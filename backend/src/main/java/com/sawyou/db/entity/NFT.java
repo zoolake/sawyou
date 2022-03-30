@@ -18,11 +18,11 @@ public class NFT {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nftSeq;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq")
     private User user;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_seq")
     private Post post;
 
@@ -40,7 +40,7 @@ public class NFT {
     @Column(name = "nft_token_id")
     private Long nftTokenId;
     @Column(name = "nft_created_at")
-    private String nftCreatedAT;
+    private String nftCreatedAt;
     @Column(name = "nft_picture_link")
     private String nftPictureLink;
 
