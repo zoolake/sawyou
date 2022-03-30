@@ -1,12 +1,13 @@
 package com.sawyou.api.service;
 
 import com.sawyou.api.request.NftMintReq;
+import com.sawyou.api.request.NftSaleReq;
 import com.sawyou.api.response.NftInfoRes;
 import com.sawyou.api.response.NftListRes;
 import com.sawyou.api.response.NftOnSaleDetailRes;
 import com.sawyou.api.response.NftOnSaleRes;
 import com.sawyou.db.entity.NFT;
-
+import com.sawyou.db.entity.Sale;
 import java.util.List;
 
 /**
@@ -14,11 +15,13 @@ import java.util.List;
  */
 public interface NFTService {
     //판매중인 NFT 조회
-    public List<NftOnSaleRes> getOnSaleList ();
+    List<NftOnSaleRes> getOnSaleList ();
     // 유저가 보유중인 NFT 조회
     List<NftListRes> getNftList(Long userSeq);
-    public NftOnSaleDetailRes getOnSale (Long nftSeq);
-
+    // 판매중인 NFT 상세조회
+    NftOnSaleDetailRes getOnSale (Long nftSeq);
+    // NFT 판매
+    Sale sale (NftSaleReq nftSaleReq);
     // NFT 상세 조회 성공
     NftInfoRes getNftInfo(Long nftSeq);
 
