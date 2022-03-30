@@ -10,6 +10,8 @@ public interface NFTRepository extends JpaRepository<NFT, Long> {
 
     @Override
     List<NFT> findAll();
+
     List<NFT> findByUser_UserSeq(Long userSeq);
+
     Optional<NFT> findByNftSeq(Long nftSeq);
 }

@@ -1,9 +1,12 @@
 package com.sawyou.api.service;
+
+import com.sawyou.api.request.NftMintReq;
 import com.sawyou.api.request.NftSaleReq;
 import com.sawyou.api.response.NftInfoRes;
 import com.sawyou.api.response.NftListRes;
 import com.sawyou.api.response.NftOnSaleDetailRes;
 import com.sawyou.api.response.NftOnSaleRes;
+import com.sawyou.db.entity.NFT;
 import com.sawyou.db.entity.Sale;
 import java.util.List;
 
@@ -21,4 +24,7 @@ public interface NFTService {
     Sale sale (NftSaleReq nftSaleReq);
     // NFT 상세 조회 성공
     NftInfoRes getNftInfo(Long nftSeq);
+
+    // NFT 민팅
+    NFT mintNft(NftMintReq request, Long userSeq);
 }

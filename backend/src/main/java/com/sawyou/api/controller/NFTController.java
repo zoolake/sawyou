@@ -1,12 +1,15 @@
 package com.sawyou.api.controller;
 
+import com.sawyou.api.request.NftMintReq;
 import com.sawyou.api.request.NftSaleReq;
 import com.sawyou.api.response.NftInfoRes;
 import com.sawyou.api.response.NftListRes;
 import com.sawyou.api.response.NftOnSaleDetailRes;
 import com.sawyou.api.response.NftOnSaleRes;
 import com.sawyou.api.service.NFTService;
+import com.sawyou.common.auth.SawyouUserDetails;
 import com.sawyou.common.model.response.Result;
+import com.sawyou.db.entity.NFT;
 import com.sawyou.db.entity.Sale;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
 import java.util.List;
 
 /**
@@ -82,45 +86,65 @@ public class NFTController {
         if (authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
-		List<NftOnSaleRes> nftOnSaleRes = nftService.getOnSaleList();
-		if(nftOnSaleRes.isEmpty())
-			return ResponseEntity.status(404).body(Result.builder().status(404).message("판매중인 NFT가 없음").build());
-		return ResponseEntity.status(200).body(Result.builder().status(200).data(nftOnSaleRes).message("판매중인 NFT조회 성공").build());
-	}
+        List<NftOnSaleRes> nftOnSaleRes = nftService.getOnSaleList();
+        if (nftOnSaleRes.isEmpty())
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("판매중인 NFT가 없음").build());
+        return ResponseEntity.status(200).body(Result.builder().status(200).data(nftOnSaleRes).message("판매중인 NFT조회 성공").build());
+    }
 
-	@GetMapping("market/{nftSeq}")
-	@ApiOperation(value = "판매중인 NFT 상세 조회", notes = "판매중인 특정 NFT를 조회한다.")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "성공"),
-			@ApiResponse(code = 401, message = "인증 실패"),
-			@ApiResponse(code = 404, message = "판매중인 NFT가 없음"),
-			@ApiResponse(code = 500, message = "서버 오류")
-	})
-	public ResponseEntity<Result> getOnSale(@ApiIgnore Authentication authentication, @PathVariable Long nftSeq){
-		if(authentication==null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+    @GetMapping("market/{nftSeq}")
+    @ApiOperation(value = "판매중인 NFT 상세 조회", notes = "판매중인 특정 NFT를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "판매중인 NFT가 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> getOnSale(@ApiIgnore Authentication authentication, @PathVariable Long nftSeq) {
+        if (authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
-		NftOnSaleDetailRes nftOnSaleDetailRes = nftService.getOnSale(nftSeq);
-		if(nftOnSaleDetailRes==null)
-			return ResponseEntity.status(404).body(Result.builder().status(404).message("판매중인 NFT가 없음").build());
-		return ResponseEntity.status(200).body(Result.builder().status(200).data(nftOnSaleDetailRes).message("판매중인 NFT 상세 조회 성공").build());
-	}
+        NftOnSaleDetailRes nftOnSaleDetailRes = nftService.getOnSale(nftSeq);
+        if (nftOnSaleDetailRes == null)
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("판매중인 NFT가 없음").build());
+        return ResponseEntity.status(200).body(Result.builder().status(200).data(nftOnSaleDetailRes).message("판매중인 NFT 상세 조회 성공").build());
+    }
 
-	@PostMapping("sale")
-	@ApiOperation(value = "NFT 판매", notes = "NFT판매 정보를 입력하고 판매한다.")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "성공"),
-			@ApiResponse(code = 401, message = "인증 실패"),
-			@ApiResponse(code = 404, message = "NFT가 없음"),
-			@ApiResponse(code = 409, message = "NFT 판매 실패"),
-			@ApiResponse(code = 500, message = "서버 오류")
-	})
-	public ResponseEntity<Result> sale(@ApiIgnore Authentication authentication, @RequestBody NftSaleReq nftSaleReq){
-		if(authentication==null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
-		Sale sale = nftService.sale(nftSaleReq);
-		if(sale==null)
-			return ResponseEntity.status(409).body(Result.builder().status(409).message("판매 실패").build());
-		return ResponseEntity.status(200).body(Result.builder().status(200).message("성공").build());
-	}
+    @PostMapping("sale")
+    @ApiOperation(value = "NFT 판매", notes = "NFT판매 정보를 입력하고 판매한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "NFT가 없음"),
+            @ApiResponse(code = 409, message = "NFT 판매 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> sale(@ApiIgnore Authentication authentication, @RequestBody NftSaleReq nftSaleReq) {
+        if (authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+        Sale sale = nftService.sale(nftSaleReq);
+        if (sale == null)
+            return ResponseEntity.status(409).body(Result.builder().status(409).message("판매 실패").build());
+        return ResponseEntity.status(200).body(Result.builder().status(200).message("성공").build());
+    }
 
+    @PostMapping("/mint")
+    @ApiOperation(value = "NFT 민팅", notes = "NFT를 민팅한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 409, message = "민팅 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> mintNft(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value = "NFT 민팅 데이터", required = true) NftMintReq request) {
+        //로그인이 되어있지 않다면
+        if (authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
+        SawyouUserDetails details = (SawyouUserDetails) authentication.getDetails();
+        NFT nft = nftService.mintNft(request, details.getUser().getUserSeq());
+        if (nft == null) return ResponseEntity.status(409).body(Result.builder().status(409).message("민팅 실패").build());
+
+        return ResponseEntity.status(200).body(Result.builder().status(201).message("민팅 성공").build());
+    }
 }

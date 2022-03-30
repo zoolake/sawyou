@@ -24,4 +24,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // 키워드를 포함하는 이름 데이터 검색
     @Query(value = "SELECT u from User u where u.userName like :keyword%")
     List<User> findByUserNameStartsWith(String keyword, Sort sort);
+
+    // userSeq 로 검색
+    Optional<User> findByUserSeq(Long userSeq);
 }

@@ -1,11 +1,13 @@
 package com.sawyou.db.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -25,6 +27,7 @@ public class NFT {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_seq")
     private Post post;
+
     /**
      * <수정>
      * sale과의 관게를 1:N 관계로 수정
@@ -33,11 +36,17 @@ public class NFT {
      */
     @OneToMany(mappedBy = "nft")
     private List<Sale> sale;
+
     private String nftAuthorName;
     private String nftTitle;
     private String nftDesc;
     private String nftOwnerAddress;
     private Long nftTokenId;
-    private String nftCreatedAt;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @Generated(GenerationTime.INSERT)
+    @Column
+    private LocalDateTime nftCreatedAt;
+
     private String nftPictureLink;
 }
