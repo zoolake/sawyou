@@ -3,6 +3,11 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   position: relative;
   top: 70px;
+  .img2 {
+    width: 100%;
+    height: 100%;
+  }
+
 
   .profile_main {
     flex-grow: 1;
