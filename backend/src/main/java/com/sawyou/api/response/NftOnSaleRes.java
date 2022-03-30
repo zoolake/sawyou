@@ -39,8 +39,8 @@ public class NftOnSaleRes {
         this.sellerId = sale.getNft().getUser().getUserId();
         this.sellerProfile = sale.getNft().getUser().getUserProfile();
         this.salePrice = sale.getSalePrice();
-        this.salestartDate = sale.getSaleStartDate();
-        this.saleEndDate = sale.getSaleEndDate();
+        this.salestartDate = sale.getSaleStartDate().toString();
+        this.saleEndDate = sale.getSaleEndDate().toString();
         this.nftPictureLink = sale.getNft().getNftPictureLink();
 
     }

@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @ApiModel("NftSaleRequest")
 public class NftSaleReq {
@@ -13,9 +15,9 @@ public class NftSaleReq {
     @ApiModelProperty(name = "판매 가격", example = "your_price")
     private Long salePrice;
     @ApiModelProperty(name = "판매 시작 시점", example = "your_startDate")
-    private String saleStartDate;
+    private LocalDateTime saleStartDate;
     @ApiModelProperty(name = "판매 종료 시점", example = "your_endDate")
-    private String saleEndDate;
+    private LocalDateTime saleEndDate;
     @ApiModelProperty(name = "sale컨트랙트 CA", example = "your_saleCA")
     private String saleContractAddress;
 

@@ -42,9 +42,11 @@ public class NFT {
     private String nftDesc;
     private String nftOwnerAddress;
     private Long nftTokenId;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     @Generated(GenerationTime.INSERT)
     @Column
     private LocalDateTime nftCreatedAt;
+
     private String nftPictureLink;
 }

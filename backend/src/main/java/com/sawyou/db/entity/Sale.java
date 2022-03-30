@@ -1,8 +1,12 @@
 package com.sawyou.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -25,8 +29,17 @@ public class Sale {
     @JoinColumn(name = "nft_seq")
     private NFT nft;
     private Long salePrice;
-    private String saleStartDate;
-    private String saleEndDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @Generated(GenerationTime.INSERT)
+    @Column
+    private LocalDateTime saleStartDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @Generated(GenerationTime.INSERT)
+    @Column
+    private LocalDateTime saleEndDate;
+
     private String saleContractAddress;
     private Boolean isSold;
 }

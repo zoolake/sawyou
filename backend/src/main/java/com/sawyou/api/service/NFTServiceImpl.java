@@ -84,7 +84,7 @@ public class NFTServiceImpl implements NFTService {
                 .builder()
                 .saleContractAddress(nftSaleReq.getSaleContractAddress())
                 .saleStartDate(nftSaleReq.getSaleStartDate())
-                .saleEndDate(nftSaleReq.getSaleStartDate())
+                .saleEndDate(nftSaleReq.getSaleEndDate())
                 .salePrice(nftSaleReq.getSalePrice())
                 .isSold(true)
                 .nft(NFT.builder()
