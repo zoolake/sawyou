@@ -60,7 +60,7 @@ public class UserController {
         return ResponseEntity.status(201).body(Result.builder().data(user).status(201).message("회원가입 성공").build());
     }
 
-    @GetMapping("/idcheck")
+    @PostMapping("/idcheck")
     @ApiOperation(value = "아이디 중복 검사", notes = "현재 입력된 아이디가 이미 가입되어있는 아이디인지 확인한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "중복 아이디 없음"),
