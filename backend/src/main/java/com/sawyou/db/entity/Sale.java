@@ -32,4 +32,6 @@ public class Sale {
     private LocalDateTime saleEndDate;
     private String saleContractAddress;
     private Boolean isSold;
+
+
 }

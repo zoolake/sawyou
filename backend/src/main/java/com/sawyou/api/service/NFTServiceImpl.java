@@ -82,7 +82,7 @@ public class NFTServiceImpl implements NFTService {
      */
     @Transactional
     public Sale sale(NftSaleReq nftSaleReq) {
-        LocalDateTime now=LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
         Sale sale = Sale
                 .builder()
                 .saleContractAddress(nftSaleReq.getSaleContractAddress())
@@ -152,27 +152,17 @@ public class NFTServiceImpl implements NFTService {
         Long userSeq = UserSeq;
         String owner = nftPurchaseReq.getNftOwnerAddress();
         Long nftSeq = nftPurchaseReq.getNftSeq();
-        Long postSeq = nftPurchaseReq.getPostSeq();
 
 //      판매중인 sale을 조회
         Sale sale = saleRepository.findByNftNftSeqAndIsSold(nftSeq, false);
-        return sale.builder()
-                .isSold(true)
-                .nft(NFT
-                        .builder()
-                        .nftSeq(nftSeq)
-                        .nftOwnerAddress(owner)
-                        .user(User
-                                .builder()
-                                .userSeq(userSeq)
-                                .build()
-                        )
-                        .post(Post
-                                .builder()
-                                .postSeq(postSeq)
-                                .build()
-                        ).build()
-                ).build();
+        NFT nft = nftRepository.findByNftSeq(nftSeq).get();
+        User user = userRepository.findByUserSeq(UserSeq).get();
+
+        sale.setIsSold(true);
+        nft.setNftOwnerAddress(owner);
+        nft.setUser(user);
+        sale.setNft(nft);
+        return sale;
     }
 
 

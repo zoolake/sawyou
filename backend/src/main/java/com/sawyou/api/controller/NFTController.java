@@ -163,7 +163,7 @@ public class NFTController {
     public ResponseEntity<Result> purchase(@ApiIgnore Authentication authentication, @RequestBody NftPurchaseReq nftPurchaseReq){
         if(authentication==null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
         SawyouUserDetails details = (SawyouUserDetails) authentication.getDetails();
-        nftService.purchase(nftPurchaseReq,details.getUser().getUserSeq());
+        Sale sale = nftService.purchase(nftPurchaseReq,details.getUser().getUserSeq());
         return ResponseEntity.status(200).body(Result.builder().status(201).message("구매 성공").build());
     }
 }
