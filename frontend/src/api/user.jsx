@@ -9,7 +9,7 @@ const instance = createInstance();
 // }
 
 // 회원가입
-export const Signup = (data) => {
+export const RegisterUser = (data) => {
   try {
     const res = instance.post(`/user/signup`, data)
     return res
@@ -18,13 +18,14 @@ export const Signup = (data) => {
   }
 }
 
-// 회원가입
+// 아이디 중복체크
 export const IdCheck = (data) => {
   try {
-    const res = instance.get(`/user/signup/idcheck`, data)
+    const res = instance.post(`/user/idcheck`, data)
     return res
   } catch (error) {
     console.log(error)
+    return error
   }
 }
 

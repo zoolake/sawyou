@@ -8,6 +8,7 @@ from '@mui/material';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Wrapper from './styles';
+import { RegisterUser, IdCheck } from '../../../api/user';
 
 const Signup = () =>{
   const [id, setId] = useState('');
@@ -18,6 +19,7 @@ const Signup = () =>{
   const [confirmPasswordWarning, SetConfirmPasswordWarning] = useState(true);
   const [emailWarning, setEmailWarning] = useState(true);
   const [idWaring, setIdWaring] = useState(true);
+  const [idcheck, setIdCheck] = useState(true);
 
 
   const onSubmit = (e) => {
@@ -39,16 +41,23 @@ const Signup = () =>{
     }
 
     const body = {
-      id : id,
-      password : password,
-      name : name,
-      email : email
+      userId : id,
+      userPwd : password,
+      userName : name,
+      userEmail : email
     };
+    RegisterUser(body)
     console.log(body)
   };
 
   // Coustom Hook 이전
-  const onChangeId = (e) => {
+  const onChangeId = async (e) => {
+    const body = {
+      userId : e.target.value
+    };
+    var idcheck = await IdCheck(body)
+    console.log(idcheck.data.data)
+
     var reg_id = /^[a-zA-Z0-9_]{6,16}$/;
     if(!reg_id.test(e.target.value)){
       setIdWaring(true);
@@ -56,6 +65,10 @@ const Signup = () =>{
     else{
       setIdWaring(false);
       setId(e.target.value);
+    }
+
+    if(!idcheck.data.data) {
+      setIdCheck(false);
     }
   }
 
