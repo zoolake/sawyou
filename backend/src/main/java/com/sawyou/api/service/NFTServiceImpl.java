@@ -1,6 +1,7 @@
 package com.sawyou.api.service;
 
 import com.sawyou.api.request.NftMintReq;
+import com.sawyou.api.request.NftPurchaseReq;
 import com.sawyou.api.request.NftSaleReq;
 import com.sawyou.api.response.NftInfoRes;
 import com.sawyou.api.response.NftListRes;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,7 +44,7 @@ public class NFTServiceImpl implements NFTService {
      * written by 정혁
      */
     public List<NftOnSaleRes> getOnSaleList() {
-        List<NftOnSaleRes> sale = saleRepository.findByIsSold(true).stream()
+        List<NftOnSaleRes> sale = saleRepository.findByIsSold(false).stream()
                 .map(Sale -> new NftOnSaleRes(Sale))
                 .collect(Collectors.toList());
         return sale;
@@ -68,7 +70,7 @@ public class NFTServiceImpl implements NFTService {
      * written by 정혁
      */
     public NftOnSaleDetailRes getOnSale(Long nftSeq) {
-        NftOnSaleDetailRes sale = new NftOnSaleDetailRes(saleRepository.findByNftNftSeqAndIsSold(nftSeq, true));
+        NftOnSaleDetailRes sale = new NftOnSaleDetailRes(saleRepository.findByNftNftSeqAndIsSold(nftSeq, false));
         return sale;
     }
 
@@ -80,13 +82,14 @@ public class NFTServiceImpl implements NFTService {
      */
     @Transactional
     public Sale sale(NftSaleReq nftSaleReq) {
+        LocalDateTime now=LocalDateTime.now();
         Sale sale = Sale
                 .builder()
                 .saleContractAddress(nftSaleReq.getSaleContractAddress())
-                .saleStartDate(nftSaleReq.getSaleStartDate())
-                .saleEndDate(nftSaleReq.getSaleEndDate())
+                .saleStartDate(now)
+                .saleEndDate(now.plusDays(3))
                 .salePrice(nftSaleReq.getSalePrice())
-                .isSold(true)
+                .isSold(false)
                 .nft(NFT.builder()
                         .nftSeq(nftSaleReq.getNftSeq())
                         .build())
@@ -134,5 +137,43 @@ public class NFTServiceImpl implements NFTService {
 
         return nftRepository.save(request.toEntity(user.get(), post.get()));
     }
+
+    /**
+     * NFT 구매
+     * written by 김정혁
+     * - 구매 성공시 판매 테이블에서 판매여부Y/N을 업데이트 해준다.
+     * - tokenID를 활용하여 해당 NFT의 소유자를 변경해준다. (NFT 테이블)
+     * - 유저 일련번호 업데이트
+     * - 소유자 지갑 주소 업데이트
+     */
+    @Override
+    @Transactional
+    public Sale purchase(NftPurchaseReq nftPurchaseReq, Long UserSeq) {
+        Long userSeq = UserSeq;
+        String owner = nftPurchaseReq.getNftOwnerAddress();
+        Long nftSeq = nftPurchaseReq.getNftSeq();
+        Long postSeq = nftPurchaseReq.getPostSeq();
+
+//      판매중인 sale을 조회
+        Sale sale = saleRepository.findByNftNftSeqAndIsSold(nftSeq, false);
+        return sale.builder()
+                .isSold(true)
+                .nft(NFT
+                        .builder()
+                        .nftSeq(nftSeq)
+                        .nftOwnerAddress(owner)
+                        .user(User
+                                .builder()
+                                .userSeq(userSeq)
+                                .build()
+                        )
+                        .post(Post
+                                .builder()
+                                .postSeq(postSeq)
+                                .build()
+                        ).build()
+                ).build();
+    }
+
 
 }

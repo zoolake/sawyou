@@ -1,6 +1,7 @@
 package com.sawyou.api.service;
 
 import com.sawyou.api.request.NftMintReq;
+import com.sawyou.api.request.NftPurchaseReq;
 import com.sawyou.api.request.NftSaleReq;
 import com.sawyou.api.response.NftInfoRes;
 import com.sawyou.api.response.NftListRes;
@@ -27,4 +28,6 @@ public interface NFTService {
 
     // NFT 민팅
     NFT mintNft(NftMintReq request, Long userSeq);
+    // NFT 구매
+    public Sale purchase(NftPurchaseReq nftPurchaseReq, Long UserSeq);
 }

@@ -1,6 +1,7 @@
 package com.sawyou.api.controller;
 
 import com.sawyou.api.request.NftMintReq;
+import com.sawyou.api.request.NftPurchaseReq;
 import com.sawyou.api.request.NftSaleReq;
 import com.sawyou.api.response.NftInfoRes;
 import com.sawyou.api.response.NftListRes;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -122,6 +124,7 @@ public class NFTController {
     public ResponseEntity<Result> sale(@ApiIgnore Authentication authentication, @RequestBody NftSaleReq nftSaleReq) {
         if (authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+        LocalDateTime now = LocalDateTime.now();
         Sale sale = nftService.sale(nftSaleReq);
         if (sale == null)
             return ResponseEntity.status(409).body(Result.builder().status(409).message("판매 실패").build());
@@ -146,5 +149,21 @@ public class NFTController {
         if (nft == null) return ResponseEntity.status(409).body(Result.builder().status(409).message("민팅 실패").build());
 
         return ResponseEntity.status(200).body(Result.builder().status(201).message("민팅 성공").build());
+    }
+
+    @PatchMapping("purchase")
+    @ApiOperation(value = "NFT 구매", notes = "NFT를 구매한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "NFT가 없음"),
+            @ApiResponse(code = 409, message = "NFT 구매 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> purchase(@ApiIgnore Authentication authentication, @RequestBody NftPurchaseReq nftPurchaseReq){
+        if(authentication==null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+        SawyouUserDetails details = (SawyouUserDetails) authentication.getDetails();
+        nftService.purchase(nftPurchaseReq,details.getUser().getUserSeq());
+        return ResponseEntity.status(200).body(Result.builder().status(201).message("구매 성공").build());
     }
 }
