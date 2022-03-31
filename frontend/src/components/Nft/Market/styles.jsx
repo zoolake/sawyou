@@ -35,7 +35,7 @@ const Wrapper = styled.div`
 
   .t2 {
     text-align: center;
-    margin: 50px auto;
+    margin: 30px;
   }
 
   .nftproduct {
@@ -54,7 +54,7 @@ const Wrapper = styled.div`
   }
 
   .notable {
-    margin: 50px auto;
+    margin-left: 60px;
   }
 
 `;
