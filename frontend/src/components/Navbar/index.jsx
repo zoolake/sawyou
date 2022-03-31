@@ -1,28 +1,68 @@
 import React, { useState, useEffect } from 'react';
 import Wrapper from './styles';
 import { Link } from 'react-router-dom'
-import Search from './Search/index'
 import Postmodal from './Postmodal/index'
 import Wallet from './Wallet/index'
 
 // MUI
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
+import InputBase from "@mui/material/InputBase";
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import NativeSelect from '@mui/material/NativeSelect';
+import { makeStyles } from "@material-ui/core/styles";
 import { useNavigate , withRouter } from 'react-router-dom';
+
+
+
+
 
 const UserHeader = (props) => {
   const navigate = useNavigate(); // for redirect
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [onBox, setOnBox] = React.useState('False');
+  const [category, setCategory] = React.useState('이름');
 
+
+  const searchStyle = {
+    position: 'fixed',
+    top: 175,
+    left: '48.2%',
+    transform: 'translate(-50%, -50%)',
+    width: 282,
+    height: 200,
+    bgcolor: 'white',
+    border: '1px solid #dedede',
+    borderRadius : 2,
+    p: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'auto',
+  };
+
+  const handelOnBox = () => {
+    if (onBox === 'True'){
+      setOnBox('False');
+    }
+    else{
+      setOnBox('True');
+    }
+  }
+
+  const handleChange = (e) => {
+    setCategory(e.target.value);
+  }
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };  
@@ -47,9 +87,30 @@ const UserHeader = (props) => {
                 I SAW YOU
               </Button>
               <Box sx={{ display: 'flex', mt : 1.5}}>
-                <Search>
-                  
-                </Search>
+              <Box
+                  component="form"
+                  sx={{height : 35, width : 300, display: "flex", border:1, borderColor:'grey.400', borderRadius: 3, backgroundColor: 'grey.200'}}
+                >
+                  <Box sx={{ml:1, display: 'flex',alignItems:'center', width:200}}>  
+                    <NativeSelect
+                      defaultValue={category}
+                      onChange={(e) => handleChange(e)}
+                    >
+                      <option value={'이름'}>이름</option>
+                      <option value={'닉네임'}>닉네임</option>
+                      <option value={'해시태그'}>해시태그</option>
+                    </NativeSelect>
+                      </Box>
+                  <InputBase
+                    placeholder="검색"
+                    sx={{height : 35, width : 300}}
+                    onFocus={handelOnBox}
+                    onBlur={handelOnBox}
+                  />
+                  <IconButton type="submit" aria-label="search">
+                    <SearchIcon />
+                  </IconButton>
+                </Box>
               </Box>
               
 
@@ -81,7 +142,7 @@ const UserHeader = (props) => {
 
                 <Button
                   key={"trade"}
-                  onClick={onClickRedirectPathHandler('/nft/market')}
+                  onClick={onClickRedirectPathHandler('/nft')}
                   style={{
                     maxWidth: "60px",
                     maxHeight: "60px",
@@ -144,6 +205,15 @@ const UserHeader = (props) => {
           </Box>
         </Container>
       </AppBar>
+      { onBox === 'True' && <Box sx={searchStyle} style={{zIndex: 2000}}>
+        {/* 여기에다 맵 방식으로 뿌려줄 것 */}
+        <Button sx={{justifyContent:'left'}}>
+          <img class="img2" src="/images/baseimg_nav.jpg" />
+          <Box sx={{ml:2}}><Typography>123</Typography></Box>
+        </Button>
+
+      </Box>}
+      
     </Wrapper>
   )
 }
