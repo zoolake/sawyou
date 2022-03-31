@@ -18,7 +18,6 @@ public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long saleSeq;
-
     /**
      * <수정>
      * NFT와의 관계를 N:1 관계로 수정
@@ -29,17 +28,10 @@ public class Sale {
     @JoinColumn(name = "nft_seq")
     private NFT nft;
     private Long salePrice;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    @Generated(GenerationTime.INSERT)
-    @Column
     private LocalDateTime saleStartDate;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    @Generated(GenerationTime.INSERT)
-    @Column
     private LocalDateTime saleEndDate;
-
     private String saleContractAddress;
     private Boolean isSold;
+
+
 }
