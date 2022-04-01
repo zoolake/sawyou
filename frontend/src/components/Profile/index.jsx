@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Wrapper from './styles';
 import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -8,10 +8,10 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import ListModal from './ListModal/index'
 import NftModal from './NftModal/index'
+import { ConstructionOutlined } from '@mui/icons-material';
 
-
-const Profile = () => {
-
+const Profile = (props) => {
+  const b = props.post
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
@@ -134,7 +134,7 @@ const Profile = () => {
         <Grid item xs={12}>
           <ImageList cols={3} gap={16}>
             {itemData.map((item) => (
-              <ImageListItem className="myimg" key={item.img}>
+              <ImageListItem className="myimg">
                 <ListModal item={item}>
                 </ListModal>
               </ImageListItem>
@@ -187,7 +187,7 @@ const Profile = () => {
             </div>
             <section class="profile_info">
               <div class="profile_info_header">
-                <h2 class="profile_name">asdf123</h2>
+                <h2 class="profile_name">{props.profile.userId}</h2>
                 <div class="profile_edit edit_outer">
                   <div class="profile_edit edit_inner">
                     <a class="profile_edit_btn" href="/profileedit" tabIndex="0">프로필 편집</a>
@@ -205,7 +205,7 @@ const Profile = () => {
                   <a href="/userId/followers/" tabIndex="0">
                     <div class="af_inner">
                       팔로워
-                      <span class="nums"> 0</span>
+                      <span class="nums">{props.profile.followerCnt}</span>
                     </div>
                   </a>
                 </li>
@@ -213,13 +213,13 @@ const Profile = () => {
                   <a href="/userId/following/" tabIndex="0">
                     <div class="af_inner">
                       팔로우
-                      <span class="nums"> 0</span>
+                      <span class="nums">{props.profile.followingCnt}</span>
                     </div>
                   </a>
                 </li>
               </ul>
               <div class="si_box">
-                <span class="si">Kim</span>
+                <span class="si">{props.profile.userName}</span>
                 <br/>
               </div>
             </section>
