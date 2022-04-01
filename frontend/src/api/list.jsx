@@ -51,7 +51,7 @@ export const UserPost = (num) => {
 export const SearchUserPost = (data) => {
   const instance = CreateInstance();
   try {
-    const res = instance.get(`/list/search/user`, data)
+    const res = instance.post(`/list/search/user`, data)
     return res
   } catch (error) {
     console.log(error)
@@ -62,7 +62,7 @@ export const SearchUserPost = (data) => {
 export const SearchHashTagPost = (data) => {
   const instance = CreateInstance();
   try {
-    const res = instance.get(`/list/search/hashtag`, data)
+    const res = instance.post(`/list/search/hashtag`, data)
     return res
   } catch (error) {
     console.log(error)

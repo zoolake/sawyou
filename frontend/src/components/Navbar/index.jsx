@@ -102,11 +102,17 @@ const UserHeader = (props) => {
   }
 
   const searchAccount = async () => {
-    const res = await SearchUserPost(search)
+    const body ={
+      keyword : search
+    }
+    const res = await SearchUserPost(body)
     setResult(res.data.data)
   }
 
   const searchHashTag = async () => {
+    const body ={
+      keyword : search
+    }
     const res = await SearchHashTagPost(search)
     setResult(res.data.data)
   }
@@ -246,6 +252,10 @@ const UserHeader = (props) => {
         <Button sx={{justifyContent:'left'}}>
           <img class="img2" src="/images/baseimg_nav.jpg" />
           <Box sx={{ml:2}}><Typography>123</Typography></Box>
+        </Button>
+        <Button sx={{justifyContent:'left'}}>
+          <img class="img2" src="/images/baseimg_nav.jpg" />
+          <Box sx={{ml:2}}><Typography>456</Typography></Box>
         </Button>
 
       </Box>}
