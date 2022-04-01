@@ -102,7 +102,7 @@ const UserHeader = (props) => {
   }
 
   const searchAccount = async () => {
-    const body ={
+    const body = {
       keyword : search
     }
     const res = await SearchUserPost(body)
@@ -110,7 +110,7 @@ const UserHeader = (props) => {
   }
 
   const searchHashTag = async () => {
-    const body ={
+    const body = {
       keyword : search
     }
     const res = await SearchHashTagPost(search)
@@ -248,16 +248,12 @@ const UserHeader = (props) => {
         </Container>
       </AppBar>
       { onBox === 'True' && <Box sx={searchStyle} style={{zIndex: 2000}}>
-        {/* 여기에다 맵 방식으로 뿌려줄 것 */}
-        <Button sx={{justifyContent:'left'}}>
-          <img class="img2" src="/images/baseimg_nav.jpg" />
-          <Box sx={{ml:2}}><Typography>123</Typography></Box>
-        </Button>
-        <Button sx={{justifyContent:'left'}}>
-          <img class="img2" src="/images/baseimg_nav.jpg" />
-          <Box sx={{ml:2}}><Typography>456</Typography></Box>
-        </Button>
-
+        { result && result.map((data) => (
+          <Button sx={{justifyContent:'left'}}>
+            <img class="img2" src="/images/baseimg_nav.jpg" />
+            <Box sx={{ml:2}}><Typography>{data.userId}</Typography></Box>
+          </Button>
+        )) }
       </Box>}
       
     </Wrapper>
