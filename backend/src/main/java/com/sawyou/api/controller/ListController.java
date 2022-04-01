@@ -76,7 +76,7 @@ public class ListController {
         return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("팔로잉 게시글 조회 성공").build());
     }
 
-    @GetMapping("/{userSeq}")
+    @GetMapping("/{userId}")
     @ApiOperation(value = "유저 게시글 조회", notes = "유저의 게시글 리스트를 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -86,13 +86,13 @@ public class ListController {
     })
     public ResponseEntity<Result> getPostListUser(
             @ApiIgnore Authentication authentication,
-            @PathVariable @ApiParam(value = "조회할 유저", required = true) Long userSeq,
+            @PathVariable @ApiParam(value = "조회할 유저", required = true) String userId,
             Pageable pageable
     ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
-        List<PostRes> lists = listService.getPostListUser(userSeq, pageable);
+        List<PostRes> lists = listService.getPostListUser(userId, pageable);
 
         if(lists.isEmpty())
             return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());

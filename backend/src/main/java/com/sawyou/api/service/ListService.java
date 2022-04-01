@@ -19,7 +19,7 @@ public interface ListService {
     List<PostRes> getPostListFollowing(Long userSeq, Pageable pageable);
 
     // 유저 게시글 조회
-    List<PostRes> getPostListUser(Long userSeq, Pageable pageable);
+    List<PostRes> getPostListUser(String userId, Pageable pageable);
 
     // 해시태그 게시글 조회
     List<PostRes> getPostListHashtag(Long hashtagSeq, Pageable pageable);
