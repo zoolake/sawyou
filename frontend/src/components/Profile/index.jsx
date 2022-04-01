@@ -111,7 +111,7 @@ const Profile = () => {
     },
   ]
   
-  const [spacing, setSpacing] = React.useState(2);
+  // const [spacing, setSpacing] = React.useState(2);
   const classes = useStyles();
   const [alignment, setAlignment] = React.useState('1');
 
@@ -122,9 +122,9 @@ const Profile = () => {
     }
   };
 
-  const handleChange = (event) => {
-    setSpacing(Number(event.target.value));
-  }
+  // const handleChange = (event) => {
+  //   setSpacing(Number(event.target.value));
+  // }
 
   const My = () => {
 

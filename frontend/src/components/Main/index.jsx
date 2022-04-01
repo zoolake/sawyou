@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import Wrapper from './styles';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import DeleteIcon from '@material-ui/icons/Delete';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 
 

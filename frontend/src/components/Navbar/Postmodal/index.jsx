@@ -7,6 +7,8 @@ import Wrapper from '../styles';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import InputBase from "@mui/material/InputBase";
+import {WritePost} from "../../../api/post"
 
 const style = {
   position: 'absolute',
@@ -24,6 +26,7 @@ const style = {
 
 const Postmodal = (props) => {
   const [open, setOpen] = React.useState(false);
+  const [content, setContent] = React.useState('');
   const handleOpen = () => setOpen(true);
   const handleClose = () => (setOpen(false), window.location.replace("/"));
   const [selectedImage, setSelectedImage] = useState(null);
@@ -34,6 +37,20 @@ const Postmodal = (props) => {
       setImageUrl(URL.createObjectURL(selectedImage));
     }
   }, [selectedImage]);
+
+  const handlePost = () => {
+    const body = {
+      postContent : content
+    };
+    const res = WritePost(body)
+    handleClose()
+  }
+  
+  const onChangeContent = (e) => {
+    setContent(e.target.value);
+  };
+
+
 
 
   const newpost = (
@@ -51,7 +68,7 @@ const Postmodal = (props) => {
         <Typography sx={{ my:'auto'}}>
           새 게시물 만들기
         </Typography>
-        <Button>
+        <Button onClick={handlePost}>
           공유하기
         </Button>
       </Box>
@@ -85,7 +102,10 @@ const Postmodal = (props) => {
             <img src="/images/baseimg_nav.jpg"></img>
             <Typography sx={{ml:2,mt:0.2}}>아이디</Typography>
           </Box>
-          <Box>45</Box>
+          <InputBase
+            placeholder="내용 입력"
+            onChange={onChangeContent}
+          />
         </Box>
         </Box>
     </Box>
