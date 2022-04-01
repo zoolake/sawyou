@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Wrapper from './styles';
 import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
 import ListModal from './ListModal/index'
 import NftModal from './NftModal/index'
 import { UserPost } from '../../api/list';
 import { User } from '../../States/User';
 import { useRecoilValue } from 'recoil';
+import { ReadAllNft, ReadAllSaleNft } from '../../api/nft';
 
 
 const Profile = () => {
@@ -28,14 +28,34 @@ const Profile = () => {
     },
   }));
 
-  const [posts, setPosts] = React.useState();
   const user = useRecoilValue(User);
 
+  const [posts, setPosts] = useState('');
+  const [nfts, setNfts] = useState('');
+  const [sales, setSales] = useState('');
+
+  // 보유한 NFT 조회
+  const getPosts = async () => {
+    const response = await UserPost(user).then((res) => { setPosts(res.data.data) });
+  }
+
+
+  // 보유한 NFT 조회
+  const getNfts = async () => {
+    const response = await ReadAllNft(user).then((res) => { setNfts(res.data.data) });
+  }
+
+  // 판매중인 NFT 조회
+  const getSales = async () => {
+    const response = await ReadAllSaleNft(user).then((res) => { setSales(res.data.data) });
+  }
+
+  // 첫 렌더링 1회 진행
   useEffect(() => {
-    UserPost(user).then((res) => {
-      setPosts(res.data.data);
-    });
+    getPosts();
   }, []);
+
+
 
   const itemData = [
     {
@@ -128,9 +148,21 @@ const Profile = () => {
   const [alignment, setAlignment] = React.useState('1');
 
 
+
   const handleAlignment = (event, newAlignment) => {
     if (newAlignment !== null) {
       setAlignment(newAlignment);
+    }
+
+    // 문제점: 탭을 반복해서 이동시 매번 API 요청을 보낸다.
+    if (newAlignment === '2') {
+      // 보유한 NFT 함수 호출
+      getNfts();
+    }
+
+    if (newAlignment === '3') {
+      // 판매중인 NFT 함수 호출
+      getSales();
     }
   };
 
@@ -165,12 +197,32 @@ const Profile = () => {
         <Grid container className={classes.root} spacing={2}>
           <Grid item xs={12}>
             <ImageList cols={3} gap={16}>
-              {itemData2.map((item) => (
+              {nfts ? nfts.map((nft) => (
                 <ImageListItem className="myimg">
-                  <NftModal key={item.img} item={item}>
+                  <NftModal key={nft} item={nft}>
                   </NftModal>
                 </ImageListItem>
-              ))}
+              )) : <span>보유한 NFT가 없습니다.</span>}
+            </ImageList>
+          </Grid>
+        </Grid>
+      </div>
+    )
+  }
+
+  const Sale = () => {
+
+    return (
+      <div>
+        <Grid container className={classes.root} spacing={2}>
+          <Grid item xs={12}>
+            <ImageList cols={3} gap={16}>
+              {sales ? sales.map((sale) => (
+                <ImageListItem className="myimg">
+                  <NftModal key={sale} item={sale}>
+                  </NftModal>
+                </ImageListItem>
+              )) : <span>판매중인 NFT가 없습니다.</span>}
             </ImageList>
           </Grid>
         </Grid>
@@ -259,7 +311,7 @@ const Profile = () => {
           </Box>
           {alignment === '1' && <My></My>}
           {alignment === '2' && <Nft></Nft>}
-          {alignment === '3' && <Nft></Nft>}
+          {alignment === '3' && <Sale></Sale>}
         </div>
       </main>
     </Wrapper>
