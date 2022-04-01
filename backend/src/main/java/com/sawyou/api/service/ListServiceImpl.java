@@ -113,7 +113,7 @@ public class ListServiceImpl implements ListService {
     public List<PostRes> getPostListUser(String userId, Pageable pageable) {
         Long userSeq = userRepository.findByUserId(userId).get().getUserSeq();
 
-        return postRepository.findByUser_UserSeqAndPostIsDeleteIsFalseAndPostIsNftIsFalseOrderByPostWritingTimeDesc(userSeq, pageable).stream().map(post -> {
+        return postRepository.findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(userSeq, pageable).stream().map(post -> {
             User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
             PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
             return PostRes.builder()
