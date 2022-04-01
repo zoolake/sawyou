@@ -28,7 +28,7 @@ function App() {
         <Route path="/signup" element={<Signup/>} />
         <Route exact path="/" element={isLoggedIn ? <Main/> : <Login/>} />
         <Route path="*" element={<NotFound/>} />
-        <Route path="/profile" element={<Profile/>} />
+        <Route path="/profile" element={isLoggedIn ? <Profile/> : <Login/>} />
         <Route path="/nft" element={<Market/>} />
         <Route path="/nft/product" element={<Product/>} />
       </Routes>

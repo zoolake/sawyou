@@ -1,17 +1,13 @@
+import { LoginInstance } from "./index.jsx";
 import { CreateInstance } from "./index.jsx";
 
-const instance = CreateInstance();
 
-// export const Login = async (data) => {
-//   const res = await instance.post("/api/login/", data);
-
-//   return res;
-// }
+const LoginInstance2 = LoginInstance();
 
 // 회원가입
 export const RegisterUser = (data) => {
   try {
-    const res = instance.post(`/user/signup`, data)
+    const res = LoginInstance2.post(`/user/signup`, data)
     return res
   } catch (error) {
     console.log(error)
@@ -21,7 +17,7 @@ export const RegisterUser = (data) => {
 // 아이디 중복체크
 export const IdCheck = (data) => {
   try {
-    const res = instance.post(`/user/idcheck`, data)
+    const res = LoginInstance2.post(`/user/idcheck`, data)
     return res
   } catch (error) {
     console.log(error)
@@ -33,7 +29,7 @@ export const IdCheck = (data) => {
 // 로그인
 export const LoginApi = (data) => {
   try {
-    const res = instance.post(`/user/login`, data)
+    const res = LoginInstance2.post(`/user/login`, data)
     return res
   } catch (error) {
     console.log(error)
@@ -42,6 +38,7 @@ export const LoginApi = (data) => {
 
 // 프로필조회
 export const Profile = (num) => {
+  const instance = CreateInstance();
   try {
     const res = instance.post(`/user/${num}`)
     return res
@@ -52,6 +49,7 @@ export const Profile = (num) => {
 
 // 프로필수정
 export const EditProfile = (data) => {
+  const instance = CreateInstance();
   try {
     const res = instance.patch(`/user`, data)
     return res
@@ -62,6 +60,7 @@ export const EditProfile = (data) => {
 
 // 비밀번호변경
 export const ChangePassword = (data) => {
+  const instance = CreateInstance();
   try {
     const res = instance.patch(`/user/pwd`, data)
     return res
@@ -72,6 +71,7 @@ export const ChangePassword = (data) => {
 
 // 회원탈퇴
 export const DeleteUser = () => {
+  const instance = CreateInstance();
   try {
     const res = instance.delete(`/user`)
     return res
@@ -82,6 +82,7 @@ export const DeleteUser = () => {
 
 // 팔로잉
 export const FollowingUser = (num) => {
+  const instance = CreateInstance();
   try {
     const res = instance.patch(`/user/followiing/${num}`)
     return res
@@ -92,6 +93,7 @@ export const FollowingUser = (num) => {
 
 // 팔로잉 목록 조회
 export const ReadFollowingUser = (num) => {
+  const instance = CreateInstance();
   try {
     const res = instance.get(`/user/following/${num}`)
     return res
@@ -102,6 +104,7 @@ export const ReadFollowingUser = (num) => {
 
 // 팔로워 목록 조회
 export const ReadFollowerUser = (num) => {
+  const instance = CreateInstance();
   try {
     const res = instance.get(`/user/follower/${num}`)
     return res
@@ -112,6 +115,7 @@ export const ReadFollowerUser = (num) => {
 
 // 팔로워 삭제?
 export const DeleteFollowerUser = (num) => {
+  const instance = CreateInstance();
   try {
     const res = instance.delete(`/user/follower/${num}/block`)
     return res
@@ -122,6 +126,7 @@ export const DeleteFollowerUser = (num) => {
 
 // 아이디 찾기
 export const FindId = (data) => {
+  const instance = CreateInstance();
   try {
     const res = instance.post(`/user/find/id`, data)
     return res
@@ -132,6 +137,7 @@ export const FindId = (data) => {
 
 // 비밀번호 찾기
 export const FindPassword = (data) => {
+  const instance = CreateInstance();
   try {
     const res = instance.post(`/user/find/pwd`, data)
     return res

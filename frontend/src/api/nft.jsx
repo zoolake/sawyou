@@ -4,6 +4,7 @@ const instance = CreateInstance();
 
 // NFT 보유 내역 출력
 export const ReadAllNft = (num) => {
+  const instance = CreateInstance();
   try {
     const res = instance.get(`/nft/${num}`)
     return res
@@ -14,6 +15,7 @@ export const ReadAllNft = (num) => {
 
 // NFT 상세 조회
 export const ReadNft = (num) => {
+  const instance = CreateInstance();
   try {
     const res = instance.get(`/nft/${num}`)
     return res
@@ -24,6 +26,7 @@ export const ReadNft = (num) => {
 
 // 판매중인 NFT 조회
 export const ReadCellAllNft = () => {
+  const instance = CreateInstance();
   try {
     const res = instance.get(`/nft/market`)
     return res
@@ -34,6 +37,7 @@ export const ReadCellAllNft = () => {
 
 // 판매중인 NFT 상세 조회
 export const ReadCellNft = (num) => {
+  const instance = CreateInstance();
   try {
     const res = instance.get(`/nft/market/${num}`)
     return res
@@ -44,6 +48,7 @@ export const ReadCellNft = (num) => {
 
 // NFT 민팅
 export const MintingNft = (data) => {
+  const instance = CreateInstance();
   try {
     const res = instance.post(`/nft/mint`, data)
     return res
@@ -54,6 +59,7 @@ export const MintingNft = (data) => {
 
 // NFT 판매
 export const CellNft = (data) => {
+  const instance = CreateInstance();
   try {
     const res = instance.post(`/nft/sale`, data)
     return res
@@ -64,6 +70,7 @@ export const CellNft = (data) => {
 
 // NFT 구매
 export const BuyNft = (data) => {
+  const instance = CreateInstance();
   try {
     const res = instance.post(`/nft/purchase`, data)
     return res
