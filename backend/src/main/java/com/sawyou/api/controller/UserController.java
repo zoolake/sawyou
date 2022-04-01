@@ -186,7 +186,7 @@ public class UserController {
     }
 
 
-    @PatchMapping("/following/{followingToSeq}")
+    @PatchMapping("/following/{followingToId}")
     @ApiOperation(value = "팔로잉/취소", notes = "유저를 팔로잉/취소한다.")
     @ApiResponses({
             @ApiResponse(code = 204, message = "팔로잉/취소 성공"),
@@ -197,7 +197,7 @@ public class UserController {
     })
     public ResponseEntity<Result> followingUser(
             @ApiIgnore Authentication authentication,
-            @PathVariable @ApiParam(value = "팔로잉(취소)할 유저", required = true) Long followingToSeq
+            @PathVariable @ApiParam(value = "팔로잉(취소)할 유저", required = true) String followingToId
     ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().message("인증 실패").build());
@@ -205,6 +205,8 @@ public class UserController {
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         String userId = userDetails.getUsername();
         User user = userService.getUserByUserId(userId);
+
+        Long followingToSeq = userService.getUserByUserId(userId).getUserSeq();
 
         // 팔로잉 하려는 userSeq가 본인인지 확인
         if(user.getUserSeq() == followingToSeq)
