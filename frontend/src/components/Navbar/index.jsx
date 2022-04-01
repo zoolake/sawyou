@@ -5,6 +5,7 @@ import Postmodal from './Postmodal/index'
 import Wallet from './Wallet/index'
 import { User } from '../../States/User';
 import { useRecoilState } from 'recoil';
+import { SearchUserPost, SearchHashTagPost } from '../../api/list';
 
 
 // MUI
@@ -35,8 +36,12 @@ const UserHeader = (props) => {
   const navigate = useNavigate(); // for redirect
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [onBox, setOnBox] = React.useState('False');
-  const [category, setCategory] = React.useState('이름');
+  const [category, setCategory] = React.useState('계정');
   const [user, setUser] = useRecoilState(User);
+  // const [account, setAccount] = useState('');
+  // const [hashtag, setHashTag] = useState('');
+  const [search, setSearch] = useState('');
+  const [result, setResult] = useState('');
 
 
 
@@ -85,6 +90,27 @@ const UserHeader = (props) => {
     navigate(`${name}`);
   };
 
+  const handleInputSearch = (e) => {
+    setSearch(e.target.value)
+
+    if (category === '계정') {
+      searchAccount()
+    }
+    else {
+      searchHashTag()
+    }
+  }
+
+  const searchAccount = async () => {
+    const res = await SearchUserPost(search)
+    setResult(res.data.data)
+  }
+
+  const searchHashTag = async () => {
+    const res = await SearchHashTagPost(search)
+    setResult(res.data.data)
+  }
+
   return (
     <Wrapper>
       <AppBar position="fixed" color="inherit" sx={{ width : '100%',boxShadow:0, borderBottom:1.5, borderColor: 'grey.200'}}>
@@ -106,8 +132,7 @@ const UserHeader = (props) => {
                       defaultValue={category}
                       onChange={(e) => handleChange(e)}
                     >
-                      <option value={'이름'}>이름</option>
-                      <option value={'닉네임'}>닉네임</option>
+                      <option value={'계정'}>계정</option>
                       <option value={'해시태그'}>해시태그</option>
                     </NativeSelect>
                       </Box>
@@ -116,6 +141,7 @@ const UserHeader = (props) => {
                     sx={{height : 35, width : 300}}
                     onFocus={handelOnBox}
                     onBlur={handelOnBox}
+                    onChange={handleInputSearch}
                   />
                   <IconButton type="submit" aria-label="search">
                     <SearchIcon />
