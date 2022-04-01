@@ -6,20 +6,30 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Wrapper from './styles';
 import TextField from '@mui/material/TextField';
+import { User } from '../../../States/User';
+import { LoginApi } from '../../../api/user';
+import { useRecoilState } from 'recoil';
 
 const Login = (props) => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [passwordWaring,setPasswordWarning] = useState('');
 
+  const [user, setUser] = useRecoilState(User);
+
   const onSubmitHandler = (e) => {
     e.preventDefault();
-
     const body = {
-      id : id,
-      password : password,
+      userId : id,
+      userPwd : password,
     };
-    console.log(body)
+    async function A(){
+      const res = await LoginApi(body)
+      localStorage.setItem('access_token', res.data.data)
+      setUser(true)
+    }
+    A()
+
   };
 
   const onChangeId = (e) => {
@@ -71,7 +81,6 @@ const Login = (props) => {
             </Button>
           </div>
         </Box>
-
 
     </div>
     </Wrapper>

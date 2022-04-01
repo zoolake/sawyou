@@ -3,6 +3,9 @@ import Wrapper from './styles';
 import { Link } from 'react-router-dom'
 import Postmodal from './Postmodal/index'
 import Wallet from './Wallet/index'
+import { User } from '../../States/User';
+import { useRecoilState } from 'recoil';
+
 
 // MUI
 import AppBar from '@mui/material/AppBar';
@@ -33,6 +36,8 @@ const UserHeader = (props) => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [onBox, setOnBox] = React.useState('False');
   const [category, setCategory] = React.useState('이름');
+  const [user, setUser] = useRecoilState(User);
+
 
 
   const searchStyle = {
@@ -50,6 +55,11 @@ const UserHeader = (props) => {
     flexDirection: 'column',
     overflow: 'auto',
   };
+
+  const Logout = e => {
+    setUser(false)
+    localStorage.removeItem('access_token');
+  }
 
   const handelOnBox = () => {
     if (onBox === 'True'){
@@ -184,7 +194,7 @@ const UserHeader = (props) => {
                     </MenuItem>
 
                     {/* <MenuItem key={"logout"} onClick={onClickLogout}> */}
-                    <MenuItem key={"logout"}>
+                    <MenuItem key={"logout"} onClick={Logout}>
                       <Typography textAlign="center">로그아웃</Typography>
                     </MenuItem>    
                 </Menu>

@@ -1,6 +1,6 @@
-import { createInstance } from "./index.jsx";
+import { CreateInstance } from "./index.jsx";
 
-const instance = createInstance();
+const instance = CreateInstance();
 
 // export const Login = async (data) => {
 //   const res = await instance.post("/api/login/", data);
@@ -30,7 +30,7 @@ export const IdCheck = (data) => {
 
 
 // 로그인
-export const Login = (data) => {
+export const LoginApi = (data) => {
   try {
     const res = instance.post(`/user/login`, data)
     return res

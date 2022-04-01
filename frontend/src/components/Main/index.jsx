@@ -5,25 +5,16 @@ import Button from '@mui/material/Button';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-// import { cat } from '../../api/user.jsx'
 
 
-const Main = () => {
+
+const Main = (props) => {
   const [comment, setComment] = useState('');
   const [commentArray, setCommentArray] = useState([]);
   const [isValid, setIsValid] = useState(false);
   const onChange = event => setComment(event.target.value);
   const [imgurl, setImgurl] = useState([''])
 
-  // const onCat = (e) => {
-  //   e.preventDefault();
-  //   const data = 'AT'
-  //   async function A(){
-  //     const res = await cat(data)
-  //     console.log(res.data) 
-  // }
-  // A()
-  // }
 
   const onSubmit = event => {
     event.preventDefault();
@@ -33,7 +24,6 @@ const Main = () => {
     setCommentArray(commentValueList => [comment, ...commentValueList]);
     setComment('');
     setIsValid(false);
-
   };
 
   return (
@@ -50,7 +40,7 @@ const Main = () => {
             </div>
             <div className="post_user">
             {/* <h3>{username}</h3> */}           
-              <h4>User</h4>
+              <h4>{props.data.userId}</h4>
             </div>
           </div>
           <div className="post_delete">
@@ -68,7 +58,7 @@ const Main = () => {
           <div className="post_article_comment">
             <div>
               {/* <h4 className="post_txt"><strong>{username}</strong> {caption}</h4> */}
-              <h4 className="post_text"><strong>leesh123</strong> 테스트</h4>
+              <h4 className="post_text"><strong>leesh123</strong> {props.data.postContent}</h4>
             </div>
             {/* <ul>
               <Comment />
