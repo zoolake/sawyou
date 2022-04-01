@@ -57,8 +57,9 @@ public class NFTServiceImpl implements NFTService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<NftListRes> getNftList(Long userSeq) {
-        List<NFT> nftList = nftRepository.findByUser_UserSeq(userSeq);
+    public List<NftListRes> getNftList(String userId) {
+        List<NFT> nftList = nftRepository.findByUser_UserId(userId);
+        if (nftList.isEmpty()) return null;
         return nftList.stream()
                 .map(nft -> new NftListRes(nft.getNftSeq(), nft.getNftPictureLink()))
                 .collect(Collectors.toList());

@@ -18,7 +18,7 @@ public interface NFTService {
     //판매중인 NFT 조회
     List<NftOnSaleRes> getOnSaleList ();
     // 유저가 보유중인 NFT 조회
-    List<NftListRes> getNftList(Long userSeq);
+    List<NftListRes> getNftList(String userId);
     // 판매중인 NFT 상세조회
     NftOnSaleDetailRes getOnSale (Long nftSeq);
     // NFT 판매

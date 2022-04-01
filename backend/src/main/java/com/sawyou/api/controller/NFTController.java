@@ -33,7 +33,7 @@ public class NFTController {
     @Autowired
     private NFTService nftService;
 
-    @GetMapping("/{userSeq}")
+    @GetMapping("/{userId}")
     @ApiOperation(value = "NFT 보유 내역 조회", notes = "유저가 보유한 NFT를 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -41,12 +41,12 @@ public class NFTController {
             @ApiResponse(code = 404, message = "보유한 NFT가 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> getNftList(@ApiIgnore Authentication authentication, @PathVariable @ApiParam(value = "조회할 유저", required = true) Long userSeq) {
+    public ResponseEntity<Result> getNftList(@ApiIgnore Authentication authentication, @PathVariable @ApiParam(value = "조회할 유저", required = true) String userId) {
         //로그인이 되어있지 않다면
         if (authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증실패").build());
 
-        List<NftListRes> nftList = nftService.getNftList(userSeq);
+        List<NftListRes> nftList = nftService.getNftList(userId);
 
         if (nftList.isEmpty())
             return ResponseEntity.status(404).body(Result.builder().status(404).message("보유한 NFT가 없음").build());
