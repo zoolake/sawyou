@@ -136,6 +136,7 @@ public class NFTServiceImpl implements NFTService {
         Optional<Post> post = postRepository.findById(request.getPostSeq());
         if (post.isEmpty()) return null;
 
+        post.get().setPostIsNft(true);
         return nftRepository.save(request.toEntity(user.get(), post.get()));
     }
 
