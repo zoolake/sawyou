@@ -40,7 +40,7 @@ export const LoginApi = (data) => {
 export const Profile = (num) => {
   const instance = CreateInstance();
   try {
-    const res = instance.post(`/user/${num}`)
+    const res = instance.get(`/user/${num}`)
     return res
   } catch (error) {
     console.log(error)
