@@ -34,7 +34,7 @@ const Postmodal = (props) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => {(setOpen(false)); setChange(false)};
   const [post, SetPost] = useState('');
-  const userSeq = '6'
+  const userSeq = props.item.postSeq
   const [content, SetContent] = useState('');
   const handleChange = () => {setChange(true); SetContent(post.postContent)}
   
