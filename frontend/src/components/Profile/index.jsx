@@ -9,6 +9,8 @@ import Button from '@mui/material/Button';
 import ListModal from './ListModal/index'
 import NftModal from './NftModal/index'
 import { UserPost } from '../../api/list';
+import { User } from '../../States/User';
+import { useRecoilValue } from 'recoil';
 
 
 const Profile = () => {
@@ -27,9 +29,10 @@ const Profile = () => {
   }));
 
   const [posts, setPosts] = React.useState();
+  const user = useRecoilValue(User);
 
   useEffect(() => {
-    UserPost("ccc").then((res) => {
+    UserPost(user).then((res) => {
       setPosts(res.data.data);
     });
   }, []);
