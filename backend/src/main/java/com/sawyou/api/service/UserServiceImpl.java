@@ -218,14 +218,13 @@ public class UserServiceImpl implements UserService {
     public List<UserListRes> getUserFollowerList(String userId) {
         User user = userRepositorySupport.findUserByUserId(userId).get();
 
-        return user.getFollowers().stream().map(follower -> {
-            Long followerFromSeq = follower.getFollowerFromSeq();
-            User follow = userRepositorySupport.findUserByUserSeq(followerFromSeq).get();
+        return followerRepository.findByFollowerFromSeq(user.getUserSeq()).stream().map(follower -> {
+            User followerUser = follower.getUser();
             return UserListRes.builder()
-                    .userSeq(follow.getUserSeq())
-                    .userId(follow.getUserId())
-                    .userName(follow.getUserName())
-                    .userProfile(follow.getUserProfile())
+                    .userSeq(followerUser.getUserSeq())
+                    .userId(followerUser.getUserId())
+                    .userName(followerUser.getUserName())
+                    .userProfile(followerUser.getUserProfile())
                     .build();
         }).collect(Collectors.toList());
     }
