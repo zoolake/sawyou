@@ -78,3 +78,14 @@ export const BuyNft = (data) => {
     console.log(error)
   }
 }
+
+// 유저가 판매중인 NFT 내역 조회
+export const ReadAllSaleNft = (userId) => {
+  const instance = CreateInstance();
+  try {
+    const res = instance.get(`/nft/on-sale/${userId}`)
+    return res
+  } catch (error) {
+    console.log(error)
+  }
+}
