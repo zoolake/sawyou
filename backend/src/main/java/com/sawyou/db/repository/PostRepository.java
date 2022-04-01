@@ -20,5 +20,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(Long userSeq);
 
     // userSeq와 같고 삭제 처리 되지 않은 데이터 작성시간 역순으로 조회 (페이징)
-    List<Post> findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(Long userSeq, Pageable pageable);
+    List<Post> findByUser_UserSeqAndPostIsDeleteIsFalseAndPostIsNftIsFalseOrderByPostWritingTimeDesc(Long userSeq, Pageable pageable);
 }
