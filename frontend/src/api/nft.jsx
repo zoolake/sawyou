@@ -1,6 +1,6 @@
-import { createInstance } from "./index.jsx";
+import { CreateInstance } from "./index.jsx";
 
-const instance = createInstance();
+const instance = CreateInstance();
 
 // NFT 보유 내역 출력
 export const ReadAllNft = (num) => {

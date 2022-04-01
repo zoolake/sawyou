@@ -1,15 +1,16 @@
 import axios from "axios";
+const Token = localStorage.getItem('access_token');
 
-// const API_BASE_URL = 'http://localhost:3000'
-const API_BASE_URL = 'https://date.nager.at/api/v3/publicholidays/2017/'
+const API_BASE_URL = 'https://sawyou.kro.kr/api/v1/'
 
-function createInstance() {
+function CreateInstance() {
   const instance = axios.create({
     baseURL: API_BASE_URL,
     headers: {
+      "Authorization" : `Bearer ${Token}`
     }
   });
   return instance;
 }
 
-export { createInstance };
+export { CreateInstance };

@@ -3,9 +3,12 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import { Wallet } from '../../../States/Wallet';
+import { useRecoilState } from 'recoil';
 
 
 export default function TemporaryDrawer() {
+  const [wallet, setWallet] = useRecoilState(Wallet);
   const [state, setState] = React.useState({
     right: false
   });

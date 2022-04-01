@@ -1,6 +1,6 @@
-import { createInstance } from "./index.jsx";
+import { CreateInstance } from "./index.jsx";
 
-const instance = createInstance();
+const instance = CreateInstance();
 
 // 게시글 작성
 export const WritePost = (data) => {
