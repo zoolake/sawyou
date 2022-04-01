@@ -24,9 +24,8 @@ const Login = (props) => {
       userPwd : password,
     };
     async function A(){
-      const res = await LoginApi(body)
-      localStorage.setItem('access_token', res.data.data)
-      setUser(true)
+      const res = await LoginApi(body).then((res) => localStorage.setItem('access_token', res.data.data))
+      setUser(id)
     }
     A()
 

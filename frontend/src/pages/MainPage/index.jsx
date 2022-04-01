@@ -7,7 +7,6 @@ import {ReadAllPost} from '../../api/list'
 
 const MainPage = (props) => {
   const [post,setPost] = useState('')
-  const a = 456
 
   const Read = async () => {
     const res = await ReadAllPost().then((res) => setPost(res.data.data));

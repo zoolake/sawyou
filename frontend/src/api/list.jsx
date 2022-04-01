@@ -1,9 +1,11 @@
 import { CreateInstance } from "./index.jsx";
 
-const instance = CreateInstance();
+
+
 
 // 게시글 전체 조회
 export const ReadAllPost = () => {
+  const instance = CreateInstance();
   try {
     const res = instance.get(`/list`)
     return res
@@ -14,6 +16,7 @@ export const ReadAllPost = () => {
 
 // 팔로잉 게시글 조회
 export const ReadFollowingPost = () => {
+  const instance = CreateInstance();
   try {
     const res = instance.get(`/list/following`)
     return res
@@ -24,6 +27,7 @@ export const ReadFollowingPost = () => {
 
 // 해시태그 게시글 리스트 조회
 export const HashTagPost = (num) => {
+  const instance = CreateInstance();
   try {
     const res = instance.get(`/list/hashtag/${num}`)
     return res
@@ -34,6 +38,7 @@ export const HashTagPost = (num) => {
 
 // 유저 게시글 리스트 조회
 export const UserPost = (num) => {
+  const instance = CreateInstance();
   try {
     const res = instance.get(`/list/${num}`)
     return res
@@ -44,6 +49,7 @@ export const UserPost = (num) => {
 
 // 계정 검색
 export const SearchUserPost = (data) => {
+  const instance = CreateInstance();
   try {
     const res = instance.get(`/list/search/user`, data)
     return res
@@ -54,6 +60,7 @@ export const SearchUserPost = (data) => {
 
 // 해시태그검색
 export const SearchHashTagPost = (data) => {
+  const instance = CreateInstance();
   try {
     const res = instance.get(`/list/search/hashtag`, data)
     return res
