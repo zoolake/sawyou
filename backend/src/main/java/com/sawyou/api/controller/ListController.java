@@ -125,7 +125,7 @@ public class ListController {
         return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("해시태그 게시글 조회 성공").build());
     }
 
-    @GetMapping("/search/user")
+    @PostMapping("/search/user")
     @ApiOperation(value = "계정 검색", notes = "검색어를 포함하는 아이디 또는 이름을 갖는 유저를 검색한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -149,7 +149,7 @@ public class ListController {
         return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("계정 검색 성공").build());
     }
 
-    @GetMapping("/search/hashtag")
+    @PostMapping("/search/hashtag")
     @ApiOperation(value = "해시태그 검색", notes = "검색어를 포함하는 해시태그를 검색한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
