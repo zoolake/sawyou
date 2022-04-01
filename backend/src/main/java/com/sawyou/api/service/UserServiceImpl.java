@@ -105,6 +105,9 @@ public class UserServiceImpl implements UserService {
         if(followingRepositorySupport.findFollowingByUserSeqAndFromSeq(userSeq, fromSeq).isPresent())
             isFollowing = true;
 
+        List<Following> following = followingRepository.findByUser_UserSeq(userSeq);
+        List<Follower> follower = followerRepository.findByFollowerFromSeq(userSeq);
+
         return UserRes.builder()
                 .userSeq(user.getUserSeq())
                 .userId(user.getUserId())
@@ -112,8 +115,8 @@ public class UserServiceImpl implements UserService {
                 .userEmail(user.getUserEmail())
                 .userDesc(user.getUserDesc())
                 .userProfile(user.getUserProfile())
-                .followingCnt(user.getFollowings().size())
-                .followerCnt(user.getFollowers().size())
+                .followingCnt(following.size())
+                .followerCnt(follower.size())
                 .isFollowing(isFollowing)
                 .build();
     }
