@@ -105,7 +105,7 @@ public class UserController {
         return ResponseEntity.status(409).body(Result.builder().status(409).message("로그인 실패").build());
     }
 
-    @GetMapping("/{userSeq}")
+    @GetMapping("/{userId}")
     @ApiOperation(value = "프로필 조회", notes = "회원 정보를 응답한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "프로필 조회 성공"),
@@ -115,16 +115,17 @@ public class UserController {
     })
     public ResponseEntity<Result> getUserInfo(
             @ApiIgnore Authentication authentication,
-            @PathVariable @ApiParam(value = "조회할 유저 일련번호", required = true) Long userSeq
+            @PathVariable @ApiParam(value = "조회할 유저 아이디", required = true) String userId
     ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().message("인증 실패").build());
 
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
-        String userId = userDetails.getUsername();
+        String myId = userDetails.getUsername();
+        User my = userService.getUserByUserId(myId);
         User user = userService.getUserByUserId(userId);
 
-        UserRes userRes = userService.getUser(userSeq, user.getUserSeq());
+        UserRes userRes = userService.getUser(user.getUserSeq(), my.getUserSeq());
         if(userRes == null)
             return ResponseEntity.status(404).body(Result.builder().status(404).message("사용자 없음").build());
 
@@ -247,7 +248,7 @@ public class UserController {
         return ResponseEntity.status(204).body(Result.builder().data(dUser).status(204).message("회원탈퇴 성공").build());
     }
 
-    @GetMapping("/following/{userSeq}")
+    @GetMapping("/following/{userId}")
     @ApiOperation(value = "팔로잉 목록 조회", notes = "유저의 팔로잉 목록을 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -258,12 +259,12 @@ public class UserController {
     })
     public ResponseEntity<Result> findUserFollowing(
             @ApiIgnore Authentication authentication,
-            @PathVariable @ApiParam(value = "팔로잉 목록 조회할 유저", required = true) Long userSeq
+            @PathVariable @ApiParam(value = "팔로잉 목록 조회할 유저 ID", required = true) String userId
     ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
-        List<UserListRes> userList = userService.getUserFollowingList(userSeq);
+        List<UserListRes> userList = userService.getUserFollowingList(userId);
 
         if(userList.isEmpty())
             return ResponseEntity.status(404).body(Result.builder().data(userList).status(404).message("팔로잉 목록 없음").build());
@@ -271,7 +272,7 @@ public class UserController {
         return ResponseEntity.status(200).body(Result.builder().data(userList).status(200).message("팔로잉 목록 조회 성공").build());
     }
 
-    @GetMapping("/follower/{userSeq}")
+    @GetMapping("/follower/{userId}")
     @ApiOperation(value = "팔로워 목록 조회", notes = "유저의 팔로워 목록을 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -282,12 +283,12 @@ public class UserController {
     })
     public ResponseEntity<Result> findUserFollower(
             @ApiIgnore Authentication authentication,
-            @PathVariable @ApiParam(value = "팔로워 목록 조회할 유저", required = true) Long userSeq
+            @PathVariable @ApiParam(value = "팔로워 목록 조회할 유저 ID", required = true) String userId
     ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
-        List<UserListRes> userList = userService.getUserFollowerList(userSeq);
+        List<UserListRes> userList = userService.getUserFollowerList(userId);
 
         if(userList.isEmpty())
             return ResponseEntity.status(404).body(Result.builder().data(userList).status(404).message("팔로잉 목록 없음").build());
