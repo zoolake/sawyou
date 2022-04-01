@@ -1,5 +1,6 @@
 package com.sawyou.api.controller;
 
+import com.sawyou.api.request.SearchReq;
 import com.sawyou.api.response.HashtagRes;
 import com.sawyou.api.response.PostRes;
 import com.sawyou.api.response.UserListRes;
@@ -134,12 +135,13 @@ public class ListController {
     })
     public ResponseEntity<Result> searchUserList(
             @ApiIgnore Authentication authentication,
-            @RequestBody @ApiParam(value = "검색할 키워드", required = true) String keyword
+            @RequestBody @ApiParam(value = "검색할 키워드", required = true) SearchReq keyword
     ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
-        List<UserListRes> lists = listService.searchUserList(keyword);
+        String word = keyword.getKeyword();
+        List<UserListRes> lists = listService.searchUserList(word);
 
         if(lists.isEmpty())
             return ResponseEntity.status(404).body(Result.builder().status(404).message("해당 계정 없음").build());
@@ -157,12 +159,13 @@ public class ListController {
     })
     public ResponseEntity<Result> searchHashtagList(
             @ApiIgnore Authentication authentication,
-            @RequestBody @ApiParam(value = "검색할 키워드", required = true) String keyword
+            @RequestBody @ApiParam(value = "검색할 키워드", required = true) SearchReq keyword
     ) {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
-        List<HashtagRes> lists = listService.searchHashtagList(keyword);
+        String word = keyword.getKeyword();
+        List<HashtagRes> lists = listService.searchHashtagList(word);
 
         if(lists.isEmpty())
             return ResponseEntity.status(404).body(Result.builder().status(404).message("해당 해시태그 없음").build());
