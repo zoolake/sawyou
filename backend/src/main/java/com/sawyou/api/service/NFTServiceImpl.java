@@ -166,5 +166,20 @@ public class NFTServiceImpl implements NFTService {
         return sale;
     }
 
+    /**
+     * 유저가 판매중인 NFT 조회
+     * userId를 활용하여 해당 유저가 판매중인 NFT 내역을 조회한다.
+     * written by 문준호
+     */
+    @Override
+    public List<NftListRes> getUserSaleList(String userId) {
+
+        List<NFT> userSaleNft = nftRepository.findUserSaleNft(userId);
+        if (userSaleNft.isEmpty()) return null;
+        return userSaleNft.stream()
+                .map(nft -> new NftListRes(nft.getNftSeq(), nft.getNftPictureLink()))
+                .collect(Collectors.toList());
+    }
+
 
 }
