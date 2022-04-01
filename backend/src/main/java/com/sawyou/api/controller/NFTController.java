@@ -48,7 +48,7 @@ public class NFTController {
 
         List<NftListRes> nftList = nftService.getNftList(userId);
 
-        if (nftList.isEmpty())
+        if (nftList == null)
             return ResponseEntity.status(404).body(Result.builder().status(404).message("보유한 NFT가 없음").build());
 
         return ResponseEntity.status(200).body(Result.builder().data(nftList).status(200).message("유저가 보유한 NFT 조회 성공").build());
@@ -69,7 +69,7 @@ public class NFTController {
 
         List<NftListRes> nftList = nftService.getUserSaleList(userId);
 
-        if (nftList.isEmpty())
+        if (nftList == null)
             return ResponseEntity.status(404).body(Result.builder().status(404).message("판매중인 NFT가 없음").build());
 
         return ResponseEntity.status(200).body(Result.builder().data(nftList).status(200).message("유저가 판매중인 NFT 조회 성공").build());
@@ -110,7 +110,7 @@ public class NFTController {
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
         List<NftOnSaleRes> nftOnSaleRes = nftService.getOnSaleList();
-        if (nftOnSaleRes.isEmpty())
+        if (nftOnSaleRes == null)
             return ResponseEntity.status(404).body(Result.builder().status(404).message("판매중인 NFT가 없음").build());
         return ResponseEntity.status(200).body(Result.builder().status(200).data(nftOnSaleRes).message("판매중인 NFT조회 성공").build());
     }
