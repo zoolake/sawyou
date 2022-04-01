@@ -30,4 +30,7 @@ public interface NFTService {
     NFT mintNft(NftMintReq request, Long userSeq);
     // NFT 구매
     public Sale purchase(NftPurchaseReq nftPurchaseReq, Long UserSeq);
+
+    // 유저가 판매중인 NFT 조회
+    List<NftListRes> getUserSaleList(String userId);
 }

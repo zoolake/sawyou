@@ -54,6 +54,27 @@ public class NFTController {
         return ResponseEntity.status(200).body(Result.builder().data(nftList).status(200).message("유저가 보유한 NFT 조회 성공").build());
     }
 
+    @GetMapping("/on-sale/{userId}")
+    @ApiOperation(value = "판매중인 NFT 내역 조회", notes = "유저가 판매중인 NFT를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "판매중인 NFT가 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> getUserSaleList(@ApiIgnore Authentication authentication, @PathVariable @ApiParam(value = "조회할 유저", required = true) String userId) {
+        //로그인이 되어있지 않다면
+        if (authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증실패").build());
+
+        List<NftListRes> nftList = nftService.getUserSaleList(userId);
+
+        if (nftList.isEmpty())
+            return ResponseEntity.status(404).body(Result.builder().status(404).message("판매중인 NFT가 없음").build());
+
+        return ResponseEntity.status(200).body(Result.builder().data(nftList).status(200).message("유저가 판매중인 NFT 조회 성공").build());
+    }
+
     @GetMapping("/detail/{nftSeq}")
     @ApiOperation(value = "NFT 상세 조회", notes = "NFT를 상세 조회한다.")
     @ApiResponses({
@@ -160,10 +181,11 @@ public class NFTController {
             @ApiResponse(code = 409, message = "NFT 구매 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> purchase(@ApiIgnore Authentication authentication, @RequestBody NftPurchaseReq nftPurchaseReq){
-        if(authentication==null) return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+    public ResponseEntity<Result> purchase(@ApiIgnore Authentication authentication, @RequestBody NftPurchaseReq nftPurchaseReq) {
+        if (authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
         SawyouUserDetails details = (SawyouUserDetails) authentication.getDetails();
-        Sale sale = nftService.purchase(nftPurchaseReq,details.getUser().getUserSeq());
+        Sale sale = nftService.purchase(nftPurchaseReq, details.getUser().getUserSeq());
         return ResponseEntity.status(200).body(Result.builder().status(201).message("구매 성공").build());
     }
 }
