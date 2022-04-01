@@ -110,7 +110,9 @@ public class ListServiceImpl implements ListService {
 
     // 유저 게시글 조회
     @Override
-    public List<PostRes> getPostListUser(Long userSeq, Pageable pageable) {
+    public List<PostRes> getPostListUser(String userId, Pageable pageable) {
+        Long userSeq = userRepository.findByUserId(userId).get().getUserSeq();
+
         return postRepository.findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(userSeq, pageable).stream().map(post -> {
             User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
             PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
