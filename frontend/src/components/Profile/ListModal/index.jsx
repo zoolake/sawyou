@@ -31,11 +31,11 @@ const Postmodal = (props) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
 
-  useEffect(() => {
-    if (selectedImage) {
-      setImageUrl(URL.createObjectURL(selectedImage));
-    }
-  }, [selectedImage]);
+  // useEffect(() => {
+  //   if (selectedImage) {
+  //     setImageUrl(URL.createObjectURL(selectedImage));
+  //   }
+  // }, [selectedImage]);
 
 
   const newpost = (
