@@ -190,7 +190,7 @@ const Profile = () => {
                 <h2 class="profile_name">asdf123</h2>
                 <div class="profile_edit edit_outer">
                   <div class="profile_edit edit_inner">
-                    <a class="profile_edit_btn" href="/accounts/edit/" tabIndex="0">프로필 편집</a>
+                    <a class="profile_edit_btn" href="/profileedit" tabIndex="0">프로필 편집</a>
                   </div>
                 </div>
               </div>
