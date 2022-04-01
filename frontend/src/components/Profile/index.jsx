@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useEffect } from 'react';
 import Wrapper from './styles';
 import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -8,10 +8,11 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import ListModal from './ListModal/index'
 import NftModal from './NftModal/index'
-import { ConstructionOutlined } from '@mui/icons-material';
+import { UserPost } from '../../api/list';
 
-const Profile = (props) => {
-  const b = props.post
+
+const Profile = () => {
+
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
@@ -24,7 +25,15 @@ const Profile = (props) => {
       padding: theme.spacing(2),
     },
   }));
-  
+
+  const [posts, setPosts] = React.useState();
+
+  useEffect(() => {
+    UserPost("ccc").then((res) => {
+      setPosts(res.data.data);
+    });
+  }, []);
+
   const itemData = [
     {
       img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
@@ -110,7 +119,7 @@ const Profile = (props) => {
       title: 'Basketball',
     },
   ]
-  
+
   // const [spacing, setSpacing] = React.useState(2);
   const classes = useStyles();
   const [alignment, setAlignment] = React.useState('1');
@@ -128,42 +137,42 @@ const Profile = (props) => {
 
   const My = () => {
 
-    return (    
+    return (
       <div>
-      <Grid container className={classes.root} spacing={2}>
-        <Grid item xs={12}>
-          <ImageList cols={3} gap={16}>
-            {itemData.map((item) => (
-              <ImageListItem className="myimg">
-                <ListModal item={item}>
-                </ListModal>
-              </ImageListItem>
-            ))}
-          </ImageList>              
-        </Grid>              
-      </Grid>
-    </div>
-    )    
+        <Grid container className={classes.root} spacing={2}>
+          <Grid item xs={12}>
+            <ImageList cols={3} gap={16}>
+              {posts && posts.map((post) => (
+                <ImageListItem className="myimg" key={post}>
+                  <ListModal item={post}>
+                  </ListModal>
+                </ImageListItem>
+              ))}
+            </ImageList>
+          </Grid>
+        </Grid>
+      </div>
+    )
   }
-  
+
   const Nft = () => {
 
-    return (    
+    return (
       <div>
-      <Grid container className={classes.root} spacing={2}>
-        <Grid item xs={12}>
-          <ImageList cols={3} gap={16}>
-            {itemData2.map((item) => (
-              <ImageListItem className="myimg">
-                <NftModal key={item.img} item={item}>
-                </NftModal>
-              </ImageListItem>
-            ))}
-          </ImageList>              
-        </Grid>              
-      </Grid>
-    </div>
-    )    
+        <Grid container className={classes.root} spacing={2}>
+          <Grid item xs={12}>
+            <ImageList cols={3} gap={16}>
+              {itemData2.map((item) => (
+                <ImageListItem className="myimg">
+                  <NftModal key={item.img} item={item}>
+                  </NftModal>
+                </ImageListItem>
+              ))}
+            </ImageList>
+          </Grid>
+        </Grid>
+      </div>
+    )
   }
 
   return (
@@ -179,7 +188,7 @@ const Profile = (props) => {
                   </button>
                   <div>
                     <form encType="multipart/form-data" method="POST" role="presentation">
-                      <input accept="image/jpeg,image/png" class="profile_upload" type="file"/>
+                      <input accept="image/jpeg,image/png" class="profile_upload" type="file" />
                     </form>
                   </div>
                 </div>
@@ -187,7 +196,7 @@ const Profile = (props) => {
             </div>
             <section class="profile_info">
               <div class="profile_info_header">
-                <h2 class="profile_name">{props.profile.userId}</h2>
+                <h2 class="profile_name">asdf123</h2>
                 <div class="profile_edit edit_outer">
                   <div class="profile_edit edit_inner">
                     <a class="profile_edit_btn" href="/profileedit" tabIndex="0">프로필 편집</a>
@@ -205,7 +214,7 @@ const Profile = (props) => {
                   <a href="/userId/followers/" tabIndex="0">
                     <div class="af_inner">
                       팔로워
-                      <span class="nums">{props.profile.followerCnt}</span>
+                      <span class="nums"> 0</span>
                     </div>
                   </a>
                 </li>
@@ -213,41 +222,41 @@ const Profile = (props) => {
                   <a href="/userId/following/" tabIndex="0">
                     <div class="af_inner">
                       팔로우
-                      <span class="nums">{props.profile.followingCnt}</span>
+                      <span class="nums"> 0</span>
                     </div>
                   </a>
                 </li>
               </ul>
               <div class="si_box">
-                <span class="si">{props.profile.userName}</span>
-                <br/>
+                <span class="si">Kim</span>
+                <br />
               </div>
             </section>
           </header>
-    <Box
-    sx={{display: 'flex', borderTop: 1, borderColor: 'grey.300', height:50, mb:3}}>
-      <ToggleButtonGroup
-        value={alignment}
-        exclusive
-        onChange={handleAlignment}
-        size={'small'}
-        sx={{mx: "auto", width:'40%' }}
-      >
-        <ToggleButton value="1" aria-label="left aligned"
-        sx={{width:'33%',border:0}}>
-          내 게시글
-        </ToggleButton>
-        <ToggleButton value="2" aria-label="centered" sx={{width:'33%', border:0}}>
-          소유한 NFT
-        </ToggleButton>
-        <ToggleButton value="3" aria-label="right aligned" sx={{width:'33%', border:0}}>
-          판매중 NFT
-        </ToggleButton>
-      </ToggleButtonGroup>
-    </Box>
-      { alignment === '1' && <My></My> }
-      { alignment === '2' && <Nft></Nft> }
-      { alignment === '3' && <Nft></Nft> }
+          <Box
+            sx={{ display: 'flex', borderTop: 1, borderColor: 'grey.300', height: 50, mb: 3 }}>
+            <ToggleButtonGroup
+              value={alignment}
+              exclusive
+              onChange={handleAlignment}
+              size={'small'}
+              sx={{ mx: "auto", width: '40%' }}
+            >
+              <ToggleButton value="1" aria-label="left aligned"
+                sx={{ width: '33%', border: 0 }}>
+                내 게시글
+              </ToggleButton>
+              <ToggleButton value="2" aria-label="centered" sx={{ width: '33%', border: 0 }}>
+                소유한 NFT
+              </ToggleButton>
+              <ToggleButton value="3" aria-label="right aligned" sx={{ width: '33%', border: 0 }}>
+                판매중 NFT
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+          {alignment === '1' && <My></My>}
+          {alignment === '2' && <Nft></Nft>}
+          {alignment === '3' && <Nft></Nft>}
         </div>
       </main>
     </Wrapper>
