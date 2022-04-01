@@ -199,16 +199,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserListRes> getUserFollowingList(String userId) {
         User user = userRepositorySupport.findUserByUserId(userId).get();
-        System.out.println("팔로잉 : " + user.getUserId());
 
-        return user.getFollowings().stream().map(following -> {
-            Long followingToSeq = following.getFollowingToSeq();
-            User follow = userRepositorySupport.findUserByUserSeq(followingToSeq).get();
+        return followingRepository.findByUser_UserSeq(user.getUserSeq()).stream().map(following -> {
+            User followingUser = following.getUser();
             return UserListRes.builder()
-                    .userSeq(follow.getUserSeq())
-                    .userId(follow.getUserId())
-                    .userName(follow.getUserName())
-                    .userProfile(follow.getUserProfile())
+                    .userSeq(followingUser.getUserSeq())
+                    .userId(followingUser.getUserId())
+                    .userName(followingUser.getUserName())
+                    .userProfile(followingUser.getUserProfile())
                     .build();
         }).collect(Collectors.toList());
     }
