@@ -3,7 +3,8 @@ import Profile from '../../components/Profile';
 import Navbar from '../../components/Navbar';
 import Wrapper from './styles';
 
-const ProfilePage = () => {
+const ProfilePage = (props) => { 
+  // const go = location.pathname
 
   return (
     <Wrapper>

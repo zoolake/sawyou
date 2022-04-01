@@ -189,7 +189,7 @@ const UserHeader = (props) => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                    <MenuItem key={"profile"} onClick={onClickRedirectPathHandler('/profile')}>
+                    <MenuItem key={"profile"} onClick={onClickRedirectPathHandler(`/profile/${user}`)}>
                       <Typography textAlign="center">프로필</Typography>
                     </MenuItem>
 
