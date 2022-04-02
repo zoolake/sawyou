@@ -145,7 +145,6 @@ public class NFTController {
     public ResponseEntity<Result> sale(@ApiIgnore Authentication authentication, @RequestBody NftSaleReq nftSaleReq) {
         if (authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
-        LocalDateTime now = LocalDateTime.now();
         Sale sale = nftService.sale(nftSaleReq);
         if (sale == null)
             return ResponseEntity.status(409).body(Result.builder().status(409).message("판매 실패").build());
@@ -169,7 +168,7 @@ public class NFTController {
         NFT nft = nftService.mintNft(request, details.getUser().getUserSeq());
         if (nft == null) return ResponseEntity.status(409).body(Result.builder().status(409).message("민팅 실패").build());
 
-        return ResponseEntity.status(200).body(Result.builder().status(201).message("민팅 성공").build());
+        return ResponseEntity.status(200).body(Result.builder().data(nft.getNftSeq()).status(201).message("민팅 성공").build());
     }
 
     @PatchMapping("purchase")
