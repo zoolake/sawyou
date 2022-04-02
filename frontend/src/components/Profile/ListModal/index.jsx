@@ -19,6 +19,8 @@ import { useRecoilValue } from 'recoil';
 import { Wallet } from '../../../States/Wallet';
 import { MintingNft } from '../../../api/nft';
 import { TokenOutlined } from '@mui/icons-material';
+import SaleFactory from '../../../abi/SaleFactory.json';
+import { CellNft } from '../../../api/nft';
 
 const style = {
   position: 'absolute',
@@ -115,16 +117,19 @@ const Postmodal = ({ item }) => {
   //   const response = await MintingNft(request).then((res) => { console.log(res) });
   // }
 
+  /* 민팅 */
+
+  const [tokenId, setTokenId] = useState();
+
   const minting = async () => {
     const tokenContract = await new web3.eth.Contract(SsafyNFT.abi, "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"); // 컨트랙트의 ABI와 주소로 *컨트랙트 객체 생성*
-    const tokenId = await tokenContract.methods
+    await tokenContract.methods
       .create(wallet, "https://i.pinimg.com/564x/60/fa/f8/60faf812aad673133e698150b87f4373.jpg")
       .send({ from: wallet })
       .then(function (receipt) {
-        return receipt.events.Transfer.returnValues.tokenId;
+        setTokenId(receipt.events.Transfer.returnValues.tokenId);
+        return tokenId;
       });
-
-    console.log("tokenId:", tokenId);
 
     const request = {
       "userSeq": item.userSeq,
@@ -138,6 +143,67 @@ const Postmodal = ({ item }) => {
     }
     const response = await MintingNft(request).then((res) => { console.log(res) });
   };
+
+  /* 판매 (민팅 + 판매) */
+  const sellToken = async () => {
+    // 먼저 민팅 진행
+    await minting();
+
+    // SaleFactory Contract
+    const saleFactoryContract = await new web3.eth.Contract(
+      SaleFactory.abi,
+      "0x0922ea92B9C3f3C580127BE07aeEfDad9CBc3540",
+      { from: wallet }
+    );
+
+    const now = Math.floor(new Date().getTime() / 1000);
+
+    // SaleFactory를 통해 createSale 진행
+    await saleFactoryContract.methods
+      .createSale(
+        tokenId,
+        1,
+        10,
+        now,
+        now + 3600,
+        "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333",
+        "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"
+      )
+      .send({ from: wallet })
+      .then(function (receipt) {
+        console.log("create Sale", receipt);
+      });
+
+    // 방금 생성한 Sale 컨트랙트 주소 추출
+    const sales = await saleFactoryContract.methods.allSales().call();
+    const saleContractAddress = sales[sales.length - 1];
+    console.log(saleContractAddress);
+
+    // ERC-721 Contract
+    const erc721Contract = await new web3.eth.Contract(
+      SsafyNFT.abi,
+      "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"
+    );
+
+    // Sale 컨트랙트에게 wallet이 갖고있는 token의 권한을 넘겨준다.
+    await erc721Contract.methods
+      .approve(saleContractAddress, tokenId)
+      .send({ from: wallet })
+      .then(() => {
+        console.log("권한 이전");
+      });
+
+    // wallet으로 부터 Sale 컨트랙트로 토큰을 옮긴다.
+    await erc721Contract.methods
+      .transferFrom(wallet, saleContractAddress, tokenId)
+      .send({ from: wallet })
+      .then(() => {
+        console.log("토큰 이전");
+      });
+
+    // 백엔드 판매 API
+
+  }
 
   const viewMyPost = (
     <Box sx={style}
@@ -161,7 +227,7 @@ const Postmodal = ({ item }) => {
           <Button sx={{ width: '50%' }} onClick={minting}>
             민팅하기
           </Button>
-          <Button sx={{ width: '50%' }}>
+          <Button sx={{ width: '50%' }} onClick={sellToken}>
             판매하기
           </Button>
         </Box>
