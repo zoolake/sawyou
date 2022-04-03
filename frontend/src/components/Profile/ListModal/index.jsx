@@ -32,7 +32,7 @@ const style = {
 };
 
 const Postmodal = ({ item }) => {
-  console.log(item);
+  console.log("item",item);
   const [open, setOpen] = React.useState(false);
   const [change, setChange] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -132,7 +132,7 @@ const Postmodal = ({ item }) => {
     };
 
     const { data: { data } } = await MintingNft(request);
-    setNftSeq(data);
+    setNftSeq(data);    
   }
 
   /* 판매 (민팅 + 판매) */
@@ -197,6 +197,8 @@ const Postmodal = ({ item }) => {
 
   }
 
+
+
   const viewMyPost = (
     <Box sx={style}
       component="form"
@@ -204,18 +206,18 @@ const Postmodal = ({ item }) => {
       <Box sx={{ display: 'flex', height: '100%' }}>
         <Box sx={{ width: '68.3%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Box sx={{ width: '100%', height: '100%' }}>
-            <img src="/images/baseimg_nav.jpg" height="100%" width="100%" />
+            <img src={ item.postPictureLink} height="100%" width="100%" />
             {/* <img src={props.item.img} alt={props.item.img} height="100%" width="100%" /> */}
           </Box>
         </Box>
         <Box sx={{ mx: 1, width: '31.7%', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', height: '5%', alignItems: 'center' }}>
             <img src="/images/baseimg_nav.jpg"></img>
-            <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{post.userId}</Typography></Box>
+            <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box>
             <Button onClick={handleChange} sx={{ width: '5%', minHeight: 0, minWidth: 40 }}><AutoFixNormalIcon sx={{ color: 'black' }}></AutoFixNormalIcon></Button>
             <Button onClick={onSendDelete} sx={{ width: '5%', minWidth: 40 }}><DeleteIcon sx={{ color: 'black' }}></DeleteIcon></Button>
           </Box>
-          <Box sx={{ height: '90%' }}>{post.postContent}</Box>
+          <Box sx={{ height: '90%' }}>{item.postContent}</Box>
           <Button sx={{ width: '50%' }} onClick={handleMintingButtonClick} disabled={isMintingLoaded}>
             민팅하기
           </Button>
@@ -237,14 +239,14 @@ const Postmodal = ({ item }) => {
       <Box sx={{ display: 'flex', height: '100%' }}>
         <Box sx={{ width: '68.3%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Box sx={{ width: '100%', height: '100%' }}>
-            <img src="/images/baseimg_nav.jpg" height="100%" width="100%" />
+            <img src={item.postPictureLink} height="100%" width="100%" />
             {/* <img src={props.item.img} alt={props.item.img} height="100%" width="100%" /> */}
           </Box>
         </Box>
         <Box sx={{ mx: 1, width: '31.7%', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', height: '5%', alignItems: 'center' }}>
             <img src="/images/baseimg_nav.jpg"></img>
-            <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{post.userId}</Typography></Box>
+            <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box>
           </Box>
           <Box sx={{ height: '90%' }}><InputBase onChange={onChangeContent} multiline={true} fullWidth defaultValue={content} sx={{ height: '3%' }}></InputBase></Box>
           <Button onClick={onSendChange} sx={{ width: '100%' }}>수정하기</Button>
@@ -265,7 +267,7 @@ const Postmodal = ({ item }) => {
         <img
           class={"img2"}
           src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-          srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+          srcSet={item.postPictureLink}
           alt={item.title}
           loading="lazy"
         />

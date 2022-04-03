@@ -9,6 +9,7 @@ import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import {ReadNft} from '../../../api/nft';
 
 const style = {
   position: 'absolute',
@@ -24,7 +25,9 @@ const style = {
   p: 1,
 };
 
-const Postmodal = (props) => {
+const Postmodal = (item) => {
+  console.log("이상해요!!", item.item);
+  
   const [open, setOpen] = React.useState(false);
   const [onwerid, setOwnerid] = React.useState('소유자');
   const [id, setId] = React.useState('민팅한 사람');
@@ -34,12 +37,38 @@ const Postmodal = (props) => {
   const handleClose = () => (setOpen(false));
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
+  const [nftDetail, setNftDetail] = useState('');
 
   useEffect(() => {
     if (selectedImage) {
       setImageUrl(URL.createObjectURL(selectedImage));
     }
-  }, [selectedImage]);
+    console.log("변해요")
+    ReadNft(item.item.nftSeq).then((res) => {setNftDetail(res.data.data)});
+  }, [selectedImage]); 
+  
+  const upDate = () => {
+    setId(nftDetail.nftOwnerName);
+  }
+
+
+    /*
+  - 판매중인 NFT에서 선택
+- 지금 구매
+- 판매 table에서 NFT의 tokenId와 Sale Contract Address를 얻어온다.
+- 불러온 Sale CA를 통해 instance를 만들어 `purchase()` 를 호출한다.
+    - `purchase()` 호출 전에 해당 Sale Contract가 구매자의 돈을 사용할 수 있게 구매가격만큼 approve 해준다.
+- 구매 성공시 판매 테이블에서 판매여부Y/N을 업데이트 해준다.
+- tokenID를 활용하여 해당 NFT의 소유자를 변경해준다. (NFT 테이블)
+    - 유저 일련번호 업데이트
+    - 소유자 지갑 주소 업데이트
+  */
+  // 구매 : 블록체인
+  const handleBuyButtonClick = async () => {
+    const tokenId = item.item.tokenId;
+    const saleContractAddress = item.item.saleContractAddress;
+  }
+  
 
 
   const newpost = (
@@ -49,7 +78,7 @@ const Postmodal = (props) => {
       <Box sx={{ display: 'flex',height:'100%'}}>
         <Box sx = {{width:'68.3%',display: 'flex', justifyContent:'center'}}>
           <Box sx={{width:'100%',height:'100%'}}>
-            <img src={props.item.img} alt={props.item.img} height="100%" width="100%" />
+            <img src={item.item.nftPictureLink} alt={item.nftPictureLink} height="100%" width="100%" />
           </Box>
         </Box>
         <Box sx={{mx: 1,width:'31.7%'}}>
@@ -60,13 +89,15 @@ const Postmodal = (props) => {
             </Box>
             <Typography variant="h6" sx={{ml:2,mt:0.2}}>{onwerid}</Typography>
           </Box>
-          <Box><Typography>작성자 : {id}</Typography></Box>
-          <Box><Typography>제작 시간 : {time}</Typography></Box>
-          <Box><Typography>작품 제목 : {title} </Typography></Box>
+          <Box><Typography>작성자 : {nftDetail.nftOwnerName} </Typography></Box>
+          <Box><Typography>제작 시간 : {nftDetail.nftCreatedAt} </Typography></Box>
+          <Box><Typography>작품 제목 : {nftDetail.nftTitle} </Typography></Box>
         </Box>
         <Button sx={{width:'100%'}}>
+      
           구매하기
-        </Button>
+          </Button>
+          
         </Box>
 
         </Box>
@@ -85,12 +116,12 @@ const Postmodal = (props) => {
         >
           <img
             class={"img2"}
-            src={`${props.item.img}?w=164&h=164&fit=crop&auto=format`}
-            srcSet={`${props.item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-            alt={props.item.title}
+            src={item.item.nftPictureLink}
+            srcSet={item.item.nftPictureLink}
+            alt={item.nftPictureLink}
             loading="lazy"
-          />
-        </Button>
+        />
+      </Button>
       <Modal
       open={open}
       onClose={handleClose}

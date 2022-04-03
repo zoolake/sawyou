@@ -34,21 +34,23 @@ const Profile = () => {
   const [nfts, setNfts] = useState('');
   const [sales, setSales] = useState('');
 
-  // 보유한 NFT 조회
+  // 내 게시글 조회
   const getPosts = async () => {
-    const response = await UserPost(user).then((res) => { setPosts(res.data.data) });
+    const response = await UserPost(user).then((res) => { setPosts(res.data.data)});
+    
   }
 
 
   // 보유한 NFT 조회
   const getNfts = async () => {
-    const response = await ReadAllNft(user).then((res) => { setNfts(res.data.data) });
-  }
+    const response = await ReadAllNft(user).then((res) => { setNfts(res.data.data)});
+}
 
   // 판매중인 NFT 조회
   const getSales = async () => {
-    const response = await ReadAllSaleNft(user).then((res) => { setSales(res.data.data) });
+    const response = await ReadAllSaleNft(user).then((res) => { setSales(res.data.data)});
   }
+
 
   // 첫 렌더링 1회 진행
   useEffect(() => {
@@ -178,7 +180,7 @@ const Profile = () => {
           <Grid item xs={12}>
             <ImageList cols={3} gap={16}>
               {posts && posts.map((post) => (
-                <ImageListItem className="myimg" key={post}>
+                <ImageListItem className="myimg" key={post.postSeq}>
                   <ListModal item={post}>
                   </ListModal>
                 </ImageListItem>
@@ -198,8 +200,8 @@ const Profile = () => {
           <Grid item xs={12}>
             <ImageList cols={3} gap={16}>
               {nfts ? nfts.map((nft) => (
-                <ImageListItem className="myimg">
-                  <NftModal key={nft} item={nft}>
+                <ImageListItem className="myimg" key={nft.nftSeq}>
+                  <NftModal  item={nft}>
                   </NftModal>
                 </ImageListItem>
               )) : <span>보유한 NFT가 없습니다.</span>}
@@ -218,8 +220,8 @@ const Profile = () => {
           <Grid item xs={12}>
             <ImageList cols={3} gap={16}>
               {sales ? sales.map((sale) => (
-                <ImageListItem className="myimg">
-                  <NftModal key={sale} item={sale}>
+                <ImageListItem className="myimg" key={sale}>
+                  <NftModal  item={sale}>
                   </NftModal>
                 </ImageListItem>
               )) : <span>판매중인 NFT가 없습니다.</span>}

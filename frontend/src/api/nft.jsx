@@ -17,7 +17,7 @@ export const ReadAllNft = (num) => {
 export const ReadNft = (num) => {
   const instance = CreateInstance();
   try {
-    const res = instance.get(`/nft/${num}`)
+    const res = instance.get(`/nft/detail/${num}`)
     return res
   } catch (error) {
     console.log(error)

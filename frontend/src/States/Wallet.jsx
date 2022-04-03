@@ -5,7 +5,7 @@ const { persistAtom } = recoilPersist()
 
 export const Wallet = atom({
   key: 'Wallet',
-  default: false,
+  default: null,
   effects_UNSTABLE: [persistAtom],
 
 });

@@ -53,7 +53,6 @@ export default function TemporaryDrawer() {
     // 메타마스크 지갑과 연결된 계정 정보를 받는 JSON-RPC Call API
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
     setWallet(accounts[0]);
-    getBalance();
   };
 
   const getBalance = async () => {
