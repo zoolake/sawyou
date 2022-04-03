@@ -22,6 +22,8 @@ public class NftOnSaleDetailRes {
     private String sellerId;
     @ApiModelProperty(name = "판매자 프로필 이미지 링크")
     private String sellerProfile;
+    @ApiModelProperty(name = "판매컨트랙트 주소")
+    private String saleContractAddress;
     @ApiModelProperty(name = "판매 가격")
     private Long salePrice;
     @ApiModelProperty(name = "판매 시작 시간")
@@ -56,6 +58,7 @@ public class NftOnSaleDetailRes {
         this.nftDesc = sale.getNft().getNftDesc();
         this.nftTokenId = sale.getNft().getNftTokenId();
         this.nftCreatedAt = sale.getNft().getNftCreatedAt().toString();
+        this.saleContractAddress = sale.getSaleContractAddress();
     }
 
 
