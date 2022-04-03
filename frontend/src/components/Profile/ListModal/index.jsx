@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import Input from '@mui/material/Input';
-import Button from '@mui/material/Button';
-import InputBase from "@mui/material/InputBase";
-import Grid from '@mui/material/Grid';
+import { Modal, Box, Input, Button, InputBase, Grid } from '@mui/material';
 import Wrapper from '../styles';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
@@ -101,36 +96,30 @@ const Postmodal = ({ item }) => {
     }
   }, []);
 
-  // NFT 민팅
-  // const mintingAPI = async () => {
-  //   const request = {
-  //     "userSeq": props.userSeq,
-  //     "postSeq": props.postSeq,
-  //     "nftAuthorName": "작가명",
-  //     "nftTitle": "제목",
-  //     "nftDesc": "설명",
-  //     "nftPictureLink": props.postPicutreLink,
-  //     "nftTokenId": 1,
-  //     "nftOwnerAddress": wallet,
-  //     "nftCreatedAt": new Date(),
-  //   }
-  //   const response = await MintingNft(request).then((res) => { console.log(res) });
-  // }
-
   /* 민팅 */
-
   const [tokenId, setTokenId] = useState();
+  const [nftSeq, setNftSeq] = useState();
+  const [isMintingLoaded, setIsMintingLoaded] = useState(false);
 
-  const minting = async () => {
+  // 민팅 : 블록체인
+  const handleMintingButtonClick = async () => {
+    setIsMintingLoaded(true);
+
     const tokenContract = await new web3.eth.Contract(SsafyNFT.abi, "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"); // 컨트랙트의 ABI와 주소로 *컨트랙트 객체 생성*
-    await tokenContract.methods
+    const { events } = await tokenContract.methods
       .create(wallet, "https://i.pinimg.com/564x/60/fa/f8/60faf812aad673133e698150b87f4373.jpg")
-      .send({ from: wallet })
-      .then(function (receipt) {
-        setTokenId(receipt.events.Transfer.returnValues.tokenId);
-        return tokenId;
-      });
+      .send({ from: wallet });
 
+    const tempTokenId = events.Transfer.returnValues.tokenId;
+    setTokenId(tempTokenId);
+
+    await mintingOnServer(tempTokenId);
+
+    setIsMintingLoaded(false);
+  };
+
+  // 민팅 : 백엔드
+  const mintingOnServer = async (tempTokenId) => {
     const request = {
       "userSeq": item.userSeq,
       "postSeq": item.postSeq,
@@ -138,16 +127,19 @@ const Postmodal = ({ item }) => {
       "nftTitle": "제목",
       "nftDesc": "설명",
       "nftPictureLink": item.postPictureLink,
-      "nftTokenId": tokenId,
+      "nftTokenId": tempTokenId,
       "nftOwnerAddress": wallet
-    }
-    const response = await MintingNft(request).then((res) => { console.log(res) });
-  };
+    };
+
+    const { data: { data } } = await MintingNft(request);
+    setNftSeq(data);
+  }
 
   /* 판매 (민팅 + 판매) */
-  const sellToken = async () => {
+  const handleSellButtonClick = async () => {
+
     // 먼저 민팅 진행
-    await minting();
+    await handleMintingButtonClick();
 
     // SaleFactory Contract
     const saleFactoryContract = await new web3.eth.Contract(
@@ -169,10 +161,10 @@ const Postmodal = ({ item }) => {
         "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333",
         "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"
       )
-      .send({ from: wallet })
-      .then(function (receipt) {
-        console.log("create Sale", receipt);
-      });
+      .send({ from: wallet });
+    // .then(function (receipt) {
+    //   console.log("create Sale", receipt);
+    // });
 
     // 방금 생성한 Sale 컨트랙트 주소 추출
     const sales = await saleFactoryContract.methods.allSales().call();
@@ -201,7 +193,7 @@ const Postmodal = ({ item }) => {
         console.log("토큰 이전");
       });
 
-    // 백엔드 판매 API
+    // TODO : 백엔드 판매 API 
 
   }
 
@@ -224,10 +216,10 @@ const Postmodal = ({ item }) => {
             <Button onClick={onSendDelete} sx={{ width: '5%', minWidth: 40 }}><DeleteIcon sx={{ color: 'black' }}></DeleteIcon></Button>
           </Box>
           <Box sx={{ height: '90%' }}>{post.postContent}</Box>
-          <Button sx={{ width: '50%' }} onClick={minting}>
+          <Button sx={{ width: '50%' }} onClick={handleMintingButtonClick} disabled={isMintingLoaded}>
             민팅하기
           </Button>
-          <Button sx={{ width: '50%' }} onClick={sellToken}>
+          <Button sx={{ width: '50%' }} onClick={handleSellButtonClick}>
             판매하기
           </Button>
         </Box>
