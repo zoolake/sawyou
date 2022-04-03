@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @PostMapping("")
+    @PostMapping(value = "", consumes = {"multipart/form-data"})
     @ApiOperation(value = "게시글 작성", notes = "요청 값에 따라 게시글을 작성한다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "게시글 작성 성공"),
@@ -42,8 +43,9 @@ public class PostController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<Result> writePost(
-            @ApiIgnore Authentication authentication,
-            @RequestBody @ApiParam(value = "게시글 작성 데이터", required = true) PostWriteReq postWrite
+            @RequestPart(value = "image", required = true) @ApiParam(value = "게시글 작성 데이터", required = true) MultipartFile image,
+            @RequestPart(value = "postContent", required = true) @ApiParam(value = "게시글 작성 데이터2", required = true) String postContent,
+            @ApiIgnore Authentication authentication
     ) {
         // 인증 토큰 확인, 올바르지 않은 토큰일 경우에도 401 자동 리턴
         if (authentication == null)
@@ -54,7 +56,7 @@ public class PostController {
         Long userSeq = userDetails.getUser().getUserSeq();
 
         // 게시글 작성
-        Post post = postService.writePost(postWrite.getPostContent(), userSeq);
+        Post post = postService.writePost(postContent, image, userSeq);
 
         // 게시글이 제대로 작성되지 않았을 경우
         if (post == null)

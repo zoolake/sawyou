@@ -4,10 +4,15 @@ import com.sawyou.api.response.CommentRes;
 import com.sawyou.db.entity.*;
 import com.sawyou.api.response.PostRes;
 import com.sawyou.db.repository.*;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,8 +56,7 @@ public class PostServiceImpl implements PostService {
 
     // 게시글 작성
     @Override
-    public Post writePost(String postContent, Long userSeq) {
-        // TODO: 게시글에 들어갈 이미지 업로드, 이미지 경로 설정 작업 필요
+    public Post writePost(String postContent, MultipartFile image, Long userSeq) {
         // DB에 들어갈 게시글 데이터 설정
         Post post = Post.builder()
                 .postContent(postContent)
@@ -105,8 +109,44 @@ public class PostServiceImpl implements PostService {
             postHashtagRepository.save(postHashtag);
         }
 
+        String path = "/opt/upload/post/" + oPost.getPostSeq().toString();
+
+        // 썸네일 이미지를 업로드 하지 않은 경우 기본이미지로 설정
+        if (image == null) return oPost;
+
+        String extension = FilenameUtils.getExtension(image.getOriginalFilename());
+
+        String fileName = image.getName();
+        if (fileName.isBlank()) throw new NullPointerException("File Name is Blank");
+
+        // png, jpg, jpeg 아니면 거르기
+        HashSet<String> candidate = new HashSet<>();
+        candidate.add("png");
+        candidate.add("jpg");
+        candidate.add("jpeg");
+
+        if (!candidate.contains(extension.toLowerCase())) throw new RuntimeException("Not Supported File Type");
+
+        File dir = new File(path);
+        if(!dir.exists()) dir.mkdirs();
+
+        // 환경에 따라 경우 아래 두 라인의 주석 변경
+        // File file = new File(path + "\\img");  // windows 환경
+        File file = new File(path + "/postImage." + extension);  // linux 환경
+
+        try {
+            image.transferTo(file);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        oPost.setPostPictureLink("https://sawyou.kro.kr/upload/"+ oPost.getPostSeq().toString() + "/postImage." + extension);
+
+        Post ooPost = postRepository.save(oPost);
+
         // 생성된 객체 return
-        return oPost;
+        return ooPost;
     }
 
     // 게시글 조회
