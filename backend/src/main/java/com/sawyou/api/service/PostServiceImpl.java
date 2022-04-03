@@ -141,7 +141,7 @@ public class PostServiceImpl implements PostService {
             e.printStackTrace();
         }
 
-        oPost.setPostPictureLink("https://sawyou.kro.kr/upload/"+ oPost.getPostSeq().toString() + "/postImage." + extension);
+        oPost.setPostPictureLink("https://sawyou.kro.kr/upload/post/"+ oPost.getPostSeq().toString() + "/postImage." + extension);
 
         Post ooPost = postRepository.save(oPost);
 
