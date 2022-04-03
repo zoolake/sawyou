@@ -48,7 +48,7 @@ const Main = (props) => {
           </div>
         </div>
 
-        <img className="post_img" src="/images/hallstatt.jpg"></img>
+        <img className="post_img" src={props.data.postPictureLink}></img>
         <div className="post_article">
           <div>          
             <FavoriteBorderIcon 

@@ -39,11 +39,17 @@ const Postmodal = (props) => {
   }, [selectedImage]);
 
   const handlePost = () => {
-    const body = {
-      postContent : content
-    };
-    const res = WritePost(body)
-    handleClose()
+    const body = new FormData();
+    body.append('image', selectedImage);
+    body.append('postContent', content);
+
+    WritePost(body)
+    .then(res => {
+      handleClose()
+    })
+    .catch(err => {
+      console.log(err)
+    })
   }
   
   const onChangeContent = (e) => {
