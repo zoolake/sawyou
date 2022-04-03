@@ -5,12 +5,16 @@ import { CreateInstance } from "./index.jsx";
 // 게시글 작성
 export const WritePost = (data) => {
   const instance = CreateInstance();
-  try {
-    const res = instance.post(`/post`, data)
-    return res
-  } catch (error) {
-    console.log(error)
-  }
+
+  return new Promise((resolve, reject) => {
+    instance.post(`/post`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(res => resolve(res))
+    .catch(err => reject(err))
+  })
 }
 
 // 게시글 조회
