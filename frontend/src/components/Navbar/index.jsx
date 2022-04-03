@@ -40,8 +40,6 @@ const UserHeader = (props) => {
   const [category, setCategory] = React.useState('계정');
   const [user, setUser] = useRecoilState(User);
   const [wallet, setWallet] = useRecoilState(Wallet);
-  // const [account, setAccount] = useState('');
-  // const [hashtag, setHashTag] = useState('');
   const [search, setSearch] = useState('');
   const [result, setResult] = useState('');
 
@@ -94,27 +92,30 @@ const UserHeader = (props) => {
   };
 
   const handleInputSearch = (e) => {
-    setSearch(e.target.value)
 
     if (category === '계정') {
-      searchAccount()
+      searchAccount(e.target.value)
     }
     else {
-      searchHashTag()
+      searchHashTag(e.target.value)
     }
   }
 
-  const searchAccount = async () => {
+  const searchAccount = async (data) => {
     const body = {
-      keyword : search
+      keyword : data
     }
-    const res = await SearchUserPost(body)
-    setResult(res.data.data)
-  }
+    const res = await SearchUserPost(body).then((res) => setResult(res.data.data))
+    .catch(setResult(''))
+    if (data === ''){
+      setResult('')
+    }
+    // setResult(res.data.data)
+    }
 
-  const searchHashTag = async () => {
+  const searchHashTag = async (data) => {
     const body = {
-      keyword : search
+      keyword : data
     }
     const res = await SearchHashTagPost(search)
     setResult(res.data.data)
