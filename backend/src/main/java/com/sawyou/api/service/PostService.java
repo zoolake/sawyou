@@ -6,6 +6,7 @@ import com.sawyou.db.entity.CommentLike;
 import com.sawyou.db.entity.Post;
 import com.sawyou.api.response.PostRes;
 import com.sawyou.db.entity.PostLike;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface PostService {
     Post getPostByPostSeq(Long postSeq);
 
     // 게시글 작성
-    Post writePost(String postContent, Long userSeq);
+    Post writePost(String postContent, MultipartFile image, Long userSeq);
 
     // 게시글 조회
     PostRes getPost(Long postSeq, Long userSeq);
