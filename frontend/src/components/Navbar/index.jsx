@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Wrapper from './styles';
 import { Link } from 'react-router-dom'
-import Postmodal from './Postmodal/index'
-import Wallet from './Wallet/index'
+import Postmodal from './Postmodal/index';
+import WalletIdx from './Wallet/index';
 import { User } from '../../States/User';
+import { Wallet } from '../../States/Wallet';
 import { useRecoilState } from 'recoil';
 import { SearchUserPost, SearchHashTagPost } from '../../api/list';
 
@@ -38,6 +39,7 @@ const UserHeader = (props) => {
   const [onBox, setOnBox] = React.useState('False');
   const [category, setCategory] = React.useState('계정');
   const [user, setUser] = useRecoilState(User);
+  const [wallet, setWallet] = useRecoilState(Wallet);
   // const [account, setAccount] = useState('');
   // const [hashtag, setHashTag] = useState('');
   const [search, setSearch] = useState('');
@@ -63,6 +65,7 @@ const UserHeader = (props) => {
 
   const Logout = e => {
     setUser(false)
+    setWallet(null)
     localStorage.removeItem('access_token');
   }
 
@@ -239,7 +242,7 @@ const UserHeader = (props) => {
                     minHeight: "40px"
                   }}
                   >
-                    <Wallet sx={{ fontSize: 27, color : 'black' }}/>
+                    <WalletIdx sx={{ fontSize: 27, color : 'black' }}/>
                 </Box>
 
             </Box>
