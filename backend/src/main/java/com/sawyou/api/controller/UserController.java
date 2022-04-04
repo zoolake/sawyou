@@ -160,7 +160,7 @@ public class UserController {
         return ResponseEntity.status(200).body(Result.builder().data(JwtTokenUtil.getToken(user.getUserId())).status(200).message("프로필 수정 성공").build());
     }
 
-    @PatchMapping
+    @PatchMapping("/profile")
     @ApiOperation(value = "프로필 이미지 수정", notes = "유저의 프로필 이미지를 수정한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "프로필 수정 성공"),
@@ -181,9 +181,9 @@ public class UserController {
 
         User user = userService.updateUserImage(userImage, oUser.getUserSeq());
         if(user == null)
-            return ResponseEntity.status(409).body(Result.builder().status(409).message("프로필 수정 실패").build());
+            return ResponseEntity.status(409).body(Result.builder().status(409).message("프로필 이미지 수정 실패").build());
 
-        return ResponseEntity.status(200).body(Result.builder().data(JwtTokenUtil.getToken(user.getUserId())).status(200).message("프로필 수정 성공").build());
+        return ResponseEntity.status(200).body(Result.builder().data(JwtTokenUtil.getToken(user.getUserId())).status(200).message("프로필 이미지 수정 성공").build());
     }
 
 

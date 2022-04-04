@@ -175,10 +175,12 @@ public class UserServiceImpl implements UserService {
         candidate.add("jpg");
         candidate.add("jpeg");
 
-        if (!candidate.contains(extension.toLowerCase())) throw new RuntimeException("Not Supported File Type");
+        if (!candidate.contains(extension.toLowerCase()))
+            throw new RuntimeException("Not Supported File Type");
 
         File dir = new File(path);
-        if(!dir.exists()) dir.mkdirs();
+        if(!dir.exists())
+            dir.mkdirs();
 
         // 환경에 따라 경우 아래 두 라인의 주석 변경
          File file = new File(path + "\\img");  // windows 환경
