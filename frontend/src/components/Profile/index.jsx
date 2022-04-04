@@ -4,16 +4,21 @@ import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import ListModal from './ListModal/index'
 import NftModal from './NftModal/index'
+import FollowerModal from './FollowerModal/index'
+import FollowModal from './FollowModal/index'
 import { UserPost } from '../../api/list';
 import { User } from '../../States/User';
+import { Profile as Profile2 } from '../../api/user';
 import { useRecoilValue } from 'recoil';
 import { ReadAllNft, ReadAllSaleNft } from '../../api/nft';
+import { Typography } from '@mui/material';
 
 
-const Profile = () => {
+const Profile = (props) => {
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,13 +38,16 @@ const Profile = () => {
   const [posts, setPosts] = useState('');
   const [nfts, setNfts] = useState('');
   const [sales, setSales] = useState('');
+  const [userData, setUserData] = useState('');
 
   // 내 게시글 조회
   const getPosts = async () => {
     const response = await UserPost(user).then((res) => { setPosts(res.data.data)});
-    
   }
-
+  const getProfile = async () => {
+    const res = await Profile2(user)
+    setUserData(res.data.data)
+  };
 
   // 보유한 NFT 조회
   const getNfts = async () => {
@@ -55,6 +63,7 @@ const Profile = () => {
   // 첫 렌더링 1회 진행
   useEffect(() => {
     getPosts();
+    getProfile();
   }, []);
 
 
@@ -261,27 +270,20 @@ const Profile = () => {
                 </div>
               </div>
               <ul class="article_follow">
+                <Button
+                  sx={{justifyContent:'left'}}
+                  style={{
+                    font: "16px",
+                    color : "black",
+                    minWidth: "100px",
+                    minHeight: "24px",
+                    padding: "0 0 0 0px"
+                  }}>
+                  <Typography>게시글 0</Typography>
+                </Button>
+                  <FollowerModal item={userData}></FollowerModal>
                 <li class="af_outer">
-                  <div class="af_inner">
-                    게시물
-                    <span class="nums"> 0</span>
-                  </div>
-                </li>
-                <li class="af_outer">
-                  <a href="/userId/followers/" tabIndex="0">
-                    <div class="af_inner">
-                      팔로워
-                      <span class="nums"> 0</span>
-                    </div>
-                  </a>
-                </li>
-                <li class="af_outer">
-                  <a href="/userId/following/" tabIndex="0">
-                    <div class="af_inner">
-                      팔로우
-                      <span class="nums"> 0</span>
-                    </div>
-                  </a>
+                <FollowModal item={userData}></FollowModal>
                 </li>
               </ul>
               <div class="si_box">
