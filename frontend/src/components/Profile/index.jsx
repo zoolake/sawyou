@@ -58,12 +58,12 @@ const Profile = (props) => {
 
   // 보유한 NFT 조회
   const getNfts = async () => {
-    const response = await ReadAllNft(user).then((res) => { setNfts(res.data.data)});
+    const response = await ReadAllNft(params).then((res) => { setNfts(res.data.data)});
 }
 
   // 판매중인 NFT 조회
   const getSales = async () => {
-    const response = await ReadAllSaleNft(user).then((res) => { setSales(res.data.data)});
+    const response = await ReadAllSaleNft(params).then((res) => { setSales(res.data.data)});
   }
 
 
