@@ -6,6 +6,7 @@ import com.sawyou.api.response.UserListRes;
 import com.sawyou.api.response.UserRes;
 import com.sawyou.db.entity.*;
 import com.sawyou.db.repository.*;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,11 @@ import org.springframework.stereotype.Service;
 import com.sawyou.api.request.UserRegisterPostReq;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -146,6 +151,53 @@ public class UserServiceImpl implements UserService {
             user.setUserPwd(passwordEncoder.encode(updateInfo.getUserPwd()));
 
         return user;
+    }
+
+    @Override
+    @Transactional
+    public User updateUserImage(MultipartFile userImage, Long userSeq) {
+        User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
+        String path = "/opt/upload/user/" + user.getUserId();
+
+        // 이미지를 업로드 하지 않은 경우 기본 이미지로 설정
+        if(userImage == null)
+            return user;
+
+        String extension = FilenameUtils.getExtension(userImage.getOriginalFilename());
+
+        String fileName = userImage.getName();
+        if(fileName.isBlank())
+            throw new NullPointerException("File Name is Blank");
+
+        // png, jpg, jpeg 아니면 거르기
+        HashSet<String> candidate = new HashSet<>();
+        candidate.add("png");
+        candidate.add("jpg");
+        candidate.add("jpeg");
+
+        if (!candidate.contains(extension.toLowerCase()))
+            throw new RuntimeException("Not Supported File Type");
+
+        File dir = new File(path);
+        if(!dir.exists())
+            dir.mkdirs();
+
+        // 환경에 따라 경우 아래 두 라인의 주석 변경
+//         File file = new File(path + "\\img");  // windows 환경
+        File file = new File(path + "/userImage." + extension);  // linux 환경
+
+        System.out.println("file = " + file);
+
+        try {
+            userImage.transferTo(file);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        user.setUserProfile("https://sawyou.kro.kr/upload/user/" + user.getUserId() + "/userImage." + extension);
+
+        return userRepository.save(user);
     }
 
     // 유저 팔로잉/취소
