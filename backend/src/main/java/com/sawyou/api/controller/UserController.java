@@ -183,7 +183,7 @@ public class UserController {
         if(user == null)
             return ResponseEntity.status(409).body(Result.builder().status(409).message("프로필 이미지 수정 실패").build());
 
-        return ResponseEntity.status(200).body(Result.builder().data(JwtTokenUtil.getToken(user.getUserId())).status(200).message("프로필 이미지 수정 성공").build());
+        return ResponseEntity.status(200).body(Result.builder().data(user).status(200).message("프로필 이미지 수정 성공").build());
     }
 
 

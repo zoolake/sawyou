@@ -183,8 +183,10 @@ public class UserServiceImpl implements UserService {
             dir.mkdirs();
 
         // 환경에 따라 경우 아래 두 라인의 주석 변경
-         File file = new File(path + "\\img");  // windows 환경
-//        File file = new File(path + "/userImage." + extension);  // linux 환경
+//         File file = new File(path + "\\img");  // windows 환경
+        File file = new File(path + "/userImage." + extension);  // linux 환경
+
+        System.out.println("file = " + file);
 
         try {
             userImage.transferTo(file);
