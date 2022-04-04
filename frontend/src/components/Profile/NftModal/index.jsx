@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import Input from '@mui/material/Input';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
+import { Input, Button, Grid, Alert, Box, Modal, CircularProgress } from '@mui/material';
 import Wrapper from '../styles';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
@@ -72,62 +68,73 @@ const Postmodal = ({ item }) => {
 
   /* 판매 관련 */
 
+  const [isSaleLoaded, setIsSaleLoaded] = useState(true);
+
   const handleSellButtonClick = async () => {
-    console.log("wallet:", wallet);
-    console.log("address:", item);
-    const saleFactoryContract = await new web3.eth.Contract(
-      SaleFactory.abi,
-      "0x0922ea92B9C3f3C580127BE07aeEfDad9CBc3540",
-      { from: wallet }
-    );
+    setIsSaleLoaded(false);
 
-    const now = Math.floor(new Date().getTime() / 1000);
+    try {
+      const saleFactoryContract = await new web3.eth.Contract(
+        SaleFactory.abi,
+        "0x0922ea92B9C3f3C580127BE07aeEfDad9CBc3540",
+        { from: wallet }
+      );
 
-    console.log("tokenId", nftDetail.nftTokenId);
+      const now = Math.floor(new Date().getTime() / 1000);
 
-    // SaleFactory를 통해 createSale 진행
-    await saleFactoryContract.methods
-      .createSale(
-        nftDetail.nftTokenId,
-        1,
-        2,
-        now,
-        now + 3600,
-        "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333",
+      // SaleFactory를 통해 createSale 진행
+      await saleFactoryContract.methods
+        .createSale(
+          nftDetail.nftTokenId,
+          1,
+          2,
+          now,
+          now + 3600,
+          "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333",
+          "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"
+        )
+        .send({ from: wallet });
+
+      // 방금 생성한 Sale 컨트랙트 주소 추출
+      const sales = await saleFactoryContract.methods.allSales().call();
+      const saleContractAddress = sales[sales.length - 1];
+      console.log("sales.length:", sales.length);
+      console.log(saleContractAddress);
+
+      // ERC-721 Contract
+      const erc721Contract = await new web3.eth.Contract(
+        SsafyNFT.abi,
         "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"
-      )
-      .send({ from: wallet });
+      );
 
-    // 방금 생성한 Sale 컨트랙트 주소 추출
-    const sales = await saleFactoryContract.methods.allSales().call();
-    const saleContractAddress = sales[sales.length - 1];
-    console.log("sales.length:", sales.length);
-    console.log(saleContractAddress);
+      // Sale 컨트랙트에게 wallet이 갖고있는 token의 권한을 넘겨준다.
+      await erc721Contract.methods
+        .approve(saleContractAddress, nftDetail.nftTokenId)
+        .send({ from: wallet })
+        .then(() => {
+          console.log("권한 이전");
+        });
 
-    // ERC-721 Contract
-    const erc721Contract = await new web3.eth.Contract(
-      SsafyNFT.abi,
-      "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"
-    );
+      // wallet으로 부터 Sale 컨트랙트로 토큰을 옮긴다.
+      await erc721Contract.methods
+        .transferFrom(wallet, saleContractAddress, nftDetail.nftTokenId)
+        .send({ from: wallet })
+        .then(() => {
+          console.log("토큰 이전");
+        });
 
-    // Sale 컨트랙트에게 wallet이 갖고있는 token의 권한을 넘겨준다.
-    await erc721Contract.methods
-      .approve(saleContractAddress, nftDetail.nftTokenId)
-      .send({ from: wallet })
-      .then(() => {
-        console.log("권한 이전");
-      });
+      // 백엔드 판매 API 호출
+      await sellOnServer(saleContractAddress);
 
-    // wallet으로 부터 Sale 컨트랙트로 토큰을 옮긴다.
-    await erc721Contract.methods
-      .transferFrom(wallet, saleContractAddress, nftDetail.nftTokenId)
-      .send({ from: wallet })
-      .then(() => {
-        console.log("토큰 이전");
-      });
+    }
 
-    // 백엔드 판매 API 호출
-    await sellOnServer(saleContractAddress);
+    catch (error) {
+      console.log("error:", error);
+    }
+
+    finally {
+      setIsSaleLoaded(true);
+    }
   }
 
   // 판매 : 백엔드
@@ -169,11 +176,17 @@ const Postmodal = ({ item }) => {
           {
             // 판매자라면 보이게 끔 (로그인한 아이디와 현재 보는 프로필의 주인과 같다면)
             // 지갑주소와 ownerAddress가 동일한지 확인
-            user === params &&
-            wallet === nftDetail.nftOwnerAddress &&
-            <Button sx={{ width: '100%' }} onClick={handleSellButtonClick}>
-              판매하기
-            </Button>
+            user !== params ?
+              <div></div> :
+              wallet === null ?
+                <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 연동 이후 이용이 가능합니다.</Button> :
+                wallet !== nftDetail.nftOwnerAddress ?
+                  <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 주소가 일치하지 않습니다.</Button> :
+                  isSaleLoaded !== true ? <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
+                    <Button sx={{ width: '100%' }} variant="contained" onClick={handleSellButtonClick} disabled={!isSaleLoaded}>
+                      판매하기
+                    </Button>
+
           }
         </Box>
 

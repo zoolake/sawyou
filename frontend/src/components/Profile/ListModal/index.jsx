@@ -99,23 +99,31 @@ const Postmodal = ({ item }) => {
   /* 민팅 */
   const [tokenId, setTokenId] = useState();
   const [nftSeq, setNftSeq] = useState();
-  const [isMintingLoaded, setIsMintingLoaded] = useState(false);
+  const [isMintingLoaded, setIsMintingLoaded] = useState(true);
 
   // 민팅 : 블록체인
   const handleMintingButtonClick = async () => {
-    setIsMintingLoaded(true);
+    setIsMintingLoaded(false);
 
     const tokenContract = await new web3.eth.Contract(SsafyNFT.abi, "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"); // 컨트랙트의 ABI와 주소로 *컨트랙트 객체 생성*
-    const { events } = await tokenContract.methods
-      .create(wallet, "https://i.pinimg.com/564x/60/fa/f8/60faf812aad673133e698150b87f4373.jpg")
-      .send({ from: wallet });
+    try {
+      const { events } = await tokenContract.methods
+        .create(wallet, "https://i.pinimg.com/564x/60/fa/f8/60faf812aad673133e698150b87f4373.jpg")
+        .send({ from: wallet });
 
-    const tempTokenId = events.Transfer.returnValues.tokenId;
-    setTokenId(tempTokenId);
+      const tempTokenId = events.Transfer.returnValues.tokenId;
+      setTokenId(tempTokenId);
 
-    await mintingOnServer(tempTokenId);
+      await mintingOnServer(tempTokenId);
+    }
+    catch (error) {
+      console.log("error:", error);
+    }
 
-    setIsMintingLoaded(false);
+    finally {
+      setIsMintingLoaded(true);
+    }
+
   };
 
   // 민팅 : 백엔드
@@ -134,70 +142,6 @@ const Postmodal = ({ item }) => {
     const { data: { data } } = await MintingNft(request);
     setNftSeq(data);
   }
-
-  /* 판매 (민팅 + 판매) */
-  const handleSellButtonClick = async () => {
-
-    // 먼저 민팅 진행
-    await handleMintingButtonClick();
-
-    // SaleFactory Contract
-    const saleFactoryContract = await new web3.eth.Contract(
-      SaleFactory.abi,
-      "0x0922ea92B9C3f3C580127BE07aeEfDad9CBc3540",
-      { from: wallet }
-    );
-
-    const now = Math.floor(new Date().getTime() / 1000);
-
-    // SaleFactory를 통해 createSale 진행
-    await saleFactoryContract.methods
-      .createSale(
-        tokenId,
-        1,
-        10,
-        now,
-        now + 3600,
-        "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333",
-        "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"
-      )
-      .send({ from: wallet });
-    // .then(function (receipt) {
-    //   console.log("create Sale", receipt);
-    // });
-
-    // 방금 생성한 Sale 컨트랙트 주소 추출
-    const sales = await saleFactoryContract.methods.allSales().call();
-    const saleContractAddress = sales[sales.length - 1];
-    console.log(saleContractAddress);
-
-    // ERC-721 Contract
-    const erc721Contract = await new web3.eth.Contract(
-      SsafyNFT.abi,
-      "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"
-    );
-
-    // Sale 컨트랙트에게 wallet이 갖고있는 token의 권한을 넘겨준다.
-    await erc721Contract.methods
-      .approve(saleContractAddress, tokenId)
-      .send({ from: wallet })
-      .then(() => {
-        console.log("권한 이전");
-      });
-
-    // wallet으로 부터 Sale 컨트랙트로 토큰을 옮긴다.
-    await erc721Contract.methods
-      .transferFrom(wallet, saleContractAddress, tokenId)
-      .send({ from: wallet })
-      .then(() => {
-        console.log("토큰 이전");
-      });
-
-    // TODO : 백엔드 판매 API 
-
-  }
-
-
 
   const viewMyPost = (
     <Box sx={style}
@@ -219,15 +163,12 @@ const Postmodal = ({ item }) => {
           </Box>
           <Box sx={{ height: '90%' }}>{item.postContent}</Box>
           {
-            isMintingLoaded === true ? <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
-              <div>
-                <Button sx={{ width: '50%' }} onClick={handleMintingButtonClick} disabled={isMintingLoaded}>
+            item.postIsNft ?
+              <Button sx={{ width: '100%' }} variant="contained" color="error" >이미 민팅된 게시물입니다.</Button> :
+              isMintingLoaded !== true ? <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
+                <Button sx={{ width: '100%' }} variant="contained" onClick={handleMintingButtonClick} disabled={!isMintingLoaded}>
                   민팅하기
                 </Button>
-                <Button sx={{ width: '50%' }} onClick={handleSellButtonClick}>
-                  판매하기
-                </Button>
-              </div>
           }
         </Box>
 
