@@ -207,7 +207,7 @@ public class UserController {
         String userId = userDetails.getUsername();
         User user = userService.getUserByUserId(userId);
 
-        Long followingToSeq = userService.getUserByUserId(userId).getUserSeq();
+        Long followingToSeq = userService.getUserByUserId(followingToId).getUserSeq();
 
         // 팔로잉 하려는 userSeq가 본인인지 확인
         if(user.getUserSeq() == followingToSeq)
