@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {ReadNft,ReadCellNft} from '../../../api/nft';
 import Sale from '../../../abi/Sale.json';
+import SsafyToken from '../../../abi/SsafyToken.json';
 import { Wallet } from '../../../States/Wallet';
 import { useRecoilValue } from 'recoil';
 import Web3 from 'web3';
@@ -89,11 +90,24 @@ const Postmodal = (item) => {
     const tokenId = nftDetail.nftTokenId;
     const saleContractAddress = saleInfo.saleContractAddress;
     
+
+    const erc20Contract = await new web3.eth.Contract(
+      SsafyToken.abi,
+      "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333"
+    );
     const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress, { from: wallet })
     
-    saleContract.methods.purchase().send({from : wallet})
+
+    await erc20Contract.methods
+    .approve("0x3324E5DadE41060B66d280A27c3CB87e22d43848", 10)
+    .send({ from: wallet })
+      .then(() => { });
+    
+    await saleContract.methods.purchase().send({from : wallet})
     
   }
+
+  
   
 
 
