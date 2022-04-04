@@ -28,7 +28,7 @@ const Postmodal = (props) => {
   const [open, setOpen] = React.useState(false);
   const [content, setContent] = React.useState('');
   const handleOpen = () => setOpen(true);
-  const handleClose = () => (setOpen(false), window.location.replace("/"));
+  const handleClose = () => (setOpen(false), setContent(''), setSelectedImage(''));
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
 
