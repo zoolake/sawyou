@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import {LikePost} from '../../api/post'
 
 
 
@@ -14,7 +15,21 @@ const Main = (props) => {
   const [isValid, setIsValid] = useState(false);
   const onChange = event => setComment(event.target.value);
   const [imgurl, setImgurl] = useState([''])
+  const [like, setLike] = useState(props.data.postIsLike)
 
+  const handelLike = (e) => {
+    sendLike()
+    if (like === true){
+      setLike(false)
+    }
+    else {
+      setLike(true)
+    }
+  }
+
+  const sendLike = async() => {
+    const res = await LikePost(props.data.postSeq)
+  }
 
   const onSubmit = event => {
     event.preventDefault();
@@ -50,11 +65,20 @@ const Main = (props) => {
 
         <img className="post_img" src={props.data.postPictureLink}></img>
         <div className="post_article">
-          <div>          
+          {like === true ?       
+            <Button onClick={handelLike}sx = {{minWidth:'24px'}} style={{padding:'0px'}}>     
+            <FavoriteIcon 
+              className="post_like"
+              sx = {{color:'black'}}
+            />
+            </Button> :
+            <Button onClick={handelLike}sx = {{minWidth:'24px'}} style={{padding:'0px'}}>        
             <FavoriteBorderIcon 
               className="post_like"
+              sx = {{color:'black'}}
             />
-          </div>
+            </Button>
+            }
           <div className="post_article_comment">
             <div>
               {/* <h4 className="post_txt"><strong>{username}</strong> {caption}</h4> */}
