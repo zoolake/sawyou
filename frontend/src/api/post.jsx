@@ -75,10 +75,9 @@ export const WriteComment = (num,data) => {
 export const ReadCommnet = (num) => {
   const instance = CreateInstance();
   try {
-    const res = instance.patch(`/post/comment/${num}/`)
+    const res = instance.get(`/post/comment/${num}/`)
     return res
   } catch (error) {
     console.log(error)
   }
 }
-
