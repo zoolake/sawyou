@@ -6,13 +6,14 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {LikePost} from '../../api/post'
+import InputBase from "@mui/material/InputBase";
 
 
 
 const Main = (props) => {
   const [comment, setComment] = useState('');
   const [commentArray, setCommentArray] = useState([]);
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState(true);
   const onChange = event => setComment(event.target.value);
   const [imgurl, setImgurl] = useState([''])
   const [like, setLike] = useState(props.data.postIsLike)
@@ -30,6 +31,7 @@ const Main = (props) => {
   const sendLike = async() => {
     const res = await LikePost(props.data.postSeq)
   }
+  
 
   const onSubmit = event => {
     event.preventDefault();
@@ -118,13 +120,11 @@ const Main = (props) => {
         </form> */}
         <div className="commentContainer" onSubmit={onSubmit}>
           <form className="commentWrap">
-            <input
-              type="text"
-              placeholder="댓글달기..."
-              className="commentInput"
-              value={comment}
-              onChange={onChange}
-            />
+          <InputBase
+            placeholder="내용 입력"
+            onChange={onChange}
+            sx={{width:'90%', ml:1}}
+          />
             <text 
               type="button"
               className={
