@@ -40,7 +40,7 @@ const Wrapper = styled.div`
     margin-bottom: 4px;
   }
 
-  .signupBtn {
+  .profileEditBtn {
     width: 264px;
     height: 50px;
     border-radius: 16px;
