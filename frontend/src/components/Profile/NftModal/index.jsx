@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
@@ -9,11 +9,15 @@ import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {ReadNft,ReadCellNft} from '../../../api/nft';
+import { ReadNft, ReadCellNft, CellNft } from '../../../api/nft';
 import Sale from '../../../abi/Sale.json';
+import { User } from '../../../States/User';
 import { Wallet } from '../../../States/Wallet';
 import { useRecoilValue } from 'recoil';
 import Web3 from 'web3';
+import SaleFactory from '../../../abi/SaleFactory.json';
+import SsafyNFT from '../../../abi/SsafyNFT.json';
+import { useParams } from 'react-router';
 
 const style = {
   position: 'absolute',
@@ -24,14 +28,12 @@ const style = {
   height: '90%',
   bgcolor: 'background.paper',
   border: '2px solid #000',
-  borderRadius : 6,
+  borderRadius: 6,
   boxShadow: 24,
   p: 1,
 };
 
-const Postmodal = (item) => {
-  console.log("이상해요!!", item.item);
-  
+const Postmodal = ({ item }) => {
   const [open, setOpen] = React.useState(false);
   const [onwerid, setOwnerid] = React.useState('소유자');
   const [id, setId] = React.useState('민팅한 사람');
@@ -44,38 +46,10 @@ const Postmodal = (item) => {
   const [nftDetail, setNftDetail] = useState('');
   const [saleInfo, setSaleInfo] = useState('');
   const wallet = useRecoilValue(Wallet);
+  const user = useRecoilValue(User);
   const [web3, setWeb3] = React.useState();
 
- 
   useEffect(() => {
-    if (selectedImage) {
-      setImageUrl(URL.createObjectURL(selectedImage));
-    }
-    ReadNft(item.item.nftSeq).then((res) => {
-      setNftDetail(res.data.data)
-      console.log(res.data.data)
-    });
-    ReadCellNft(item.item.nftSeq).then((res) => {
-      setSaleInfo(res.data.data)
-      console.log(res.data.data)
-    });
-  }, [selectedImage]); 
-  
-
-    /*
-  - 판매중인 NFT에서 선택
-- 지금 구매
-- 판매 table에서 NFT의 tokenId와 Sale Contract Address를 얻어온다.
-- 불러온 Sale CA를 통해 instance를 만들어 `purchase()` 를 호출한다.
-    - `purchase()` 호출 전에 해당 Sale Contract가 구매자의 돈을 사용할 수 있게 구매가격만큼 approve 해준다.
-- 구매 성공시 판매 테이블에서 판매여부Y/N을 업데이트 해준다.
-- tokenID를 활용하여 해당 NFT의 소유자를 변경해준다. (NFT 테이블)
-    - 유저 일련번호 업데이트
-    - 소유자 지갑 주소 업데이트
-  */
-  // 구매 : 블록체인
-  const handlePurchaseButtonClick = async () => {
-
     if (typeof window.ethereum != "undefined") {
       try {
         const web = new Web3(window.ethereum);
@@ -83,48 +57,127 @@ const Postmodal = (item) => {
       } catch (err) {
         console.log(err);
       }
-    } else {
-      console.log("ethereum is not defined")
     }
-    const tokenId = nftDetail.nftTokenId;
-    const saleContractAddress = saleInfo.saleContractAddress;
-    
-    const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress, { from: wallet })
-    
-    saleContract.methods.purchase().send({from : wallet})
-    
-  }
-  
+  }, []);
 
+  useEffect(() => {
+    if (selectedImage) {
+      setImageUrl(URL.createObjectURL(selectedImage));
+    }
+    ReadNft(item.nftSeq).then((res) => {
+      setNftDetail(res.data.data)
+      console.log("ReadNft:", res.data.data)
+    });
+  }, [selectedImage]);
+
+  /* 판매 관련 */
+
+  const handleSellButtonClick = async () => {
+    console.log("wallet:", wallet);
+    console.log("address:", item);
+    const saleFactoryContract = await new web3.eth.Contract(
+      SaleFactory.abi,
+      "0x0922ea92B9C3f3C580127BE07aeEfDad9CBc3540",
+      { from: wallet }
+    );
+
+    const now = Math.floor(new Date().getTime() / 1000);
+
+    console.log("tokenId", nftDetail.nftTokenId);
+
+    // SaleFactory를 통해 createSale 진행
+    await saleFactoryContract.methods
+      .createSale(
+        nftDetail.nftTokenId,
+        1,
+        2,
+        now,
+        now + 3600,
+        "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333",
+        "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"
+      )
+      .send({ from: wallet });
+
+    // 방금 생성한 Sale 컨트랙트 주소 추출
+    const sales = await saleFactoryContract.methods.allSales().call();
+    const saleContractAddress = sales[sales.length - 1];
+    console.log("sales.length:", sales.length);
+    console.log(saleContractAddress);
+
+    // ERC-721 Contract
+    const erc721Contract = await new web3.eth.Contract(
+      SsafyNFT.abi,
+      "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"
+    );
+
+    // Sale 컨트랙트에게 wallet이 갖고있는 token의 권한을 넘겨준다.
+    await erc721Contract.methods
+      .approve(saleContractAddress, nftDetail.nftTokenId)
+      .send({ from: wallet })
+      .then(() => {
+        console.log("권한 이전");
+      });
+
+    // wallet으로 부터 Sale 컨트랙트로 토큰을 옮긴다.
+    await erc721Contract.methods
+      .transferFrom(wallet, saleContractAddress, nftDetail.nftTokenId)
+      .send({ from: wallet })
+      .then(() => {
+        console.log("토큰 이전");
+      });
+
+    // 백엔드 판매 API 호출
+    await sellOnServer(saleContractAddress);
+  }
+
+  // 판매 : 백엔드
+  const sellOnServer = async (saleContractAddress) => {
+
+    const request = {
+      "nftSeq": item.nftSeq,
+      "salePrice": 2,
+      "saleContractAddress": saleContractAddress,
+    }
+
+    await CellNft(request);
+  }
+
+  const params = useParams().id;
 
   const newpost = (
     <Box sx={style}
-    component="form"
+      component="form"
     >
-      <Box sx={{ display: 'flex',height:'100%'}}>
-        <Box sx = {{width:'68.3%',display: 'flex', justifyContent:'center'}}>
-          <Box sx={{width:'100%',height:'100%'}}>
-            <img src={item.item.nftPictureLink} alt={item.nftPictureLink} height="100%" width="100%" />
+      <Box sx={{ display: 'flex', height: '100%' }}>
+        <Box sx={{ width: '68.3%', display: 'flex', justifyContent: 'center' }}>
+          <Box sx={{ width: '100%', height: '100%' }}>
+            <img src={item.nftPictureLink} alt={item.nftPictureLink} height="100%" width="100%" />
           </Box>
         </Box>
-        <Box sx={{mx: 1,width:'31.7%'}}>
-        <Box sx={{height:'95%'}}>
-          <Box sx={{ display: 'flex', height:'8%', alignItems:'center'}}>
-            <Box sx={{ display: 'flex', height:'50%'}}>
-              <img src="/images/baseimg_nav.jpg"></img>
+        <Box sx={{ mx: 1, width: '31.7%' }}>
+          <Box sx={{ height: '95%' }}>
+            <Box sx={{ display: 'flex', height: '8%', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', height: '50%' }}>
+                <img src="/images/baseimg_nav.jpg"></img>
+              </Box>
+              <Typography variant="h6" sx={{ ml: 2, mt: 0.2 }}>{onwerid}</Typography>
             </Box>
-            <Typography variant="h6" sx={{ml:2,mt:0.2}}>{onwerid}</Typography>
+            <Box><Typography>작성자 : {nftDetail.nftOwnerName} </Typography></Box>
+            <Box><Typography>제작 시간 : {nftDetail.nftCreatedAt} </Typography></Box>
+            <Box><Typography>작품 제목 : {nftDetail.nftTitle} </Typography></Box>
           </Box>
-          <Box><Typography>작성자 : {nftDetail.nftOwnerName} </Typography></Box>
-          <Box><Typography>제작 시간 : {nftDetail.nftCreatedAt} </Typography></Box>
-          <Box><Typography>작품 제목 : {nftDetail.nftTitle} </Typography></Box>
-          </Box>
-          <Button sx={{ width: '100%' }}>
-          판매하기
-          </Button>
+          {
+            // 판매자라면 보이게 끔 (로그인한 아이디와 현재 보는 프로필의 주인과 같다면)
+            // 지갑주소와 ownerAddress가 동일한지 확인
+            user === params &&
+            wallet === nftDetail.nftOwnerAddress &&
+            <Button sx={{ width: '100%' }} onClick={handleSellButtonClick}>
+              판매하기
+            </Button>
+          }
         </Box>
 
-        </Box>
+      </Box>
 
     </Box>
 
@@ -136,22 +189,22 @@ const Postmodal = (item) => {
       <Button
         key={"add"}
         onClick={handleOpen}
-        sx={{width:'100%', height:'100%'}}
-        >
-          <img
-            class={"img2"}
-            src={item.item.nftPictureLink}
-            srcSet={item.item.nftPictureLink}
-            alt={item.nftPictureLink}
-            loading="lazy"
+        sx={{ width: '100%', height: '100%' }}
+      >
+        <img
+          class={"img2"}
+          src={item.nftPictureLink}
+          srcSet={item.nftPictureLink}
+          alt={item.nftPictureLink}
+          loading="lazy"
         />
       </Button>
       <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-      closeAfterTransition
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        closeAfterTransition
       >
         {newpost}
       </Modal>
