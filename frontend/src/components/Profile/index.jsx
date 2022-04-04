@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Wrapper from './styles';
+import { useParams } from 'react-router';
 import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -35,20 +36,22 @@ const Profile = (props) => {
   }));
 
   const user = useRecoilValue(User);
-
+  const params = useParams().id;
   const [posts, setPosts] = useState('');
   const [nfts, setNfts] = useState('');
   const [sales, setSales] = useState('');
   const [userData, setUserData] = useState('');
+  const [myProfile, setMyProfile] = useState('');
+  const [followCheck, setFollowCheck] = useState('');
 
   // 내 게시글 조회
   const getPosts = async () => {
-    const response = await UserPost(user).then((res) => { setPosts(res.data.data)});
+    const response = await UserPost(params).then((res) => { setPosts(res.data.data)});
     
   }
 
   const getProfile = async () => {
-    const res = await Profile2(user)
+    const res = await Profile2(params)
     setUserData(res.data.data)
   };
 
@@ -68,6 +71,19 @@ const Profile = (props) => {
   useEffect(() => {
     getPosts();
     getProfile();
+    if (user === params){
+      setMyProfile(true)
+    }
+    else {
+      setMyProfile(false)
+    }
+
+    if (userData.isFollowing === true){
+      setFollowCheck(true)
+    }
+    else{
+      setFollowCheck(false)
+    }
   }, []);
 
 
@@ -269,7 +285,8 @@ const Profile = (props) => {
                 <h2 class="profile_name">asdf123</h2>
                 <div class="profile_edit edit_outer">
                   <div class="profile_edit edit_inner">
-                    <a class="profile_edit_btn" href="/profileedit" tabIndex="0">프로필 편집</a>
+                    {myProfile === true ?  <a class="profile_edit_btn" href="/profileedit" tabIndex="0">프로필 편집</a>
+                    : followCheck === true ? <Button variant="contained" >팔로우 해제</Button> : <Button variant="contained" >팔로우</Button>}
                   </div>
                 </div>
               </div>
