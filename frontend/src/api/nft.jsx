@@ -89,3 +89,14 @@ export const ReadAllSaleNft = (userId) => {
     console.log(error)
   }
 }
+
+// 판매 취소
+export const CancelSale = (data) => {
+  const instance = CreateInstance();
+  try {
+    const res = instance.delete(`/nft/cancel`, data)
+    return res
+  } catch (error) {
+    console.log(error)
+  }
+}

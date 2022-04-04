@@ -10,7 +10,7 @@ import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {ReadNft,ReadCellNft,ReadAllSaleNft,BuyNft} from '../../../api/nft';
+import {ReadNft,ReadCellNft,CancelSale,BuyNft} from '../../../api/nft';
 import Sale from '../../../abi/Sale.json';
 import SsafyToken from '../../../abi/SsafyToken.json';
 import {Wallet} from '../../../States/Wallet';
@@ -115,16 +115,13 @@ const Postmodal = (item) => {
       "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333"
     );
    
-    console.log("saleContract_1");
-    console.log("abcdefg");
     const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress);
     
-    console.log("saleContract_2");
     const approve = await erc20Contract.methods.approve(saleContractAddress, salePrice).send({ from: wallet });
-    console.log("saleContract_3");
     
     const purchase = await saleContract.methods.purchase().send({ from: wallet });
 
+    // send purchaseinfo to backend
     const buyNft = await BuyNft({
       "nftSeq": item.item.nftSeq,
       "nftOwnerAddress": wallet
@@ -132,24 +129,11 @@ const Postmodal = (item) => {
 
     setIsPurchaseLoaded(false);
   }
-
-//send purchaseinfo to backend
-  // const PurchaseOnServer = async () => {
-  //   console.log("PurchaseOnServer")
-  //   const request = 
-  //   console.log("4")
-  //   const { data: { data } } = await BuyNft({
-  //     "nftSeq": item.item.nftSeq,
-  //     "nftOwnerAddress": saleInfo.nftOwnerAddress
-  //   });
-  //   console.log("5")
-  // }
-
-  /////////////////////////////////////////////////////////
   
   // send cancel to blockchain network
   const handleCancelButtonClick = async () => {
     setIsPurchaseLoaded(true);
+    console.log("saleContractAddress : ",saleInfo)
     if (typeof window.ethereum != "undefined") {
       try {
         const web = new Web3(window.ethereum);
@@ -160,23 +144,22 @@ const Postmodal = (item) => {
     } else {
       console.log("ethereum is not defined")
     }
+    //saleContractAddress로 delete하자
     const saleContractAddress = saleInfo.saleContractAddress;
+    console.log(saleContractAddress);
     const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress, { from: wallet })
 
-    await saleContract.methods.cancelSales().send({ from: wallet }).then(() => { });
+    const cancelSales = await saleContract.methods.cancelSales().send({ from: wallet }).then(() => { });
     
-    cancelOnServer();
+    //send cancelInfo to backend
+    const cancelSale = await CancelSale({
+      "saleContractAddress" :  saleInfo.saleContractAddress
+    });
     
     setIsPurchaseLoaded(false);
   }
 
-//send cancelInfo to backend
-  const cancelOnServer = async () => {
-      const request = {
-   
-      };
-      const { data: { data } } = await BuyNft(request);
-  }
+
 
 
   const loading = (
