@@ -2,12 +2,10 @@ package com.sawyou.api.controller;
 
 import com.sawyou.api.request.UserLoginPostReq;
 import com.sawyou.api.request.UserUpdateInfoReq;
-import com.sawyou.api.request.UserUpdatePwdReq;
 import com.sawyou.api.response.UserListRes;
 import com.sawyou.api.response.UserLoginPostRes;
 import com.sawyou.common.model.response.Result;
 import com.sawyou.common.util.JwtTokenUtil;
-import com.sawyou.db.entity.Following;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -26,6 +24,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
@@ -159,6 +158,33 @@ public class UserController {
         return ResponseEntity.status(200).body(Result.builder().data(JwtTokenUtil.getToken(user.getUserId())).status(200).message("프로필 수정 성공").build());
     }
 
+    @PatchMapping("/profile")
+    @ApiOperation(value = "프로필 이미지 수정", notes = "유저의 프로필 이미지를 수정한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "프로필 수정 성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 409, message = "프로필 수정 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> updateUserImage(
+            @ApiIgnore Authentication authentication,
+            @RequestBody @ApiParam(value = "수정할 유저 이미지", required = true) MultipartFile userImage
+    ) {
+        if(authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().message("인증 실패").build());
+
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        String userId = userDetails.getUsername();
+        User oUser = userService.getUserByUserId(userId);
+
+        User user = userService.updateUserImage(userImage, oUser.getUserSeq());
+        if(user == null)
+            return ResponseEntity.status(409).body(Result.builder().status(409).message("프로필 이미지 수정 실패").build());
+
+        return ResponseEntity.status(200).body(Result.builder().data(user).status(200).message("프로필 이미지 수정 성공").build());
+    }
+
+
     @PatchMapping("/following/{followingToId}")
     @ApiOperation(value = "팔로잉/취소", notes = "유저를 팔로잉/취소한다.")
     @ApiResponses({
@@ -179,7 +205,7 @@ public class UserController {
         String userId = userDetails.getUsername();
         User user = userService.getUserByUserId(userId);
 
-        Long followingToSeq = userService.getUserByUserId(userId).getUserSeq();
+        Long followingToSeq = userService.getUserByUserId(followingToId).getUserSeq();
 
         // 팔로잉 하려는 userSeq가 본인인지 확인
         if(user.getUserSeq() == followingToSeq)
@@ -266,7 +292,7 @@ public class UserController {
         List<UserListRes> userList = userService.getUserFollowerList(userId);
 
         if(userList.isEmpty())
-            return ResponseEntity.status(404).body(Result.builder().data(userList).status(404).message("팔로잉 목록 없음").build());
+            return ResponseEntity.status(404).body(Result.builder().data(userList).status(404).message("팔로워 목록 없음").build());
 
         return ResponseEntity.status(200).body(Result.builder().data(userList).status(200).message("팔로워 목록 조회 성공").build());
     }

@@ -13,16 +13,16 @@ import java.util.List;
 public interface ListService {
 
     // 모든 게시글 조회
-    List<PostRes> getPostListAll(Pageable pageable);
+    List<PostRes> getPostListAll(Long userSeq, Pageable pageable);
 
     // 팔로잉 게시글 조회
     List<PostRes> getPostListFollowing(Long userSeq, Pageable pageable);
 
     // 유저 게시글 조회
-    List<PostRes> getPostListUser(String userId, Pageable pageable);
+    List<PostRes> getPostListUser(Long userSeq, String userId, Pageable pageable);
 
     // 해시태그 게시글 조회
-    List<PostRes> getPostListHashtag(Long hashtagSeq, Pageable pageable);
+    List<PostRes> getPostListHashtag(Long userSeq, Long hashtagSeq, Pageable pageable);
 
     // 계정 검색
     List<UserListRes> searchUserList(String keyword);

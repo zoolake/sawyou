@@ -14,7 +14,7 @@ import OnSaleModal from './OnSaleModal/index'
 import FollowerModal from './FollowerModal/index'
 import FollowModal from './FollowModal/index'
 import { UserPost } from '../../api/list';
-import { Profile as Profile2 } from '../../api/user';
+import { FollowingUser, Profile as Profile2 } from '../../api/user';
 import { User } from '../../States/User';
 import { useRecoilValue } from 'recoil';
 import { ReadAllNft, ReadAllSaleNft } from '../../api/nft';
@@ -53,17 +53,31 @@ const Profile = (props) => {
   const getProfile = async () => {
     const res = await Profile2(params)
     setUserData(res.data.data)
+    setFollowCheck(res.data.data.following)
   };
+
+  const changeFollow = () => {
+    if (followCheck === true){
+      setFollowCheck(false)
+    } 
+    else{
+      setFollowCheck(true)
+    }
+  }
+
+  const handleFollow = async () => {
+    const res = await FollowingUser(params).then(changeFollow())
+  }
 
 
   // 보유한 NFT 조회
   const getNfts = async () => {
-    const response = await ReadAllNft(user).then((res) => { setNfts(res.data.data)});
+    const response = await ReadAllNft(params).then((res) => { setNfts(res.data.data)});
 }
 
   // 판매중인 NFT 조회
   const getSales = async () => {
-    const response = await ReadAllSaleNft(user).then((res) => { setSales(res.data.data)});
+    const response = await ReadAllSaleNft(params).then((res) => { setSales(res.data.data)});
   }
 
 
@@ -77,109 +91,10 @@ const Profile = (props) => {
     else {
       setMyProfile(false)
     }
-
-    if (userData.isFollowing === true){
-      setFollowCheck(true)
-    }
-    else{
-      setFollowCheck(false)
-    }
   }, []);
 
-
-
-  const itemData = [
-    {
-      img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-      title: 'Breakfast',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-      title: 'Burger',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-      title: 'Camera',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-      title: 'Coffee',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-      title: 'Hats',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-      title: 'Honey',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-      title: 'Basketball',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-      title: 'Fern',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-      title: 'Mushrooms',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-      title: 'Tomato basil',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-      title: 'Sea star',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-      title: 'Bike',
-    },
-  ]
-
-  const itemData2 = [
-    {
-      img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-      title: 'Burger',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-      title: 'Breakfast',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-      title: 'Camera',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-      title: 'Tomato basil',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-      title: 'Sea star',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-      title: 'Bike',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-      title: 'Honey',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-      title: 'Basketball',
-    },
-  ]
-
-  // const [spacing, setSpacing] = React.useState(2);
   const classes = useStyles();
   const [alignment, setAlignment] = React.useState('1');
-
-
-
   const handleAlignment = (event, newAlignment) => {
     if (newAlignment !== null) {
       setAlignment(newAlignment);
@@ -261,6 +176,12 @@ const Profile = (props) => {
     )
   }
 
+  // const followButton = () => {
+  //   return (
+
+  //   )
+  // }
+
   return (
     <Wrapper>
       <main class="profile_main" role="main">
@@ -282,11 +203,11 @@ const Profile = (props) => {
             </div>
             <section class="profile_info">
               <div class="profile_info_header">
-                <h2 class="profile_name">asdf123</h2>
+                <h2 class="profile_name">{params}</h2>
                 <div class="profile_edit edit_outer">
                   <div class="profile_edit edit_inner">
                     {myProfile === true ?  <a class="profile_edit_btn" href="/profileedit" tabIndex="0">프로필 편집</a>
-                    : followCheck === true ? <Button variant="contained" >팔로우 해제</Button> : <Button variant="contained" >팔로우</Button>}
+                    :  followCheck===true ? <Button variant="contained" onClick={handleFollow}>팔로우 해제</Button> : <Button variant="contained" onClick={handleFollow}>팔로우</Button>}
                   </div>
                 </div>
               </div>

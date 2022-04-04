@@ -2,10 +2,10 @@ package com.sawyou.api.service;
 
 import com.sawyou.api.request.UserRegisterPostReq;
 import com.sawyou.api.request.UserUpdateInfoReq;
-import com.sawyou.api.request.UserUpdatePwdReq;
 import com.sawyou.api.response.UserListRes;
 import com.sawyou.api.response.UserRes;
 import com.sawyou.db.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,6 +24,9 @@ public interface UserService {
 
     // 유저 정보 수정
     User updateUserInfo(UserUpdateInfoReq updateInfo, Long userSeq);
+
+    // 유저 프로필 이미지 수정
+    User updateUserImage(MultipartFile userImage, Long userSeq);
 
     // 유저 팔로잉/취소
     boolean followingUser(User user, Long followingToSeq);

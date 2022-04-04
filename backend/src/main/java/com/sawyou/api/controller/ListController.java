@@ -43,7 +43,10 @@ public class ListController {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
-        List<PostRes> lists = listService.getPostListAll(pageable);
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        Long userSeq = userDetails.getUser().getUserSeq();
+
+        List<PostRes> lists = listService.getPostListAll(userSeq, pageable);
 
         if(lists.isEmpty())
             return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());
@@ -93,7 +96,10 @@ public class ListController {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
-        List<PostRes> lists = listService.getPostListUser(userId, pageable);
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        Long userSeq = userDetails.getUser().getUserSeq();
+
+        List<PostRes> lists = listService.getPostListUser(userSeq, userId, pageable);
 
         if(lists.isEmpty())
             return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());
@@ -117,7 +123,10 @@ public class ListController {
         if(authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
 
-        List<PostRes> lists = listService.getPostListHashtag(hashtagSeq, pageable);
+        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
+        Long userSeq = userDetails.getUser().getUserSeq();
+
+        List<PostRes> lists = listService.getPostListHashtag(userSeq, hashtagSeq, pageable);
 
         if(lists.isEmpty())
             return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());

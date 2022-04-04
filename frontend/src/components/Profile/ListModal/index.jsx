@@ -32,7 +32,6 @@ const style = {
 };
 
 const Postmodal = ({ item }) => {
-  console.log("item", item);
   const [open, setOpen] = React.useState(false);
   const [change, setChange] = React.useState(false);
   const handleOpen = () => setOpen(true);

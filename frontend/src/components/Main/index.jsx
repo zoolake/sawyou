@@ -4,6 +4,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Typography from '@mui/material/Typography';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {LikePost} from '../../api/post'
 import InputBase from "@mui/material/InputBase";
@@ -34,6 +35,7 @@ const Main = (props) => {
   
 
   const onSubmit = event => {
+    console.log(comment)
     event.preventDefault();
     if (comment === '') {
       return;
@@ -84,7 +86,7 @@ const Main = (props) => {
           <div className="post_article_comment">
             <div>
               {/* <h4 className="post_txt"><strong>{username}</strong> {caption}</h4> */}
-              <h4 className="post_text"><strong>leesh123</strong> {props.data.postContent}</h4>
+              <h4 className="post_text"><strong>{props.data.userId}</strong> {props.data.postContent}</h4>
             </div>
             {/* <ul>
               <Comment />
@@ -118,20 +120,16 @@ const Main = (props) => {
             게시
           </text>
         </form> */}
-        <div className="commentContainer" onSubmit={onSubmit}>
+        <div className="commentContainer" >
           <form className="commentWrap">
           <InputBase
             placeholder="내용 입력"
             onChange={onChange}
             sx={{width:'90%', ml:1}}
           />
-            <text 
-              type="button"
-              className={
-                isValid === true ? 'commentUploadBtnActive' : 'commentUploadBtnDeactive'
-              }>
-              게시
-            </text>
+            <Button>
+              <Typography onClick={onSubmit}>게시</Typography>
+            </Button>
           </form>
         </div>       
       </div>
