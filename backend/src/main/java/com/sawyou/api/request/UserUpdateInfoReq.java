@@ -20,4 +20,7 @@ public class UserUpdateInfoReq {
     private String userDesc;
     @ApiModelProperty(name = "유저 프로필 사진", example = "your_new_profile")
     private String userProfile;
+
+    @ApiModelProperty(name = "유저 비밀번호", example = "your_new_profile")
+    private String userPwd;
 }

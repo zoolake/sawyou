@@ -142,17 +142,8 @@ public class UserServiceImpl implements UserService {
         if(StringUtils.hasText(updateInfo.getUserProfile()))
             user.setUserProfile(updateInfo.getUserProfile());
 
-        return user;
-    }
-
-    // 유저 비밀번호 수정
-    @Override
-    @Transactional
-    public User updateUserPwd(UserUpdatePwdReq updatePwd, Long userSeq) {
-        User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
-
-        if(StringUtils.hasText(updatePwd.getUserPwd()))
-            user.setUserPwd(passwordEncoder.encode(updatePwd.getUserPwd()));
+        if(StringUtils.hasText(updateInfo.getUserPwd()))
+            user.setUserPwd(passwordEncoder.encode(updateInfo.getUserPwd()));
 
         return user;
     }
