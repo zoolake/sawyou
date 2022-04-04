@@ -46,10 +46,10 @@ public class ListServiceImpl implements ListService {
 
     // 모든 게시글 조회
     @Override
-    public List<PostRes> getPostListAll(Pageable pageable) {
+    public List<PostRes> getPostListAll(Long userSeq, Pageable pageable) {
         return postRepository.findAllByPostIsDeleteFalseOrderByPostWritingTimeDesc(pageable).stream().map(post -> {
             User user = post.getUser();
-            PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
+            PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(userSeq, post.getPostSeq());
             return PostRes.builder()
                     .postSeq(post.getPostSeq())
                     .postContent(post.getPostContent())
@@ -84,7 +84,7 @@ public class ListServiceImpl implements ListService {
             Long toSeq = following.getFollowingToSeq();
             User user = userRepositorySupport.findUserByUserSeq(toSeq).get();
             postRepository.findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(user.getUserSeq()).forEach(post -> {
-                PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
+                PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(userSeq, post.getPostSeq());
                 postResList.add(PostRes.builder()
                         .postSeq(post.getPostSeq())
                         .postContent(post.getPostContent())
@@ -110,12 +110,12 @@ public class ListServiceImpl implements ListService {
 
     // 유저 게시글 조회
     @Override
-    public List<PostRes> getPostListUser(String userId, Pageable pageable) {
-        Long userSeq = userRepository.findByUserId(userId).get().getUserSeq();
+    public List<PostRes> getPostListUser(Long userSeq, String userId, Pageable pageable) {
+        Long findUserSeq = userRepository.findByUserId(userId).get().getUserSeq();
 
-        return postRepository.findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(userSeq, pageable).stream().map(post -> {
-            User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
-            PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
+        return postRepository.findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(findUserSeq, pageable).stream().map(post -> {
+            User user = userRepositorySupport.findUserByUserSeq(findUserSeq).get();
+            PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(userSeq, post.getPostSeq());
             return PostRes.builder()
                     .postSeq(post.getPostSeq())
                     .postContent(post.getPostContent())
@@ -139,14 +139,14 @@ public class ListServiceImpl implements ListService {
 
     // 해시태그 게시글 조회
     @Override
-    public List<PostRes> getPostListHashtag(Long hashtagSeq, Pageable pageable) {
+    public List<PostRes> getPostListHashtag(Long userSeq, Long hashtagSeq, Pageable pageable) {
         Long offset = pageable.getOffset();
         int size = pageable.getPageSize();
 
         List<PostRes> list = postHashtagRepository.findPostHashtagByHashtag_HashtagSeq(hashtagSeq).stream().map(postHashtag -> {
             Post post = postHashtag.getPost();
             User user = post.getUser();
-            PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(user.getUserSeq(), post.getPostSeq());
+            PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(userSeq, post.getPostSeq());
             return PostRes.builder()
                     .postSeq(post.getPostSeq())
                     .postContent(post.getPostContent())
