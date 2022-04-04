@@ -19,6 +19,4 @@ public class UserRegisterPostReq {
     private String userName;
     @ApiModelProperty(name = "유저 이메일", example = "your_email")
     private String userEmail;
-    @ApiModelProperty(name = "유저 소개", example = "your_desc")
-    private String userDesc;
 }

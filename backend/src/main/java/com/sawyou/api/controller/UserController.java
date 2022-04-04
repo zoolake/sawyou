@@ -2,12 +2,10 @@ package com.sawyou.api.controller;
 
 import com.sawyou.api.request.UserLoginPostReq;
 import com.sawyou.api.request.UserUpdateInfoReq;
-import com.sawyou.api.request.UserUpdatePwdReq;
 import com.sawyou.api.response.UserListRes;
 import com.sawyou.api.response.UserLoginPostRes;
 import com.sawyou.common.model.response.Result;
 import com.sawyou.common.util.JwtTokenUtil;
-import com.sawyou.db.entity.Following;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

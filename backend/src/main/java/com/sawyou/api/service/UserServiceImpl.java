@@ -1,7 +1,6 @@
 package com.sawyou.api.service;
 
 import com.sawyou.api.request.UserUpdateInfoReq;
-import com.sawyou.api.request.UserUpdatePwdReq;
 import com.sawyou.api.response.UserListRes;
 import com.sawyou.api.response.UserRes;
 import com.sawyou.db.entity.*;
@@ -76,7 +75,6 @@ public class UserServiceImpl implements UserService {
                 .userPwd(passwordEncoder.encode(userRegisterInfo.getUserPwd()))
                 .userName(userRegisterInfo.getUserName())
                 .userEmail(userRegisterInfo.getUserEmail())
-                .userDesc(userRegisterInfo.getUserDesc())
                 .build();
         
         return userRepository.save(user);
@@ -143,9 +141,6 @@ public class UserServiceImpl implements UserService {
 
         if(StringUtils.hasText(updateInfo.getUserDesc()))
             user.setUserDesc(updateInfo.getUserDesc());
-
-        if(StringUtils.hasText(updateInfo.getUserProfile()))
-            user.setUserProfile(updateInfo.getUserProfile());
 
         if(StringUtils.hasText(updateInfo.getUserPwd()))
             user.setUserPwd(passwordEncoder.encode(updateInfo.getUserPwd()));
