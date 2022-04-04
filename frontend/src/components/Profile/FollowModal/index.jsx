@@ -10,7 +10,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import InputBase from "@mui/material/InputBase";
 import {ReadFollowingUser} from "../../../api/user"
 import CloseIcon from '@mui/icons-material/Close';
-import { SettingsInputAntennaTwoTone } from '@mui/icons-material';
+import { User } from '../../../States/User';
+import { useRecoilValue } from 'recoil';
 
 const style = {
   position: 'absolute',
@@ -30,6 +31,7 @@ const style = {
 };
 
 const Postmodal = (props) => {
+  const user = useRecoilValue(User)
   const [open, setOpen] = React.useState(false);
   const data = props.item;
   const handleOpen = () => setOpen(true);
@@ -38,11 +40,10 @@ const Postmodal = (props) => {
 
   useEffect(() => {
     Read()
-    console.log(data)
   }, [open]);
 
   const Read = async () => {
-    const res = await ReadFollowingUser(data.userSeq).then((res) => setFollower(res.data.data))
+    const res = await ReadFollowingUser(user).then((res) => setFollower(res.data.data))
   }
 
 
@@ -92,7 +93,7 @@ const Postmodal = (props) => {
           minHeight: "24px",
           padding: "0 0 0 0px"
         }}>
-          <Typography>팔로우 {data.followerCnt}</Typography>
+          <Typography>팔로우 {data.followingCnt}</Typography>
         </Button>
       <Modal
       open={open}

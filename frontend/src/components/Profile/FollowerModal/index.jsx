@@ -1,16 +1,12 @@
 import React, { useState, useEffect }  from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
-import Wrapper from '../styles';
-import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import Typography from '@mui/material/Typography';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import InputBase from "@mui/material/InputBase";
 import {ReadFollowerUser} from "../../../api/user"
 import CloseIcon from '@mui/icons-material/Close';
-import { SettingsInputAntennaTwoTone } from '@mui/icons-material';
+import { User } from '../../../States/User';
+import { useRecoilValue } from 'recoil';
 
 const style = {
   position: 'absolute',
@@ -30,6 +26,7 @@ const style = {
 };
 
 const Postmodal = (props) => {
+  const user = useRecoilValue(User)
   const [open, setOpen] = React.useState(false);
   const data = props.item;
   const handleOpen = () => setOpen(true);
@@ -38,11 +35,11 @@ const Postmodal = (props) => {
 
   useEffect(() => {
     Read()
-    console.log(data)
+
   }, [open]);
 
   const Read = async () => {
-    const res = await ReadFollowerUser(data.userSeq).then((res) => setFollower(res.data.data))
+    const res = await ReadFollowerUser(user).then((res) => setFollower(res.data.data))
   }
 
 
