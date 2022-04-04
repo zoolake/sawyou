@@ -72,7 +72,7 @@ export const CellNft = (data) => {
 export const BuyNft = (data) => {
   const instance = CreateInstance();
   try {
-    const res = instance.post(`/nft/purchase`, data)
+    const res = instance.patch(`/nft/purchase`, data)
     return res
   } catch (error) {
     console.log(error)

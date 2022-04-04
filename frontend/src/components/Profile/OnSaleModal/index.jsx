@@ -1,4 +1,5 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState, useEffect } from 'react';
+import { CircularProgress } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
@@ -9,12 +10,16 @@ import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {ReadNft,ReadCellNft} from '../../../api/nft';
+import {ReadNft,ReadCellNft,ReadAllSaleNft,BuyNft} from '../../../api/nft';
 import Sale from '../../../abi/Sale.json';
 import SsafyToken from '../../../abi/SsafyToken.json';
-import { Wallet } from '../../../States/Wallet';
+import {Wallet} from '../../../States/Wallet';
+import {User} from '../../../States/User';
 import { useRecoilValue } from 'recoil';
 import Web3 from 'web3';
+import { textAlign } from '@mui/system';
+import { useParams } from 'react-router';
+
 
 const style = {
   position: 'absolute',
@@ -33,6 +38,7 @@ const style = {
 const Postmodal = (item) => {
   console.log("이상해요!!", item.item);
   
+  
   const [open, setOpen] = React.useState(false);
   const [onwerid, setOwnerid] = React.useState('소유자');
   const [id, setId] = React.useState('민팅한 사람');
@@ -43,39 +49,19 @@ const Postmodal = (item) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [nftDetail, setNftDetail] = useState('');
-  const [saleInfo, setSaleInfo] = useState('');
+  const [saleInfo, setSaleInfo] = useState('abc');
   const wallet = useRecoilValue(Wallet);
+  const userId = useRecoilValue(User);
   const [web3, setWeb3] = React.useState();
-
+  const [isPurchaseLoaded, setIsPurchaseLoaded] = useState(false);
  
   useEffect(() => {
     if (selectedImage) {
       setImageUrl(URL.createObjectURL(selectedImage));
     }
-    ReadNft(item.item.nftSeq).then((res) => {
-      setNftDetail(res.data.data)
-      console.log(res.data.data)
-    });
-    ReadCellNft(item.item.nftSeq).then((res) => {
-      setSaleInfo(res.data.data)
-      console.log(res.data.data)
-    });
   }, [selectedImage]); 
   
-
-    /*
-  - 판매중인 NFT에서 선택
-- 지금 구매
-- 판매 table에서 NFT의 tokenId와 Sale Contract Address를 얻어온다.
-- 불러온 Sale CA를 통해 instance를 만들어 `purchase()` 를 호출한다.
-    - `purchase()` 호출 전에 해당 Sale Contract가 구매자의 돈을 사용할 수 있게 구매가격만큼 approve 해준다.
-- 구매 성공시 판매 테이블에서 판매여부Y/N을 업데이트 해준다.
-- tokenID를 활용하여 해당 NFT의 소유자를 변경해준다. (NFT 테이블)
-    - 유저 일련번호 업데이트
-    - 소유자 지갑 주소 업데이트
-  */
-  // 구매 : 블록체인
-  const handlePurchaseButtonClick = async () => {
+  useEffect(() => {
 
     if (typeof window.ethereum != "undefined") {
       try {
@@ -87,25 +73,122 @@ const Postmodal = (item) => {
     } else {
       console.log("ethereum is not defined")
     }
-    const tokenId = nftDetail.nftTokenId;
+
+     ReadCellNft(item.item.nftSeq).then((r) => {
+      console.log("saleInfo",r.data.data)
+      setSaleInfo(r.data.data);
+    })
+  },[])
+
+    /*
+  - 판매중인 NFT에서 선택 
+- 지금 구매
+- 판매 table에서 NFT의 tokenId와 Sale Contract Address를 얻어온다.
+- 불러온 Sale CA를 통해 instance를 만들어 `purchase()` 를 호출한다.
+    - `purchase()` 호출 전에 해당 Sale Contract가 구매자의 돈을 사용할 수 있게 구매가격만큼 approve 해준다.
+- 구매 성공시 판매 테이블에서 판매여부Y/N을 업데이트 해준다.
+- tokenID를 활용하여 해당 NFT의 소유자를 변경해준다. (NFT 테이블)
+    - 유저 일련번호 업데이트
+    - 소유자 지갑 주소 업데이트
+  */
+  
+  /*
+    시나리오
+    1. 판매중인 nft 사진을 누른다
+    2-1. 나의 판매중인 nft라면 "판매 취소"버튼이 활성화
+    2-2. 상대방의 판매중인 nft라면 "구매하기" 버튼이 활성화
+    3. "구매하기"를 누르면 구매가 완료될때까지 loading 
+
+  */
+  // send purchase to blockchain network
+  const handlePurchaseButtonClick = async () => {
+ 
+    setIsPurchaseLoaded(true);
+    console.log("saleContractAddress : ",saleInfo)
     const saleContractAddress = saleInfo.saleContractAddress;
-    
+
+    const salePrice = saleInfo.salePrice;
+    console.log("salePrice : ", saleInfo.salePrice)
 
     const erc20Contract = await new web3.eth.Contract(
       SsafyToken.abi,
       "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333"
     );
-    const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress, { from: wallet })
+   
+    console.log("saleContract_1");
+    console.log("abcdefg");
+    const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress);
     
+    console.log("saleContract_2");
+    const approve = await erc20Contract.methods.approve(saleContractAddress, salePrice).send({ from: wallet });
+    console.log("saleContract_3");
+    
+    const purchase = await saleContract.methods.purchase().send({ from: wallet });
 
-    await erc20Contract.methods
-    .approve("0x3324E5DadE41060B66d280A27c3CB87e22d43848", 10)
-    .send({ from: wallet })
-      .then(() => { });
-    
-    await saleContract.methods.purchase().send({from : wallet})
-    
+    const buyNft = await BuyNft({
+      "nftSeq": item.item.nftSeq,
+      "nftOwnerAddress": wallet
+    });
+
+    setIsPurchaseLoaded(false);
   }
+
+//send purchaseinfo to backend
+  // const PurchaseOnServer = async () => {
+  //   console.log("PurchaseOnServer")
+  //   const request = 
+  //   console.log("4")
+  //   const { data: { data } } = await BuyNft({
+  //     "nftSeq": item.item.nftSeq,
+  //     "nftOwnerAddress": saleInfo.nftOwnerAddress
+  //   });
+  //   console.log("5")
+  // }
+
+  /////////////////////////////////////////////////////////
+  
+  // send cancel to blockchain network
+  const handleCancelButtonClick = async () => {
+    setIsPurchaseLoaded(true);
+    if (typeof window.ethereum != "undefined") {
+      try {
+        const web = new Web3(window.ethereum);
+        setWeb3(web);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      console.log("ethereum is not defined")
+    }
+    const saleContractAddress = saleInfo.saleContractAddress;
+    const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress, { from: wallet })
+
+    await saleContract.methods.cancelSales().send({ from: wallet }).then(() => { });
+    
+    cancelOnServer();
+    
+    setIsPurchaseLoaded(false);
+  }
+
+//send cancelInfo to backend
+  const cancelOnServer = async () => {
+      const request = {
+   
+      };
+      const { data: { data } } = await BuyNft(request);
+  }
+
+
+  const loading = (
+    
+    isPurchaseLoaded ? <Box sx={{textAlign:'center'}}><CircularProgress/></Box>:
+    userId!==saleInfo.sellerId?
+    <Button sx={{ width: '100%' }} onClick={handlePurchaseButtonClick}>
+      구매하기
+    </Button> : <Button sx={{ width: '100%' }} onClick={handleCancelButtonClick}>
+      판매 취소
+    </Button> 
+  )
 
   
   
@@ -131,13 +214,12 @@ const Postmodal = (item) => {
           </Box>
           <Box><Typography>작성자 : {nftDetail.nftOwnerName} </Typography></Box>
           <Box><Typography>제작 시간 : {nftDetail.nftCreatedAt} </Typography></Box>
-          <Box><Typography>작품 제목 : {nftDetail.nftTitle} </Typography></Box>
+            <Box><Typography>작품 제목 : {nftDetail.nftTitle} </Typography></Box>
+          
           </Box>
-          <Button sx={{ width: '100%' }}>
-          판매하기
-          </Button>
+           
+          {loading}
         </Box>
-
         </Box>
 
     </Box>
