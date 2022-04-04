@@ -1,7 +1,6 @@
 package com.sawyou.api.service;
 
 import com.sawyou.api.request.UserUpdateInfoReq;
-import com.sawyou.api.request.UserUpdatePwdReq;
 import com.sawyou.api.response.UserListRes;
 import com.sawyou.api.response.UserRes;
 import com.sawyou.db.entity.*;
@@ -76,7 +75,6 @@ public class UserServiceImpl implements UserService {
                 .userPwd(passwordEncoder.encode(userRegisterInfo.getUserPwd()))
                 .userName(userRegisterInfo.getUserName())
                 .userEmail(userRegisterInfo.getUserEmail())
-                .userDesc(userRegisterInfo.getUserDesc())
                 .build();
         
         return userRepository.save(user);
@@ -143,9 +141,6 @@ public class UserServiceImpl implements UserService {
 
         if(StringUtils.hasText(updateInfo.getUserDesc()))
             user.setUserDesc(updateInfo.getUserDesc());
-
-        if(StringUtils.hasText(updateInfo.getUserProfile()))
-            user.setUserProfile(updateInfo.getUserProfile());
 
         if(StringUtils.hasText(updateInfo.getUserPwd()))
             user.setUserPwd(passwordEncoder.encode(updateInfo.getUserPwd()));
@@ -244,7 +239,8 @@ public class UserServiceImpl implements UserService {
         User user = userRepositorySupport.findUserByUserId(userId).get();
 
         return followingRepository.findByUser_UserSeq(user.getUserSeq()).stream().map(following -> {
-            User followingUser = following.getUser();
+            Long followingUserSeq = following.getFollowingToSeq();
+            User followingUser = userRepositorySupport.findUserByUserSeq(followingUserSeq).get();
             return UserListRes.builder()
                     .userSeq(followingUser.getUserSeq())
                     .userId(followingUser.getUserId())
@@ -254,7 +250,7 @@ public class UserServiceImpl implements UserService {
         }).collect(Collectors.toList());
     }
 
-    // 유저희 팔로워 리스트 조회
+    // 유저의 팔로워 리스트 조회
     @Override
     public List<UserListRes> getUserFollowerList(String userId) {
         User user = userRepositorySupport.findUserByUserId(userId).get();

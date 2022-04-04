@@ -2,12 +2,10 @@ package com.sawyou.api.controller;
 
 import com.sawyou.api.request.UserLoginPostReq;
 import com.sawyou.api.request.UserUpdateInfoReq;
-import com.sawyou.api.request.UserUpdatePwdReq;
 import com.sawyou.api.response.UserListRes;
 import com.sawyou.api.response.UserLoginPostRes;
 import com.sawyou.common.model.response.Result;
 import com.sawyou.common.util.JwtTokenUtil;
-import com.sawyou.db.entity.Following;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -294,7 +292,7 @@ public class UserController {
         List<UserListRes> userList = userService.getUserFollowerList(userId);
 
         if(userList.isEmpty())
-            return ResponseEntity.status(404).body(Result.builder().data(userList).status(404).message("팔로잉 목록 없음").build());
+            return ResponseEntity.status(404).body(Result.builder().data(userList).status(404).message("팔로워 목록 없음").build());
 
         return ResponseEntity.status(200).body(Result.builder().data(userList).status(200).message("팔로워 목록 조회 성공").build());
     }

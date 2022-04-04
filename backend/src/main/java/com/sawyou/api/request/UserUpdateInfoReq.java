@@ -18,9 +18,6 @@ public class UserUpdateInfoReq {
     private String userEmail;
     @ApiModelProperty(name = "유저 소개", example = "your_new_desc")
     private String userDesc;
-    @ApiModelProperty(name = "유저 프로필 사진", example = "your_new_profile")
-    private String userProfile;
-
     @ApiModelProperty(name = "유저 비밀번호", example = "your_new_profile")
     private String userPwd;
 }
