@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Box, Input, Button, InputBase, Grid } from '@mui/material';
+import { Modal, Box, Input, Button, InputBase, Grid, CircularProgress } from '@mui/material';
 import Wrapper from '../styles';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
@@ -32,7 +32,7 @@ const style = {
 };
 
 const Postmodal = ({ item }) => {
-  console.log("item",item);
+  console.log("item", item);
   const [open, setOpen] = React.useState(false);
   const [change, setChange] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -132,7 +132,7 @@ const Postmodal = ({ item }) => {
     };
 
     const { data: { data } } = await MintingNft(request);
-    setNftSeq(data);    
+    setNftSeq(data);
   }
 
   /* 판매 (민팅 + 판매) */
@@ -206,7 +206,7 @@ const Postmodal = ({ item }) => {
       <Box sx={{ display: 'flex', height: '100%' }}>
         <Box sx={{ width: '68.3%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Box sx={{ width: '100%', height: '100%' }}>
-            <img src={ item.postPictureLink} height="100%" width="100%" />
+            <img src={item.postPictureLink} height="100%" width="100%" />
             {/* <img src={props.item.img} alt={props.item.img} height="100%" width="100%" /> */}
           </Box>
         </Box>
@@ -218,12 +218,17 @@ const Postmodal = ({ item }) => {
             <Button onClick={onSendDelete} sx={{ width: '5%', minWidth: 40 }}><DeleteIcon sx={{ color: 'black' }}></DeleteIcon></Button>
           </Box>
           <Box sx={{ height: '90%' }}>{item.postContent}</Box>
-          <Button sx={{ width: '50%' }} onClick={handleMintingButtonClick} disabled={isMintingLoaded}>
-            민팅하기
-          </Button>
-          <Button sx={{ width: '50%' }} onClick={handleSellButtonClick}>
-            판매하기
-          </Button>
+          {
+            isMintingLoaded === true ? <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
+              <div>
+                <Button sx={{ width: '50%' }} onClick={handleMintingButtonClick} disabled={isMintingLoaded}>
+                  민팅하기
+                </Button>
+                <Button sx={{ width: '50%' }} onClick={handleSellButtonClick}>
+                  판매하기
+                </Button>
+              </div>
+          }
         </Box>
 
       </Box>
