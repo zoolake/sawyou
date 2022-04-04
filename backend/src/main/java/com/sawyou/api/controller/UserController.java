@@ -292,7 +292,7 @@ public class UserController {
         List<UserListRes> userList = userService.getUserFollowerList(userId);
 
         if(userList.isEmpty())
-            return ResponseEntity.status(404).body(Result.builder().data(userList).status(404).message("팔로잉 목록 없음").build());
+            return ResponseEntity.status(404).body(Result.builder().data(userList).status(404).message("팔로워 목록 없음").build());
 
         return ResponseEntity.status(200).body(Result.builder().data(userList).status(200).message("팔로워 목록 조회 성공").build());
     }
