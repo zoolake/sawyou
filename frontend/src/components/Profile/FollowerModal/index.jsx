@@ -5,8 +5,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import {ReadFollowerUser} from "../../../api/user"
 import CloseIcon from '@mui/icons-material/Close';
-import { User } from '../../../States/User';
-import { useRecoilValue } from 'recoil';
+import { useParams } from 'react-router';
 
 const style = {
   position: 'absolute',
@@ -26,7 +25,7 @@ const style = {
 };
 
 const Postmodal = (props) => {
-  const user = useRecoilValue(User)
+  const params = useParams().id;
   const [open, setOpen] = React.useState(false);
   const data = props.item;
   const handleOpen = () => setOpen(true);
@@ -39,7 +38,7 @@ const Postmodal = (props) => {
   }, [open]);
 
   const Read = async () => {
-    const res = await ReadFollowerUser(user).then((res) => setFollower(res.data.data))
+    const res = await ReadFollowerUser(params).then((res) => setFollower(res.data.data))
   }
 
 

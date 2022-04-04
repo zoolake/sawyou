@@ -84,7 +84,7 @@ export const DeleteUser = () => {
 export const FollowingUser = (num) => {
   const instance = CreateInstance();
   try {
-    const res = instance.patch(`/user/followiing/${num}`)
+    const res = instance.patch(`/user/following/${num}`)
     return res
   } catch (error) {
     console.log(error)

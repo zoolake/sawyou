@@ -14,7 +14,7 @@ import OnSaleModal from './OnSaleModal/index'
 import FollowerModal from './FollowerModal/index'
 import FollowModal from './FollowModal/index'
 import { UserPost } from '../../api/list';
-import { Profile as Profile2 } from '../../api/user';
+import { FollowingUser, Profile as Profile2 } from '../../api/user';
 import { User } from '../../States/User';
 import { useRecoilValue } from 'recoil';
 import { ReadAllNft, ReadAllSaleNft } from '../../api/nft';
@@ -53,7 +53,21 @@ const Profile = (props) => {
   const getProfile = async () => {
     const res = await Profile2(params)
     setUserData(res.data.data)
+    setFollowCheck(res.data.data.following)
   };
+
+  const changeFollow = () => {
+    if (followCheck === true){
+      setFollowCheck(false)
+    } 
+    else{
+      setFollowCheck(true)
+    }
+  }
+
+  const handleFollow = async () => {
+    const res = await FollowingUser(params).then(changeFollow())
+  }
 
 
   // 보유한 NFT 조회
@@ -76,13 +90,6 @@ const Profile = (props) => {
     }
     else {
       setMyProfile(false)
-    }
-
-    if (userData.isFollowing === true){
-      setFollowCheck(true)
-    }
-    else{
-      setFollowCheck(false)
     }
   }, []);
 
@@ -169,6 +176,12 @@ const Profile = (props) => {
     )
   }
 
+  // const followButton = () => {
+  //   return (
+
+  //   )
+  // }
+
   return (
     <Wrapper>
       <main class="profile_main" role="main">
@@ -190,11 +203,11 @@ const Profile = (props) => {
             </div>
             <section class="profile_info">
               <div class="profile_info_header">
-                <h2 class="profile_name">asdf123</h2>
+                <h2 class="profile_name">{params}</h2>
                 <div class="profile_edit edit_outer">
                   <div class="profile_edit edit_inner">
                     {myProfile === true ?  <a class="profile_edit_btn" href="/profileedit" tabIndex="0">프로필 편집</a>
-                    : followCheck === true ? <Button variant="contained" >팔로우 해제</Button> : <Button variant="contained" >팔로우</Button>}
+                    :  followCheck===true ? <Button variant="contained" onClick={handleFollow}>팔로우 해제</Button> : <Button variant="contained" onClick={handleFollow}>팔로우</Button>}
                   </div>
                 </div>
               </div>
