@@ -1,5 +1,6 @@
 package com.sawyou.api.controller;
 
+import com.sawyou.api.request.CancelSaleReq;
 import com.sawyou.api.request.NftMintReq;
 import com.sawyou.api.request.NftPurchaseReq;
 import com.sawyou.api.request.NftSaleReq;
@@ -186,5 +187,23 @@ public class NFTController {
         SawyouUserDetails details = (SawyouUserDetails) authentication.getDetails();
         Sale sale = nftService.purchase(nftPurchaseReq, details.getUser().getUserSeq());
         return ResponseEntity.status(200).body(Result.builder().status(201).message("구매 성공").build());
+    }
+
+
+    @DeleteMapping("cancel")
+    @ApiOperation(value = "NFT 삭제", notes = "판매중인 NFT를 삭제한다..")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "NFT가 없음"),
+            @ApiResponse(code = 409, message = "NFT 구매 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Result> cancel(@ApiIgnore Authentication authentication,@RequestBody CancelSaleReq cancelSaleReq) {
+        if (authentication == null)
+            return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
+        if(nftService.cancelSale(cancelSaleReq)==0)return ResponseEntity.status(404).body(Result.builder().status(401).message("삭제된것이 없음").build());
+
+        return ResponseEntity.status(200).body(Result.builder().status(201).message("삭제 성공").build());
     }
 }

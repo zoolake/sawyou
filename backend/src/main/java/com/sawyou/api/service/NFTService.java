@@ -1,5 +1,6 @@
 package com.sawyou.api.service;
 
+import com.sawyou.api.request.CancelSaleReq;
 import com.sawyou.api.request.NftMintReq;
 import com.sawyou.api.request.NftPurchaseReq;
 import com.sawyou.api.request.NftSaleReq;
@@ -33,4 +34,7 @@ public interface NFTService {
 
     // 유저가 판매중인 NFT 조회
     List<NftListRes> getUserSaleList(String userId);
+
+    // 판매중인 NFT 삭제
+    Long cancelSale(CancelSaleReq cancelSaleReq);
 }

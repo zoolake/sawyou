@@ -1,5 +1,6 @@
 package com.sawyou.api.service;
 
+import com.sawyou.api.request.CancelSaleReq;
 import com.sawyou.api.request.NftMintReq;
 import com.sawyou.api.request.NftPurchaseReq;
 import com.sawyou.api.request.NftSaleReq;
@@ -182,5 +183,16 @@ public class NFTServiceImpl implements NFTService {
                 .collect(Collectors.toList());
     }
 
-
+    /**
+     * 판매중인 NFT 삭제
+     * saleContractAddress 를 활용하여 해당 유저가 판매중인 NFT를 삭제한다.
+     * written by 김정혁
+     */
+    @Override
+    @Transactional
+    public Long cancelSale(CancelSaleReq cancelSaleReq) {
+       Long deleteBySaleCount =  saleRepository.deleteBySaleContractAddress(cancelSaleReq.getSaleContractAddress());
+       return deleteBySaleCount;
+    }
+    
 }
