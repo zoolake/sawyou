@@ -59,6 +59,7 @@ const Profileedit = () => {
 
     async function B() {
       const res = await EditProfile(body).then((res) => localStorage.setItem('access_token', res.data.data))
+      setUser(id)
     }
 
     B()
