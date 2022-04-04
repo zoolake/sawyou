@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface SaleRepository extends JpaRepository<Sale,Long> {
     List<Sale> findByIsSold(Boolean isSold);
     Sale findByNftNftSeqAndIsSold(Long nftSeq,Boolean isSold);
+    Long deleteBySaleContractAddress(String saleContractAddress);
 }
