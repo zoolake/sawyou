@@ -134,7 +134,7 @@ public class UserController {
     }
 
     @PatchMapping
-    @ApiOperation(value = "프로필 수정", notes = "유저의 프로필 정보를 수정한다.")
+    @ApiOperation(value = "프로필/비밀번호 수정", notes = "유저의 프로필/비밀번호 정보를 수정한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "프로필 수정 성공"),
             @ApiResponse(code = 401, message = "인증 실패"),
@@ -158,33 +158,6 @@ public class UserController {
 
         return ResponseEntity.status(200).body(Result.builder().data(JwtTokenUtil.getToken(user.getUserId())).status(200).message("프로필 수정 성공").build());
     }
-
-    @PatchMapping("/pwd")
-    @ApiOperation(value = "비밀번호 수정", notes = "유저의 비밀번호를 수정한다.")
-    @ApiResponses({
-            @ApiResponse(code = 204, message = "성공"),
-            @ApiResponse(code = 401, message = "인증 실패"),
-            @ApiResponse(code = 404, message = "사용자 없음"),
-            @ApiResponse(code = 500, message = "서버 오류")
-    })
-    public ResponseEntity<Result> updateUserPwd(
-            @ApiIgnore Authentication authentication,
-            @RequestBody @ApiParam(value = "변경할 비밀번호", required = true) UserUpdatePwdReq updatePwd
-    ) {
-        if(authentication == null)
-            return ResponseEntity.status(401).body(Result.builder().message("인증 실패").build());
-
-        SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
-        String userId = userDetails.getUsername();
-        User oUser = userService.getUserByUserId(userId);
-
-        User user = userService.updateUserPwd(updatePwd, oUser.getUserSeq());
-        if(user == null)
-            return ResponseEntity.status(409).body(Result.builder().status(409).message("비밀번호 수정 실패").build());
-
-        return ResponseEntity.status(204).body(Result.builder().data(user).status(204).message("비밀번호 수정 성공").build());
-    }
-
 
     @PatchMapping("/following/{followingToId}")
     @ApiOperation(value = "팔로잉/취소", notes = "유저를 팔로잉/취소한다.")

@@ -25,9 +25,6 @@ public interface UserService {
     // 유저 정보 수정
     User updateUserInfo(UserUpdateInfoReq updateInfo, Long userSeq);
 
-    // 유저 비밀번호 수정
-    User updateUserPwd(UserUpdatePwdReq updatePwd, Long userSeq);
-
     // 유저 팔로잉/취소
     boolean followingUser(User user, Long followingToSeq);
 
