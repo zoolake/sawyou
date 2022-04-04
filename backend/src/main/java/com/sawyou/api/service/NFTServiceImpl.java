@@ -194,5 +194,5 @@ public class NFTServiceImpl implements NFTService {
        Long deleteBySaleCount =  saleRepository.deleteBySaleContractAddress(cancelSaleReq.getSaleContractAddress());
        return deleteBySaleCount;
     }
-    
+
 }
