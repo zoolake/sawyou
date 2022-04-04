@@ -74,6 +74,7 @@ const Postmodal = ({ item }) => {
   const Delete = async () => {
     const res = await DeletePost(userSeq)
     handleClose()
+    window.location.reload()
   };
 
   useEffect(() => {

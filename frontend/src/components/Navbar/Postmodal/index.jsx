@@ -50,6 +50,7 @@ const Postmodal = (props) => {
     .catch(err => {
       console.log(err)
     })
+    window.location.reload()
   }
   
   const onChangeContent = (e) => {

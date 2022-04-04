@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Wrapper from './styles';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -6,7 +6,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import {LikePost} from '../../api/post'
+import {LikePost, WriteComment, ReadCommnet} from '../../api/post'
 import InputBase from "@mui/material/InputBase";
 
 
@@ -18,6 +18,7 @@ const Main = (props) => {
   const onChange = event => setComment(event.target.value);
   const [imgurl, setImgurl] = useState([''])
   const [like, setLike] = useState(props.data.postIsLike)
+  const [dataComment, setDataComment] = useState('');
 
   const handelLike = (e) => {
     sendLike()
@@ -32,18 +33,32 @@ const Main = (props) => {
   const sendLike = async() => {
     const res = await LikePost(props.data.postSeq)
   }
+
+  const getComment = async() => {
+    const res = await ReadCommnet(props.data.postSeq)
+    setDataComment(res.data.data)
+    console.log(res)
+  }
   
 
   const onSubmit = event => {
-    console.log(comment)
     event.preventDefault();
-    if (comment === '') {
+    if (comment.trim() === '') {
       return;
     }
-    setCommentArray(commentValueList => [comment, ...commentValueList]);
-    setComment('');
-    setIsValid(false);
+    // setCommentArray(commentValueList => [comment, ...commentValueList]);
+    // setComment('');
+    // setIsValid(false);
+    const body = {
+      commentContent : comment
+    }
+    WriteComment(props.data.postSeq, body)
+    getComment()
   };
+
+  useEffect(() => {
+    getComment()
+  }, []);
 
   return (
     <Wrapper>
@@ -88,6 +103,7 @@ const Main = (props) => {
               {/* <h4 className="post_txt"><strong>{username}</strong> {caption}</h4> */}
               <h4 className="post_text"><strong>{props.data.userId}</strong> {props.data.postContent}</h4>
             </div>
+            {dataComment && dataComment.map((data) => <Typography>{data.commentContent}</Typography>)}
             {/* <ul>
               <Comment />
             </ul> */}
