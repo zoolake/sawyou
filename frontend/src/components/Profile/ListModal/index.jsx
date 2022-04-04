@@ -32,7 +32,6 @@ const style = {
 };
 
 const Postmodal = ({ item }) => {
-  console.log("item",item);
   const [open, setOpen] = React.useState(false);
   const [change, setChange] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -217,7 +216,7 @@ const Postmodal = ({ item }) => {
             <Button onClick={handleChange} sx={{ width: '5%', minHeight: 0, minWidth: 40 }}><AutoFixNormalIcon sx={{ color: 'black' }}></AutoFixNormalIcon></Button>
             <Button onClick={onSendDelete} sx={{ width: '5%', minWidth: 40 }}><DeleteIcon sx={{ color: 'black' }}></DeleteIcon></Button>
           </Box>
-          <Box sx={{ height: '90%' }}>{item.postContent}</Box>
+          <Box sx={{ height: '90%' }}>{post.postContent}</Box>
           <Button sx={{ width: '50%' }} onClick={handleMintingButtonClick} disabled={isMintingLoaded}>
             민팅하기
           </Button>
