@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import ListModal from './ListModal/index'
 import NftModal from './NftModal/index'
+import OnSaleModal from './OnSaleModal/index'
 import { UserPost } from '../../api/list';
 import { User } from '../../States/User';
 import { useRecoilValue } from 'recoil';
@@ -221,8 +222,8 @@ const Profile = () => {
             <ImageList cols={3} gap={16}>
               {sales ? sales.map((sale) => (
                 <ImageListItem className="myimg" key={sale}>
-                  <NftModal  item={sale}>
-                  </NftModal>
+                  <OnSaleModal  item={sale}>
+                  </OnSaleModal>
                 </ImageListItem>
               )) : <span>판매중인 NFT가 없습니다.</span>}
             </ImageList>
