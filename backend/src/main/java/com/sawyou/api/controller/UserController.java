@@ -175,9 +175,8 @@ public class UserController {
 
         SawyouUserDetails userDetails = (SawyouUserDetails) authentication.getDetails();
         String userId = userDetails.getUsername();
-        User oUser = userService.getUserByUserId(userId);
 
-        User user = userService.updateUserImage(userImage, oUser.getUserSeq());
+        User user = userService.updateUserImage(userImage, userId);
         if(user == null)
             return ResponseEntity.status(409).body(Result.builder().status(409).message("프로필 이미지 수정 실패").build());
 

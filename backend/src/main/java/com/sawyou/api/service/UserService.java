@@ -26,7 +26,7 @@ public interface UserService {
     User updateUserInfo(UserUpdateInfoReq updateInfo, Long userSeq);
 
     // 유저 프로필 이미지 수정
-    User updateUserImage(MultipartFile userImage, Long userSeq);
+    User updateUserImage(MultipartFile userImage, String userId);
 
     // 유저 팔로잉/취소
     boolean followingUser(User user, Long followingToSeq);
