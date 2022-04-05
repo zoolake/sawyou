@@ -53,6 +53,7 @@ export default function TemporaryDrawer() {
     // 메타마스크 지갑과 연결된 계정 정보를 받는 JSON-RPC Call API
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
     setWallet(accounts[0]);
+    await getBalance();
   };
 
   const getBalance = async () => {
@@ -86,18 +87,23 @@ export default function TemporaryDrawer() {
               <Box sx={{ ml: 2, mt: 1 }}>
                 <img src="/images/baseimg_nav.jpg" />
               </Box>
-              <Box sx={{ ml: 3, mt: 1 }}>My Wallet</Box>
+              <Box sx={{ ml: 1, mt: 1 }}>
+                My Wallet
+              </Box>
             </Box>
             {
-              wallet === null ?
-                <Button sx={{ width: 250, mt: 5 }} onClick={connectWallet}>지갑 연동하기</Button> :
-                <Button sx={{ width: 250, mt: 5 }}>{wallet.slice(0, 10)}  지갑과 연결되었습니다</Button>
+              wallet === null ? <Button sx={{ width: 250, mt: 5 }} onClick={connectWallet}>지갑을 연동해주세요!</Button> :
+                balance===null ?
+                  <Button sx={{ width: 250, mt: 5 }}  size="large"> 잔액을 불러와주세요!</Button> :
+                  <Button sx={{ width: 250, mt: 5 }} size ="large"> {balance} SSF</Button>
             }
             {
               balance === null ?
-                <Button onClick={getBalance}> 잔액 불러오기 </Button> :
-                <Button>{balance} SSF</Button>
+                <Button onClick={getBalance} > 잔액 불러오기 </Button> :
+                <Button sx={{ width: 250, mt: 1 }}  onClick={connectWallet}> 새로운 지갑 연결하기 </Button>
+                
             }
+            {getBalance}
           </Drawer>
         </React.Fragment>
       ))
