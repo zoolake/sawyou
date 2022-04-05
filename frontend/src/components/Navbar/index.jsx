@@ -317,9 +317,12 @@ const UserHeader = (props) => {
                     <AccountBalanceWalletIcon sx={{ fontSize: 27, color: '#484848' }} />
                   </Badge>
               </Button>
+              {
+                wallet !== null ?
                 <Button color="secondary">
                     { balance==null ? "" :balance +" SSF" } 
-                  </Button>
+                  </Button> : null
+              }
             </Box>
           </Box>
         </Container>
