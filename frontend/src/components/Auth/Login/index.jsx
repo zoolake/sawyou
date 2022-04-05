@@ -25,6 +25,9 @@ const Login = (props) => {
     };
     async function A(){
       const res = await LoginApi(body).then((res) => localStorage.setItem('access_token', res.data.data))
+      .catch(
+        alert('회원정보를 확인해주세요')
+      )
       setUser(id)
     }
     A()
