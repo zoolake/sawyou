@@ -130,10 +130,12 @@ const Postmodal = (item) => {
     setIsPurchaseLoaded(false);
   }
   
+
   // send cancel to blockchain network
   const handleCancelButtonClick = async () => {
     setIsPurchaseLoaded(true);
-    console.log("saleContractAddress : ",saleInfo)
+    console.log("saleContractAddress : ", saleInfo)
+    
     if (typeof window.ethereum != "undefined") {
       try {
         const web = new Web3(window.ethereum);
@@ -146,15 +148,19 @@ const Postmodal = (item) => {
     }
     //saleContractAddress로 delete하자
     const saleContractAddress = saleInfo.saleContractAddress;
+
+    const request = ({
+      "saleContractAddress" :  saleContractAddress
+    })
+    const cancelSale = await CancelSale(request);
+
     console.log(saleContractAddress);
-    const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress, { from: wallet })
+    const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress)
 
     const cancelSales = await saleContract.methods.cancelSales().send({ from: wallet }).then(() => { });
-    
+    console.log(saleContractAddress);
     //send cancelInfo to backend
-    const cancelSale = await CancelSale({
-      "saleContractAddress" :  saleInfo.saleContractAddress
-    });
+
     
     setIsPurchaseLoaded(false);
   }
