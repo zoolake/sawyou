@@ -182,6 +182,8 @@ public class UserServiceImpl implements UserService {
 //         File file = new File(path + "\\img");  // windows 환경
         File file = new File(path + "/userImage." + extension);  // linux 환경
 
+        if (file.exists()) file.delete();
+
         try {
             userImage.transferTo(file);
         }
