@@ -46,7 +46,6 @@ const Postmodal = (props) => {
 
   const Read = async () => {
     const res = await ReadFollowingUser(params).then((res) => setFollower(res.data.data))
-    console.log(data)
   }
 
   const onClickRedirectPathHandler = name => e => {
