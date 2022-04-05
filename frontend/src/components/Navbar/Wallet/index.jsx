@@ -82,7 +82,8 @@ export default function TemporaryDrawer() {
             anchor={anchor}
             open={state[anchor]}
             onClose={toggleDrawer(anchor, false)}
-          >
+            >
+            <Button>안녕하세요</Button>
             <Box sx={{ display: 'flex' }}>
               <Box sx={{ ml: 2, mt: 1 }}>
                 <img src="/images/baseimg_nav.jpg" />

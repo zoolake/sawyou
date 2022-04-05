@@ -23,15 +23,16 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import NativeSelect from '@mui/material/NativeSelect';
 import { makeStyles } from "@material-ui/core/styles";
 import { useNavigate , withRouter } from 'react-router-dom';
 
 
 
-
+import Badge from '@mui/material/Badge';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import Web3 from "web3";
+import SsafyToken from '../../../src/abi/SsafyToken.json';
 
 const UserHeader = (props) => {
   const navigate = useNavigate(); // for redirect
@@ -43,6 +44,55 @@ const UserHeader = (props) => {
   const [search, setSearch] = useState('');
   const [result, setResult] = useState('');
   const [check, setCheck] = useState(false);
+  const [invisible, setInvisible] = useState(false);
+  const [web3, setWeb3] = React.useState();
+  const [balance, setBalance] = React.useState(null);
+
+  useEffect(() => {
+    if (typeof window.ethereum != "undefined") {
+      try {
+        const web = new Web3(window.ethereum);
+        setWeb3(web);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    if (wallet === null) {
+      setInvisible(true)
+    }
+    else {
+      getBalance()
+      setInvisible(false)
+    }
+    
+  }, []);
+
+  const handleBadgeVisibility = () => {
+    
+    // 지갑이 연동되어있지 않을때
+    if (invisible === true) {
+      connectWallet();
+      getBalance()
+      setInvisible(!invisible);
+    }
+    // 지갑이 연동되어 있을때
+    else {
+      
+    }
+  };
+  const connectWallet = async () => {
+    // 메타마스크 지갑과 연결된 계정 정보를 받는 JSON-RPC Call API
+    const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+    setWallet(accounts[0]);
+  };
+
+  const getBalance = async () => {
+    // 잔액 확인을 위해 ERC-20 Contract 사용
+    const erc20Contract = await new web3.eth.Contract(SsafyToken.abi, "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333");
+    const temp = await erc20Contract.methods.balanceOf(wallet).call();
+    console.log("balance:", temp);
+    setBalance(temp);
+  }
 
 
 
@@ -253,18 +303,28 @@ const UserHeader = (props) => {
                       <Typography textAlign="center">로그아웃</Typography>
                     </MenuItem>    
                 </Menu>
-                <Box
-                  key={"wallet"}
+
+                <Button
+                  onClick={handleBadgeVisibility}
                   style={{
                     maxWidth: "60px",
                     maxHeight: "60px",
-                    minWidth: "40px",
+                    minWidth: "50px",
                     minHeight: "40px"
-                  }}
-                  >
-                    <WalletIdx sx={{ fontSize: 27, color : 'black' }}/>
-                </Box>
-
+                  }}  >
+                <Badge color="secondary"  variant="dot"  max={9999} invisible={invisible}>
+                    <AccountBalanceWalletIcon sx={{ fontSize: 27, color: '#484848' }} />
+                  </Badge>
+              </Button>
+              {
+              balance!==null?
+                <Button color="secondary">
+                  {balance} SSF
+                  </Button> :
+                  <Button onClick={getBalance} color="secondary">
+                   잔액 조회
+                </Button>
+              }
             </Box>
           </Box>
         </Container>
