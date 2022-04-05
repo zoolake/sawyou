@@ -30,11 +30,11 @@ function App() {
         <Route path="/signup" element={<Signup/>} />
         <Route exact path="/" element={isLoggedIn ? <Main/> : <Login/>} />
         <Route path="*" element={<NotFound/>} />
-        <Route path="/profileedit/" element={<ProfileEdit/>} />
-        <Route path="/profile/:id" element={<Profile/>} />
-        <Route path="/nft" element={<Market/>} />
-        <Route path="/nft/product" element={<Product/>} />
-        <Route path="/search/tags" element={<Result/>} />
+        <Route path="/profileedit/" element={isLoggedIn ? <ProfileEdit/> : <Login/>} />
+        <Route path="/profile/:id" element={isLoggedIn ? <Profile/>  : <Login/>} />
+        <Route path="/nft" element={isLoggedIn ? <Market/>  : <Login/>} />
+        <Route path="/nft/product" element={isLoggedIn ? <Product/>  : <Login/>} />
+        <Route path="/search/tags" element={isLoggedIn ? <Result/>  : <Login/>} />
       </Routes>
     </BrowserRouter>
   );
