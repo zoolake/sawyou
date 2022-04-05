@@ -174,18 +174,16 @@ const Postmodal = ({ item }) => {
             <Box><Typography>작품 제목 : {nftDetail.nftTitle} </Typography></Box>
           </Box>
           {
-            // 판매자라면 보이게 끔 (로그인한 아이디와 현재 보는 프로필의 주인과 같다면)
-            // 지갑주소와 ownerAddress가 동일한지 확인
             user !== params ?
-              <div></div> :
-              wallet === null ?
-                <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 연동 이후 이용이 가능합니다.</Button> :
-                wallet !== nftDetail.nftOwnerAddress ?
-                  <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 주소가 일치하지 않습니다.</Button> :
-                  isSaleLoaded !== true ? <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
-                    <Button sx={{ width: '100%' }} variant="contained" onClick={handleSellButtonClick} disabled={!isSaleLoaded}>
-                      판매하기
-                    </Button>
+            <div></div> :
+            wallet === null ?
+              <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 연동 이후 이용이 가능합니다.</Button> :
+              item.postIsNft ?
+                <Button sx={{ width: '100%' }} variant="contained" color="error" >이미 민팅된 게시물입니다.</Button> :
+                isMintingLoaded !== true ? <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
+                  <Button sx={{ width: '100%' }} variant="contained" onClick={handleMintingButtonClick} disabled={!isMintingLoaded}>
+                    민팅하기
+                  </Button>
 
           }
         </Box>
@@ -202,7 +200,7 @@ const Postmodal = ({ item }) => {
       <Button
         key={"add"}
         onClick={handleOpen}
-        sx={{ width: '100%', height: '100%' }}
+        sx={{ width: '300px', height: '300px' }}
       >
         <img
           class={"img2"}
