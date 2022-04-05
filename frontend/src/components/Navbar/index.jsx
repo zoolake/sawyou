@@ -77,7 +77,7 @@ const UserHeader = (props) => {
     }
     // 지갑이 연동되어 있을때
     else {
-      
+      connectWallet();
     }
   };
   const connectWallet = async () => {
@@ -317,13 +317,14 @@ const UserHeader = (props) => {
                   </Badge>
               </Button>
               {
-              balance!==null?
+                wallet !== null ?
+                  balance !==null?
                 <Button color="secondary">
                   {balance} SSF
                   </Button> :
                   <Button onClick={getBalance} color="secondary">
                    잔액 조회
-                </Button>
+                </Button>:null
               }
             </Box>
           </Box>
