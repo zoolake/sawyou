@@ -94,7 +94,7 @@ export const ReadAllSaleNft = (userId) => {
 export const CancelSale = (data) => {
   const instance = CreateInstance();
   try {
-    const res = instance.delete(`/nft/cancel`, data)
+    const res = instance.post(`/nft/cancel`, data)
     return res
   } catch (error) {
     console.log(error)
