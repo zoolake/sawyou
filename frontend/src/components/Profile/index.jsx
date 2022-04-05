@@ -103,7 +103,7 @@ const Profile = (props) => {
     else {
       setMyProfile(false)
     }
-  }, []);
+  }, [params]);
 
 
 
