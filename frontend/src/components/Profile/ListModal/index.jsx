@@ -5,6 +5,11 @@ import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import { ReadPost, ChangePost, DeletePost } from '../../../api/post'
@@ -71,6 +76,7 @@ const Postmodal = ({ item }) => {
   const handleClose2 = () => setOpen2(false);
   const [post, SetPost] = useState('');
   const userSeq = item.postSeq
+  const [dialog, setDialog] = React.useState(false);
   const [content, SetContent] = useState('');
   const handleChange = () => { setChange(true); SetContent(post.postContent) }
   const [mintContent, setMintContent] = useState('');
@@ -101,6 +107,14 @@ const Postmodal = ({ item }) => {
 
   const onSendDelete = (e) => {
     Delete()
+  };
+
+  const handleClickDialog = () => {
+    setDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialog(false);
   };
 
   const Change = async () => {
@@ -241,7 +255,25 @@ const Postmodal = ({ item }) => {
             <img src="/images/baseimg_nav.jpg"></img>
             <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box>
             <Button onClick={handleChange} sx={{ width: '5%', minHeight: 0, minWidth: 40 }}><AutoFixNormalIcon sx={{ color: 'black' }}></AutoFixNormalIcon></Button>
-            <Button onClick={onSendDelete} sx={{ width: '5%', minWidth: 40 }}><DeleteIcon sx={{ color: 'black' }}></DeleteIcon></Button>
+            <Button 
+              onClick={handleClickDialog} 
+              sx={{ width: '5%', minWidth: 40 }}>
+              <DeleteIcon sx={{ color: 'black' }}></DeleteIcon>
+            </Button>
+            <Dialog
+              open={dialog}
+              onClose={handleDialogClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {"게시물을 삭제할까요?"}
+              </DialogTitle>
+              <DialogActions>
+                <Button onClick={handleDialogClose} autoFocus>삭제</Button>
+                <Button onClick={handleDialogClose}>취소</Button>
+              </DialogActions>
+            </Dialog>
           </Box>
           <Box sx={{ height: '90%' }}>{post.postContent}</Box>
           {
