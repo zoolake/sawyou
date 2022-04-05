@@ -7,6 +7,7 @@ import Profile from './pages/ProfilePage';
 import Market from './pages/Nft/MarketPage';
 import Product from './pages/Nft/ProductPage';
 import ProfileEdit from './components/Profile/ProfileEdit';
+import Result from './pages/SearchResultPage/';
 import { User } from './States/User';
 import { useRecoilValue } from 'recoil';
 import { useEffect } from 'react';
@@ -33,6 +34,7 @@ function App() {
         <Route path="/profile/:id" element={<Profile/>} />
         <Route path="/nft" element={<Market/>} />
         <Route path="/nft/product" element={<Product/>} />
+        <Route path="/search/tags" element={<Result/>} />
       </Routes>
     </BrowserRouter>
   );
