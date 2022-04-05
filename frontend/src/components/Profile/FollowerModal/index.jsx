@@ -45,7 +45,6 @@ const Postmodal = (props) => {
 
   const onClickRedirectPathHandler = name => e => {
     window.scrollTo(0, 0);
-    console.log(name)
     navigate(`${name}`);
     handleClose()
   };

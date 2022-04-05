@@ -147,3 +147,15 @@ export const FindPassword = (data) => {
 }
 
 
+// 프로필 이미지 변경
+export const ProfileImage = (data) => {
+  const instance = CreateInstance();
+  try {
+    const res = instance.patch(`/user/profile`, data)
+    return res
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+

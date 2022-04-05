@@ -13,6 +13,7 @@ import NftModal from './NftModal/index'
 import OnSaleModal from './OnSaleModal/index'
 import FollowerModal from './FollowerModal/index'
 import FollowModal from './FollowModal/index'
+import ImageModal from './ImageModal/index'
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 
@@ -213,7 +214,8 @@ const Profile = (props) => {
               <div class="profile_image_mid">
                 <div class="profile_image_inner">
                   <button class="profile_btn">
-                    <img alt="프로필 사진" class="profile_image" src="/images/baseimg.jpg"></img>
+                    {/* <img alt="프로필 사진" class="profile_image" src="/images/baseimg.jpg"></img> */}
+                    <ImageModal item={userData}></ImageModal>
                   </button>
                   <div>
                     <form encType="multipart/form-data" method="POST" role="presentation">
