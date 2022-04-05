@@ -12,12 +12,7 @@ import ListModal from '../../../Profile/ListModal/index'
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 
-import { UserPost } from '../../../../api/list';
-import { FollowingUser, Profile as Profile2 } from '../../../../api/user';
-import { User } from '../../../../States/User';
-import { useRecoilValue } from 'recoil';
-import { ReadAllNft, ReadAllSaleNft } from '../../../../api/nft';
-
+import { HashTagPost } from '../../../../api/list';
 
 const Profile = (props) => {
 
@@ -41,64 +36,20 @@ const Profile = (props) => {
     },
   }));
 
-  const user = useRecoilValue(User);
-
-  const params = useParams().id;
+  const params = useParams().tags;
 
   const [posts, setPosts] = useState('');
-  const [nfts, setNfts] = useState('');
-  const [sales, setSales] = useState('');
-  const [userData, setUserData] = useState('');
-  const [myProfile, setMyProfile] = useState('');
-  const [followCheck, setFollowCheck] = useState('');
 
-  // 내 게시글 조회
-  const getPosts = async () => {
-    const response = await UserPost(params).then((res) => { setPosts(res.data.data)});    
-  }
-
-  const getProfile = async () => {
-    const res = await Profile2(params)
-    setUserData(res.data.data)
-    setFollowCheck(res.data.data.following)
-  };
-
-  const changeFollow = () => {
-    if (followCheck === true){
-      setFollowCheck(false)
-    } 
-    else{
-      setFollowCheck(true)
-    }
-  }
-
-  const handleFollow = async () => {
-    const res = await FollowingUser(params).then(changeFollow())
-  }
-
-
-  // 보유한 NFT 조회
-  const getNfts = async () => {
-    const response = await ReadAllNft(params).then((res) => { setNfts(res.data.data)});
-  }
-
-
-
-  // 판매중인 NFT 조회
-  const getSales = async () => {
-    const response = await ReadAllSaleNft(params).then((res) => { setSales(res.data.data)});
+  const Read = async () => {
+    // const body = {
+    //   keyword : params
+    // }
+    const response = await HashTagPost(params).then((res) => { setPosts(res.data.data)});    
   }
 
   // 첫 렌더링 1회 진행
   useEffect(() => {
-    getPosts();
-    getProfile();
-    if (user === params){
-      setMyProfile(true)
-    }
-    else {
-      setMyProfile(false)
-    }
+    Read();
   }, [params]);
 
 

@@ -34,7 +34,7 @@ function App() {
         <Route path="/profile/:id" element={isLoggedIn ? <Profile/>  : <Login/>} />
         <Route path="/nft" element={isLoggedIn ? <Market/>  : <Login/>} />
         <Route path="/nft/product" element={isLoggedIn ? <Product/>  : <Login/>} />
-        <Route path="/search/tags" element={isLoggedIn ? <Result/>  : <Login/>} />
+        <Route path="/search/tags/:tags" element={isLoggedIn ? <Result/> : <Login/>} />
       </Routes>
     </BrowserRouter>
   );

@@ -126,10 +126,6 @@ const Postmodal = ({ item }) => {
     setChange(false)
   };
 
-  useEffect(() => {
-    Read()
-  }, []);
-
   const Delete = async () => {
     const res = await DeletePost(userSeq)
     handleClose()
@@ -137,7 +133,8 @@ const Postmodal = ({ item }) => {
   };
 
   useEffect(() => {
-    Read()
+    // Read()
+    console.log(item)
   }, []);
 
   /* 민팅 및 판매하기 관련 */
