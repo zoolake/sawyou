@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { User } from '../../../States/User';
 import { EditProfile, Profile } from '../../../api/user';
 import { useRecoilState } from 'recoil';
+import { useNavigate  } from 'react-router-dom';
 
 
 const Profileedit = () => {
@@ -17,16 +18,19 @@ const Profileedit = () => {
   const [passwordWarning, setPasswordWarning] = useState(false);
   const [confirmPasswordWarning, SetConfirmPasswordWarning] = useState(false);
   const [idWaring, setIdWaring] = useState(false);
+  const navigate = useNavigate();
+
+  const onClickRedirectPathHandler = (name) => {
+    navigate(`/profile/${name}`);
+  };
 
   async function A(){
     const curUser = await Profile(user);
 
-    console.log("userId", curUser.data.data.userId)
     setName(curUser.data.data.userName);
     setId(curUser.data.data.userId);
     setIntro(curUser.data.data.userDesc);
 
-    console.log(curUser)
   }
 
   useEffect(() => {
@@ -55,14 +59,15 @@ const Profileedit = () => {
       userPwd : password
     };
 
-    console.log(body)
-
     async function B() {
       const res = await EditProfile(body).then((res) => localStorage.setItem('access_token', res.data.data))
       setUser(id)
+      onClickRedirectPathHandler(id)
     }
 
     B()
+
+
   }
 
   const onChangeIntro = (e) => {
@@ -187,6 +192,7 @@ const Profileedit = () => {
         </Button>
         </div>
       </Box>
+      <ToastContainer autoClose={5000} />
     </Wrapper>
 
 
