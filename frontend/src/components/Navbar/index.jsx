@@ -141,11 +141,12 @@ const UserHeader = (props) => {
                     <NativeSelect
                       defaultValue={category}
                       onChange={(e) => handleChange(e)}
+                      disableUnderline
                     >
                       <option value={'계정'}>계정</option>
                       <option value={'해시태그'}>해시태그</option>
                     </NativeSelect>
-                      </Box>
+                  </Box>
                   <InputBase
                     placeholder="검색"
                     sx={{height : 35, width : 300}}
