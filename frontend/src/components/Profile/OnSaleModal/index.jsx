@@ -221,7 +221,7 @@ const Postmodal = (item) => {
       <Button
         key={"add"}
         onClick={handleOpen}
-        sx={{width:'100%', height:'100%'}}
+        sx={{width:'300px', height:'300px'}}
         >
           <img
             class={"img2"}
