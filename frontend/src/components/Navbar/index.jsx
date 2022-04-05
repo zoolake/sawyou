@@ -42,6 +42,7 @@ const UserHeader = (props) => {
   const [wallet, setWallet] = useRecoilState(Wallet);
   const [search, setSearch] = useState('');
   const [result, setResult] = useState('');
+  const [check, setCheck] = useState(false);
 
 
 
@@ -67,14 +68,21 @@ const UserHeader = (props) => {
     localStorage.removeItem('access_token');
   }
 
+  // const handelOnBox = () => {
+  //   if (onBox === 'True'){
+  //     setOnBox('False');
+  //   }
+  //   else{
+  //     setOnBox('True');
+  //   }
+  // }
   const handelOnBox = () => {
-    if (onBox === 'True'){
-      setOnBox('False');
-    }
-    else{
-      setOnBox('True');
-    }
+    setOnBox('True');
   }
+  const handelOffBox = (e) => {
+    setOnBox('false');
+  }
+
 
   const handleChange = (e) => {
     setCategory(e.target.value);
@@ -89,9 +97,12 @@ const UserHeader = (props) => {
   const onClickRedirectPathHandler = name => e => {
     window.scrollTo(0, 0);
     navigate(`${name}`);
+    // handelOffBox();
+    setSearch('');
   };
 
   const handleInputSearch = (e) => {
+    setSearch(e.target.value)
 
     if (category === '계정') {
       searchAccount(e.target.value)
@@ -156,8 +167,9 @@ const UserHeader = (props) => {
                   <InputBase
                     placeholder="검색"
                     sx={{height : 35, width : 300}}
+                    value={search}
                     onFocus={handelOnBox}
-                    // onBlur={handelOnBox}
+                    onBlur={handelOffBox}
                     onChange={handleInputSearch}
                   />
                   <IconButton type="submit" aria-label="search">
@@ -259,13 +271,13 @@ const UserHeader = (props) => {
       </AppBar>
       { onBox === 'True' && <Box sx={searchStyle} style={{zIndex: 2000}} onBlur={handelOnBox}>
         { result && category === '계정' ? result.map((data) => (
-          <Button key={data.userId} sx={{justifyContent:'left'}} onClick={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
+          <Button key={data.userId} sx={{justifyContent:'left'}} onMouseDown={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
             <img class="img2" src="/images/baseimg_nav.jpg" />
             <Box sx={{ml:2}}><Typography>{data.userId}</Typography></Box>
           </Button>
         )) : null}
         { result && category === '해시태그' ? result.map((data) => (
-          <Button key={data.hashtagName} sx={{justifyContent:'left'}} onClick={handleSearch}>
+          <Button key={data.hashtagName} sx={{justifyContent:'left'}} onMouseDown={handleSearch}>
             <img class="img2" src="/images/baseimg_nav.jpg" />
             <Box sx={{ml:2}}><Typography>{data.hashtagName}</Typography></Box>
           </Button>
