@@ -11,6 +11,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import InputBase from "@mui/material/InputBase";
 import {ReadFollowingUser} from "../../../api/user"
 import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate  } from 'react-router-dom';
 
 const style = {
   position: 'absolute',
@@ -36,6 +37,7 @@ const Postmodal = (props) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [follower, setFollower] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     Read()
@@ -44,6 +46,11 @@ const Postmodal = (props) => {
   const Read = async () => {
     const res = await ReadFollowingUser(params).then((res) => setFollower(res.data.data))
   }
+
+  const onClickRedirectPathHandler = name => e => {
+    window.scrollTo(0, 0);
+    navigate(`${name}`);
+  };
 
 
   const newpost = (
@@ -65,12 +72,8 @@ const Postmodal = (props) => {
           <CloseIcon></CloseIcon>
         </Button>
       </Box>
-      <Button sx={{justifyContent:'left'}}>
-        <img class="img2" src="/images/baseimg_nav.jpg" />
-        <Box sx={{ml:2}}><Typography>test</Typography></Box>
-      </Button>
       {follower && follower.map((item) =>
-        <Button sx={{justifyContent:'left'}}>
+        <Button sx={{justifyContent:'left'}} onClick={onClickRedirectPathHandler(`/profile/${item.userId}`)}>
         <img class="img2" src="/images/baseimg_nav.jpg" />
         <Box sx={{ml:2}}><Typography>{item.userId}</Typography></Box>
       </Button>)

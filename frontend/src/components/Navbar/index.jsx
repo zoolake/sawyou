@@ -124,7 +124,6 @@ const UserHeader = (props) => {
       }
     }
   const handleSearch = () => {
-    console.log(3)
   }
 
 
