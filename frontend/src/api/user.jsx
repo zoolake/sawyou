@@ -150,12 +150,14 @@ export const FindPassword = (data) => {
 // 프로필 이미지 변경
 export const ProfileImage = (data) => {
   const instance = CreateInstance();
-  try {
-    const res = instance.patch(`/user/profile`, data)
-    return res
-  } catch (error) {
-    console.log(error)
-  }
+
+  return new Promise((resolve, reject) => {
+    instance.patch(`/user/profile`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(res => resolve(res))
+    .catch(err => reject(err))
+  })
 }
-
-

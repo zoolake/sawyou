@@ -40,9 +40,9 @@ const ImageModal = (props) => {
   }, [selectedImage]);
 
   const handlePost = () => {
-    const body = {
-      "userImage" : selectedImage
-    }
+    const body = new FormData();
+    body.append('userImage', selectedImage);
+
     ProfileImage(body)
     .then(res => {
       handleClose()
@@ -51,7 +51,7 @@ const ImageModal = (props) => {
       console.log(err)
     })
     console.log(body)
-    // window.location.reload()
+    window.location.reload()
   }
   
 
@@ -113,7 +113,8 @@ const ImageModal = (props) => {
         onClick={handleOpen}
         style={{
           minWidth: "150px",
-          minHeight: "150px"
+          minHeight: "150px",
+          padding: '0 0 0 0px'
         }}>
         {forImage ? (
           <Box sx={{width:'100%',height:'100%'}}>
