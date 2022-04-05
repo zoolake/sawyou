@@ -83,6 +83,7 @@ const UserHeader = (props) => {
   const connectWallet = async () => {
     // 메타마스크 지갑과 연결된 계정 정보를 받는 JSON-RPC Call API
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+    console.log(accounts[0]);
     setWallet(accounts[0]);
   };
 
@@ -305,7 +306,7 @@ const UserHeader = (props) => {
                 </Menu>
 
                 <Button
-                  onClick={handleBadgeVisibility}
+                  onClick={() => { handleBadgeVisibility();  getBalance(); }}
                   style={{
                     maxWidth: "60px",
                     maxHeight: "60px",
@@ -318,13 +319,9 @@ const UserHeader = (props) => {
               </Button>
               {
                 wallet !== null ?
-                  balance !==null?
                 <Button color="secondary">
-                  {balance} SSF
-                  </Button> :
-                  <Button onClick={getBalance} color="secondary">
-                   잔액 조회
-                </Button>:null
+                    { balance==null ? "" :balance +" SSF" } 
+                  </Button> : null
               }
             </Box>
           </Box>
