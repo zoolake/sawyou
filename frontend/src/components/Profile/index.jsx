@@ -251,7 +251,7 @@ const Profile = (props) => {
                 </li>
               </ul>
               <div class="si_box">
-                <span class="si">Kim</span>
+                <span class="si">{userData && userData.userDesc}</span>
                 <br />
               </div>
             </section>
