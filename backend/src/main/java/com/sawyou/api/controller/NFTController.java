@@ -4,10 +4,7 @@ import com.sawyou.api.request.CancelSaleReq;
 import com.sawyou.api.request.NftMintReq;
 import com.sawyou.api.request.NftPurchaseReq;
 import com.sawyou.api.request.NftSaleReq;
-import com.sawyou.api.response.NftInfoRes;
-import com.sawyou.api.response.NftListRes;
-import com.sawyou.api.response.NftOnSaleDetailRes;
-import com.sawyou.api.response.NftOnSaleRes;
+import com.sawyou.api.response.*;
 import com.sawyou.api.service.NFTService;
 import com.sawyou.common.auth.SawyouUserDetails;
 import com.sawyou.common.model.response.Result;
@@ -68,12 +65,12 @@ public class NFTController {
         if (authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증실패").build());
 
-        List<NftListRes> nftList = nftService.getUserSaleList(userId);
+        List<NftSaleListRes> nftSaleList = nftService.getUserSaleList(userId);
 
-        if (nftList == null)
+        if (nftSaleList == null)
             return ResponseEntity.status(404).body(Result.builder().status(404).message("판매중인 NFT가 없음").build());
 
-        return ResponseEntity.status(200).body(Result.builder().data(nftList).status(200).message("유저가 판매중인 NFT 조회 성공").build());
+        return ResponseEntity.status(200).body(Result.builder().data(nftSaleList).status(200).message("유저가 판매중인 NFT 조회 성공").build());
     }
 
     @GetMapping("/detail/{nftSeq}")
@@ -199,10 +196,11 @@ public class NFTController {
             @ApiResponse(code = 409, message = "NFT 구매 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Result> cancel(@ApiIgnore Authentication authentication,@RequestBody CancelSaleReq cancelSaleReq) {
+    public ResponseEntity<Result> cancel(@ApiIgnore Authentication authentication, @RequestBody CancelSaleReq cancelSaleReq) {
         if (authentication == null)
             return ResponseEntity.status(401).body(Result.builder().status(401).message("인증 실패").build());
-        if(nftService.cancelSale(cancelSaleReq)==0)return ResponseEntity.status(404).body(Result.builder().status(401).message("삭제된것이 없음").build());
+        if (nftService.cancelSale(cancelSaleReq) == 0)
+            return ResponseEntity.status(404).body(Result.builder().status(401).message("삭제된것이 없음").build());
 
         return ResponseEntity.status(200).body(Result.builder().status(201).message("삭제 성공").build());
     }
