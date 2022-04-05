@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import Wrapper from './styles';
 import { useParams } from 'react-router';
-import { makeStyles } from '@material-ui/core';
+import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import ListModal from '../../../Profile/ListModal';
+import ListModal from '../../../Profile/ListModal/index'
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
+
 import { UserPost } from '../../../../api/list';
 import { FollowingUser, Profile as Profile2 } from '../../../../api/user';
 import { User } from '../../../../States/User';
@@ -13,7 +19,7 @@ import { useRecoilValue } from 'recoil';
 import { ReadAllNft, ReadAllSaleNft } from '../../../../api/nft';
 
 
-const Result = (props) => {
+const Profile = (props) => {
 
   const styles = theme => ({
     Card: {
@@ -93,16 +99,12 @@ const Result = (props) => {
     else {
       setMyProfile(false)
     }
-  }, []);
+  }, [params]);
+
 
   const classes = useStyles();
-  const [alignment, setAlignment] = React.useState('1');
-  const handleAlignment = (event, newAlignment) => {
-    if (newAlignment !== null) {
-      setAlignment(newAlignment);
-    }
 
-  const Search = () => {
+  const My = () => {
 
     return (
       <div>
@@ -146,13 +148,11 @@ const Result = (props) => {
               </div>
             </div>
           </header>
-          {alignment === '1' && <Search></Search>}
+          <My></My>
         </div>
       </main>
     </Wrapper>
   )
+}
 
-}}
-
-
-export default Result;
+export default Profile;
