@@ -150,13 +150,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User updateUserImage(MultipartFile userImage, Long userSeq) {
-        User user = userRepositorySupport.findUserByUserSeq(userSeq).get();
-        String path = "/opt/upload/user/" + user.getUserId();
+    public User updateUserImage(MultipartFile userImage, String userId) {
+        User user = userRepositorySupport.findUserByUserId(userId).get();
+        Long userSeq = user.getUserSeq();
+        String path = "/opt/upload/user/" + userSeq.toString();
 
-        // 이미지를 업로드 하지 않은 경우 기본 이미지로 설정
+        // 이미지가 없으면 이미지 변경 실패
         if(userImage == null)
-            return user;
+            return null;
 
         String extension = FilenameUtils.getExtension(userImage.getOriginalFilename());
 
@@ -181,8 +182,6 @@ public class UserServiceImpl implements UserService {
 //         File file = new File(path + "\\img");  // windows 환경
         File file = new File(path + "/userImage." + extension);  // linux 환경
 
-        System.out.println("file = " + file);
-
         try {
             userImage.transferTo(file);
         }
@@ -190,7 +189,7 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
 
-        user.setUserProfile("https://sawyou.kro.kr/upload/user/" + user.getUserId() + "/userImage." + extension);
+        user.setUserProfile("https://sawyou.kro.kr/upload/user/" + userSeq.toString() + "/userImage." + extension);
 
         return userRepository.save(user);
     }
