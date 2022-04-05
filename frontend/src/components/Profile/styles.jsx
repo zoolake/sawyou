@@ -191,11 +191,16 @@ const Wrapper = styled.div`
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   }
 
-  .myimg {
-    width: 33.3%!important;
-    height: 300px!important;
+  .card__st {
+    width: 300px;
+    height: 300px;
   }
 
+  .media__st {
+    width: 300px;
+    height: 300px;
+
+  }
 `;
 
 export default Wrapper;

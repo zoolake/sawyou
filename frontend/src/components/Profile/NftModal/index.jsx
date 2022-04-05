@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Button, Grid, Alert, Box, Modal, CircularProgress } from '@mui/material';
+import { Modal, Box, Input, Button, InputBase, Grid, CircularProgress } from '@mui/material';
 import Wrapper from '../styles';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { ReadNft, ReadCellNft, CellNft } from '../../../api/nft';
-import Sale from '../../../abi/Sale.json';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
+import { ReadPost, ChangePost, DeletePost } from '../../../api/post'
+import Web3 from 'web3';
+import SsafyNFT from '../../../abi/SsafyNFT.json'
+import { useRecoilValue } from 'recoil';
 import { User } from '../../../States/User';
 import { Wallet } from '../../../States/Wallet';
-import { useRecoilValue } from 'recoil';
-import Web3 from 'web3';
+import { MintingNft } from '../../../api/nft';
+import { TokenOutlined } from '@mui/icons-material';
 import SaleFactory from '../../../abi/SaleFactory.json';
-import SsafyNFT from '../../../abi/SsafyNFT.json';
+import { CellNft } from '../../../api/nft';
 import { useParams } from 'react-router';
 
 const style = {
@@ -31,21 +35,60 @@ const style = {
 
 const Postmodal = ({ item }) => {
   const [open, setOpen] = React.useState(false);
-  const [onwerid, setOwnerid] = React.useState('소유자');
-  const [id, setId] = React.useState('민팅한 사람');
-  const [time, setTime] = React.useState('2022-03-30');
-  const [title, setTtile] = React.useState('맛잇는 햄버거');
+  const [change, setChange] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => (setOpen(false));
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null);
-  const [nftDetail, setNftDetail] = useState('');
-  const [saleInfo, setSaleInfo] = useState('');
-  const wallet = useRecoilValue(Wallet);
-  const user = useRecoilValue(User);
-  const [web3, setWeb3] = React.useState();
+  const handleClose = () => { (setOpen(false)); setChange(false) };
+  const [post, SetPost] = useState('');
+  const userSeq = item.postSeq
+  const [content, SetContent] = useState('');
+  const handleChange = () => { setChange(true); SetContent(post.postContent) }
+
+  const Read = async () => {
+    const res = await ReadPost(userSeq)
+    SetPost(res.data.data)
+  }
+
+  const onChangeContent = (e) => {
+    SetContent(e.target.value);
+  };
+
+  const onSendChange = (e) => {
+    Change()
+  };
+
+  const onSendDelete = (e) => {
+    Delete()
+  };
+
+  const Change = async () => {
+    const body = {
+      postContent: content
+    }
+    const res = await ChangePost(userSeq, body)
+    Read()
+    setChange(false)
+  };
 
   useEffect(() => {
+    Read()
+  }, []);
+
+  const Delete = async () => {
+    const res = await DeletePost(userSeq)
+    handleClose()
+    window.location.reload()
+  };
+
+  useEffect(() => {
+    Read()
+  }, []);
+
+  /* 민팅 및 판매하기 관련 */
+  const [web3, setWeb3] = React.useState();
+  const user = useRecoilValue(User);
+  const wallet = useRecoilValue(Wallet);
+
+  React.useEffect(() => {
     if (typeof window.ethereum != "undefined") {
       try {
         const web = new Web3(window.ethereum);
@@ -56,140 +99,114 @@ const Postmodal = ({ item }) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (selectedImage) {
-      setImageUrl(URL.createObjectURL(selectedImage));
-    }
-    ReadNft(item.nftSeq).then((res) => {
-      setNftDetail(res.data.data)
-      console.log("ReadNft:", res.data.data)
-    });
-  }, [selectedImage]);
+  /* 민팅 */
+  const [tokenId, setTokenId] = useState();
+  const [nftSeq, setNftSeq] = useState();
+  const [isMintingLoaded, setIsMintingLoaded] = useState(true);
 
-  /* 판매 관련 */
+  // 민팅 : 블록체인
+  const handleMintingButtonClick = async () => {
+    setIsMintingLoaded(false);
 
-  const [isSaleLoaded, setIsSaleLoaded] = useState(true);
-
-  const handleSellButtonClick = async () => {
-    setIsSaleLoaded(false);
-
+    const tokenContract = await new web3.eth.Contract(SsafyNFT.abi, "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"); // 컨트랙트의 ABI와 주소로 *컨트랙트 객체 생성*
     try {
-      const saleFactoryContract = await new web3.eth.Contract(
-        SaleFactory.abi,
-        "0x0922ea92B9C3f3C580127BE07aeEfDad9CBc3540",
-        { from: wallet }
-      );
-
-      const now = Math.floor(new Date().getTime() / 1000);
-
-      // SaleFactory를 통해 createSale 진행
-      await saleFactoryContract.methods
-        .createSale(
-          nftDetail.nftTokenId,
-          1,
-          2,
-          now,
-          now + 3600,
-          "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333",
-          "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"
-        )
+      const { events } = await tokenContract.methods
+        .create(wallet, "https://i.pinimg.com/564x/60/fa/f8/60faf812aad673133e698150b87f4373.jpg")
         .send({ from: wallet });
 
-      // 방금 생성한 Sale 컨트랙트 주소 추출
-      const sales = await saleFactoryContract.methods.allSales().call();
-      const saleContractAddress = sales[sales.length - 1];
-      console.log("sales.length:", sales.length);
-      console.log(saleContractAddress);
+      const tempTokenId = events.Transfer.returnValues.tokenId;
+      setTokenId(tempTokenId);
 
-      // ERC-721 Contract
-      const erc721Contract = await new web3.eth.Contract(
-        SsafyNFT.abi,
-        "0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2"
-      );
-
-      // Sale 컨트랙트에게 wallet이 갖고있는 token의 권한을 넘겨준다.
-      await erc721Contract.methods
-        .approve(saleContractAddress, nftDetail.nftTokenId)
-        .send({ from: wallet })
-        .then(() => {
-          console.log("권한 이전");
-        });
-
-      // wallet으로 부터 Sale 컨트랙트로 토큰을 옮긴다.
-      await erc721Contract.methods
-        .transferFrom(wallet, saleContractAddress, nftDetail.nftTokenId)
-        .send({ from: wallet })
-        .then(() => {
-          console.log("토큰 이전");
-        });
-
-      // 백엔드 판매 API 호출
-      await sellOnServer(saleContractAddress);
-
+      await mintingOnServer(tempTokenId);
     }
-
     catch (error) {
       console.log("error:", error);
     }
 
     finally {
-      setIsSaleLoaded(true);
+      setIsMintingLoaded(true);
     }
-  }
 
-  // 판매 : 백엔드
-  const sellOnServer = async (saleContractAddress) => {
+  };
 
+  // 민팅 : 백엔드
+  const mintingOnServer = async (tempTokenId) => {
     const request = {
-      "nftSeq": item.nftSeq,
-      "salePrice": 2,
-      "saleContractAddress": saleContractAddress,
-    }
+      "userSeq": item.userSeq,
+      "postSeq": item.postSeq,
+      "nftAuthorName": "작가명",
+      "nftTitle": "제목",
+      "nftDesc": "설명",
+      "nftPictureLink": item.postPictureLink,
+      "nftTokenId": tempTokenId,
+      "nftOwnerAddress": wallet
+    };
 
-    await CellNft(request);
+    const { data: { data } } = await MintingNft(request);
+    setNftSeq(data);
   }
 
   const params = useParams().id;
 
-  const newpost = (
+  const viewMyPost = (
     <Box sx={style}
       component="form"
     >
       <Box sx={{ display: 'flex', height: '100%' }}>
-        <Box sx={{ width: '68.3%', display: 'flex', justifyContent: 'center' }}>
+        <Box sx={{ width: '68.3%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Box sx={{ width: '100%', height: '100%' }}>
-            <img src={item.nftPictureLink} alt={item.nftPictureLink} height="100%" width="100%" />
+            <img src={item.postPictureLink} height="100%" width="100%" />
+            {/* <img src={props.item.img} alt={props.item.img} height="100%" width="100%" /> */}
           </Box>
         </Box>
-        <Box sx={{ mx: 1, width: '31.7%' }}>
-          <Box sx={{ height: '95%' }}>
-            <Box sx={{ display: 'flex', height: '8%', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', height: '50%' }}>
-                <img src="/images/baseimg_nav.jpg"></img>
-              </Box>
-              <Typography variant="h6" sx={{ ml: 2, mt: 0.2 }}>{onwerid}</Typography>
-            </Box>
-            <Box><Typography>작성자 : {nftDetail.nftOwnerName} </Typography></Box>
-            <Box><Typography>제작 시간 : {nftDetail.nftCreatedAt} </Typography></Box>
-            <Box><Typography>작품 제목 : {nftDetail.nftTitle} </Typography></Box>
+        <Box sx={{ mx: 1, width: '31.7%', justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex', height: '5%', alignItems: 'center' }}>
+            <img src="/images/baseimg_nav.jpg"></img>
+            <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box>
+            <Button onClick={handleChange} sx={{ width: '5%', minHeight: 0, minWidth: 40 }}><AutoFixNormalIcon sx={{ color: 'black' }}></AutoFixNormalIcon></Button>
+            <Button onClick={onSendDelete} sx={{ width: '5%', minWidth: 40 }}><DeleteIcon sx={{ color: 'black' }}></DeleteIcon></Button>
           </Box>
+          <Box sx={{ height: '90%' }}>{post.postContent}</Box>
           {
             user !== params ?
-            <div></div> :
-            wallet === null ?
-              <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 연동 이후 이용이 가능합니다.</Button> :
-              item.postIsNft ?
-                <Button sx={{ width: '100%' }} variant="contained" color="error" >이미 민팅된 게시물입니다.</Button> :
-                isMintingLoaded !== true ? <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
-                  <Button sx={{ width: '100%' }} variant="contained" onClick={handleMintingButtonClick} disabled={!isMintingLoaded}>
-                    민팅하기
-                  </Button>
-
+              <div></div> :
+              wallet === null ?
+                <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 연동 이후 이용이 가능합니다.</Button> :
+                item.postIsNft ?
+                  <Button sx={{ width: '100%' }} variant="contained" color="error" >이미 민팅된 게시물입니다.</Button> :
+                  isMintingLoaded !== true ? <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
+                    <Button sx={{ width: '100%' }} variant="contained" onClick={handleMintingButtonClick} disabled={!isMintingLoaded}>
+                      민팅하기
+                    </Button>
           }
         </Box>
 
       </Box>
 
+    </Box >
+
+  );
+
+  const ChangeModal = (
+    <Box sx={style}
+      component="form"
+    >
+      <Box sx={{ display: 'flex', height: '100%' }}>
+        <Box sx={{ width: '68.3%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Box sx={{ width: '100%', height: '100%' }}>
+            <img src={item.postPictureLink} height="100%" width="100%" />
+            {/* <img src={props.item.img} alt={props.item.img} height="100%" width="100%" /> */}
+          </Box>
+        </Box>
+        <Box sx={{ mx: 1, width: '31.7%', justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex', height: '5%', alignItems: 'center' }}>
+            <img src="/images/baseimg_nav.jpg"></img>
+            <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box>
+          </Box>
+          <Box sx={{ height: '90%' }}><InputBase onChange={onChangeContent} multiline={true} fullWidth defaultValue={content} sx={{ height: '3%' }}></InputBase></Box>
+          <Button onClick={onSendChange} sx={{ width: '100%' }}>수정하기</Button>
+        </Box>
+      </Box>
     </Box>
 
   );
@@ -204,9 +221,9 @@ const Postmodal = ({ item }) => {
       >
         <img
           class={"img2"}
-          src={item.nftPictureLink}
-          srcSet={item.nftPictureLink}
-          alt={item.nftPictureLink}
+          src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
+          srcSet={item.postPictureLink}
+          alt={item.title}
           loading="lazy"
         />
       </Button>
@@ -217,7 +234,8 @@ const Postmodal = ({ item }) => {
         aria-describedby="modal-modal-description"
         closeAfterTransition
       >
-        {newpost}
+        {change ? ChangeModal : viewMyPost}
+
       </Modal>
     </div>
   )
