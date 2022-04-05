@@ -81,6 +81,11 @@ public class NFTServiceImpl implements NFTService {
      */
     @Transactional
     public Sale sale(NftSaleReq nftSaleReq) {
+        Optional<NFT> optionalNFT = nftRepository.findByNftSeq(nftSaleReq.getNftSeq());
+        if (optionalNFT.isEmpty()) return null;
+
+        NFT nft = optionalNFT.get();
+
         LocalDateTime now = LocalDateTime.now();
         Sale sale = Sale
                 .builder()
@@ -89,14 +94,12 @@ public class NFTServiceImpl implements NFTService {
                 .saleEndDate(now.plusDays(3))
                 .salePrice(nftSaleReq.getSalePrice())
                 .isSold(false)
-                .nft(NFT.builder()
-                        .nftSeq(nftSaleReq.getNftSeq())
-                        .build())
+                .nft(nft)
                 .build();
         saleRepository.save(sale);
 
         // NFT의 nftForSale을 True로 변경해준다.
-        sale.getNft().setNftForSale(true);
+        nft.setNftForSale(true);
         return sale;
     }
 
@@ -196,7 +199,7 @@ public class NFTServiceImpl implements NFTService {
         Long deleteBySaleCount = saleRepository.deleteBySaleContractAddress(saleContractAddress);
         Optional<Sale> sale = saleRepository.findBySaleContractAddress(saleContractAddress);
 
-        if(sale.isEmpty()) return null;
+        if (sale.isEmpty()) return null;
         // 판매취소 -> 판매중 상태를 True에서 False로 변경
         sale.get().getNft().setNftForSale(false);
 

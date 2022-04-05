@@ -38,20 +38,21 @@ const style2 = {
   height: '200px',
   bgcolor: 'background.paper',
   border: '2px solid #000',
-  borderRadius : 6,
+  borderRadius: 6,
   boxShadow: 24,
   p: 1,
 };
 
-const style3 ={
-  display:'flex',
-  height:'70%',
-  width:'100%',
+const style3 = {
+  display: 'flex',
+  height: '70%',
+  width: '100%',
   alignItems: 'center',
-  justifyContent:'center'
+  justifyContent: 'center'
 }
 
 const Postmodal = ({ item }) => {
+  console.log("item:", item);
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const handleClose2 = () => setOpen2(false);
@@ -69,12 +70,12 @@ const Postmodal = ({ item }) => {
   const user = useRecoilValue(User);
   const [price, setPrice] = useState('');
   const [web3, setWeb3] = React.useState();
-  
+
   const handleOpen2 = () => {
-    if (open2 === false){
+    if (open2 === false) {
       setOpen2(true)
     }
-    else{
+    else {
       return;
     }
   }
@@ -129,7 +130,7 @@ const Postmodal = ({ item }) => {
         )
         .send({ from: wallet });
 
-        // 2자리에다가 가격설정한거 넣게 한다
+      // 2자리에다가 가격설정한거 넣게 한다
 
       // 방금 생성한 Sale 컨트랙트 주소 추출
       const sales = await saleFactoryContract.methods.allSales().call();
@@ -189,22 +190,22 @@ const Postmodal = ({ item }) => {
 
   const pricemodal = (
     <Box sx={style2}>
-        <Box sx={style3}><Typography>판매 가격  </Typography>
-          <TextField
+      <Box sx={style3}><Typography>판매 가격  </Typography>
+        <TextField
           id="outlined-start-adornment"
           sx={{ ml: 5, width: '50ch' }}
           onChange={(event) => setPrice(event.target.value)}
         /></Box>
 
-        <Box sx={{display:'flex', height:'20%', width:'100%', alignItems: 'center', justifyContent:'center'}}>        
-          <Button
-          sx={{width:'30%'}}
-          variant="contained" 
+      <Box sx={{ display: 'flex', height: '20%', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+        <Button
+          sx={{ width: '30%' }}
+          variant="contained"
           type="submit"
           onClick={handleSellButtonClick}
-            >
-              판매하기
-          </Button></Box>
+        >
+          판매하기
+        </Button></Box>
     </Box>
   );
   const newpost = (
@@ -239,18 +240,20 @@ const Postmodal = ({ item }) => {
                 wallet !== nftDetail.nftOwnerAddress ?
                   <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 주소가 일치하지 않습니다.</Button> :
                   isSaleLoaded !== true ? <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
-                    <Button sx={{ width: '100%' }} variant="contained" onClick={handleOpen2} disabled={!isSaleLoaded}>
-                      판매하기
-                      <Modal
-                        open={open2}
-                        onClose={handleClose2}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                        closeAfterTransition
+                    item.nftForSale === true ?
+                      <Button sx={{ width: '100%' }} variant="contained" color="warning" >판매중</Button> :
+                      <Button sx={{ width: '100%' }} variant="contained" onClick={handleOpen2} disabled={!isSaleLoaded}>
+                        판매하기
+                        <Modal
+                          open={open2}
+                          onClose={handleClose2}
+                          aria-labelledby="modal-modal-title"
+                          aria-describedby="modal-modal-description"
+                          closeAfterTransition
                         >
                           {pricemodal}
                         </Modal>
-                    </Button>
+                      </Button>
 
           }
         </Box>

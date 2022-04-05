@@ -36,6 +36,7 @@ public class NftMintReq {
                 .nftOwnerAddress(nftOwnerAddress)
                 .nftTokenId(nftTokenId)
                 .nftPictureLink(nftPictureLink)
+                .nftForSale(false)
                 .build();
     }
 }
