@@ -46,12 +46,12 @@ const ImageModal = (props) => {
     ProfileImage(body)
     .then(res => {
       handleClose()
+      window.location.reload()
     })
     .catch(err => {
       console.log(err)
     })
-    console.log(body)
-    window.location.reload()
+
   }
   
 
