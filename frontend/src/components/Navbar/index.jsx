@@ -117,7 +117,7 @@ const UserHeader = (props) => {
     const body = {
       keyword : data
     }
-    const res = await SearchHashTagPost(search)
+    const res = await SearchHashTagPost(body)
     setResult(res.data.data)
   }
 
