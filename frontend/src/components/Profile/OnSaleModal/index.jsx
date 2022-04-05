@@ -149,18 +149,17 @@ const Postmodal = (item) => {
     //saleContractAddress로 delete하자
     const saleContractAddress = saleInfo.saleContractAddress;
 
-    const request = ({
-      "saleContractAddress" :  saleContractAddress
-    })
-    const cancelSale = await CancelSale(request);
-
     console.log(saleContractAddress);
     const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress)
 
     const cancelSales = await saleContract.methods.cancelSales().send({ from: wallet }).then(() => { });
     console.log(saleContractAddress);
-    //send cancelInfo to backend
 
+    //send cancelInfo to backend
+    const request = ({
+      "saleContractAddress" :  saleContractAddress
+    })
+    const cancelSale = await CancelSale(request);
     
     setIsPurchaseLoaded(false);
   }
@@ -170,13 +169,15 @@ const Postmodal = (item) => {
 
   const loading = (
     
-    isPurchaseLoaded ? <Box sx={{textAlign:'center'}}><CircularProgress/></Box>:
-    userId!==saleInfo.sellerId?
-    <Button sx={{ width: '100%' }} onClick={handlePurchaseButtonClick}>
-      구매하기
-    </Button> : <Button sx={{ width: '100%' }} onClick={handleCancelButtonClick}>
-      판매 취소
-    </Button> 
+    wallet === null ?
+        <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 연동 이후 이용이 가능합니다.</Button> :     
+          isPurchaseLoaded ? <Box sx={{textAlign:'center'}}><CircularProgress/></Box>:
+            userId!==saleInfo.sellerId?
+            <Button sx={{ width: '100%' }} onClick={handlePurchaseButtonClick}>
+              구매하기
+            </Button> : <Button sx={{ width: '100%' }} onClick={handleCancelButtonClick}>
+              판매 취소
+            </Button> 
   )
 
   
