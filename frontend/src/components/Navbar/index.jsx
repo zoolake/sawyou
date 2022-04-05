@@ -158,7 +158,7 @@ const UserHeader = (props) => {
                     placeholder="검색"
                     sx={{height : 35, width : 300}}
                     onFocus={handelOnBox}
-                    onBlur={handelOnBox}
+                    // onBlur={handelOnBox}
                     onChange={handleInputSearch}
                   />
                   <IconButton type="submit" aria-label="search">
@@ -255,19 +255,18 @@ const UserHeader = (props) => {
                 </Box>
 
             </Box>
-            {/* onClick={onClickRedirectPathHandler(`/profile/${data.userId}`)} */}
           </Box>
         </Container>
       </AppBar>
-      { onBox === 'True' && <Box sx={searchStyle} style={{zIndex: 2000}}>
+      { onBox === 'True' && <Box sx={searchStyle} style={{zIndex: 2000}} onBlur={handelOnBox}>
         { result && category === '계정' ? result.map((data) => (
-          <Button key={data.userId} sx={{justifyContent:'left'}} onClick={handleSearch}>
+          <Button key={data.userId} sx={{justifyContent:'left'}} onClick={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
             <img class="img2" src="/images/baseimg_nav.jpg" />
             <Box sx={{ml:2}}><Typography>{data.userId}</Typography></Box>
           </Button>
         )) : null}
         { result && category === '해시태그' ? result.map((data) => (
-          <Button key={data.hashtagName} sx={{justifyContent:'left'}}>
+          <Button key={data.hashtagName} sx={{justifyContent:'left'}} onClick={handleSearch}>
             <img class="img2" src="/images/baseimg_nav.jpg" />
             <Box sx={{ml:2}}><Typography>{data.hashtagName}</Typography></Box>
           </Button>
