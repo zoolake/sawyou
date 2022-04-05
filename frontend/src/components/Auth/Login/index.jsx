@@ -24,13 +24,11 @@ const Login = (props) => {
       userPwd : password,
     };
     async function A(){
-      try {
-        const res = await LoginApi(body).then((res) => localStorage.setItem('access_token', res.data.data))
-        setUser(id)
-      }
-      catch {
+      const res = await LoginApi(body).then((res) => localStorage.setItem('access_token', res.data.data))
+      .catch(
         alert('회원정보를 확인해주세요')
-      }
+      )
+      setUser(id)
     }
     A()
 
