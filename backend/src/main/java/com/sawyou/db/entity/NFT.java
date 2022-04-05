@@ -49,4 +49,6 @@ public class NFT {
     private LocalDateTime nftCreatedAt;
 
     private String nftPictureLink;
+
+    private Boolean nftForSale;
 }

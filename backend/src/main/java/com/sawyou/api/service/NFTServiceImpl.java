@@ -4,10 +4,7 @@ import com.sawyou.api.request.CancelSaleReq;
 import com.sawyou.api.request.NftMintReq;
 import com.sawyou.api.request.NftPurchaseReq;
 import com.sawyou.api.request.NftSaleReq;
-import com.sawyou.api.response.NftInfoRes;
-import com.sawyou.api.response.NftListRes;
-import com.sawyou.api.response.NftOnSaleDetailRes;
-import com.sawyou.api.response.NftOnSaleRes;
+import com.sawyou.api.response.*;
 import com.sawyou.db.entity.NFT;
 import com.sawyou.db.entity.Post;
 import com.sawyou.db.entity.Sale;
@@ -62,7 +59,7 @@ public class NFTServiceImpl implements NFTService {
         List<NFT> nftList = nftRepository.findByUser_UserId(userId);
         if (nftList.isEmpty()) return null;
         return nftList.stream()
-                .map(nft -> new NftListRes(nft.getNftSeq(), nft.getNftPictureLink()))
+                .map(nft -> new NftListRes(nft.getNftSeq(), nft.getNftPictureLink(), nft.getNftForSale()))
                 .collect(Collectors.toList());
     }
 
@@ -97,6 +94,9 @@ public class NFTServiceImpl implements NFTService {
                         .build())
                 .build();
         saleRepository.save(sale);
+
+        // NFT의 nftForSale을 True로 변경해준다.
+        sale.getNft().setNftForSale(true);
         return sale;
     }
 
@@ -174,12 +174,12 @@ public class NFTServiceImpl implements NFTService {
      * written by 문준호
      */
     @Override
-    public List<NftListRes> getUserSaleList(String userId) {
+    public List<NftSaleListRes> getUserSaleList(String userId) {
 
         List<NFT> userSaleNft = nftRepository.findUserSaleNft(userId);
         if (userSaleNft.isEmpty()) return null;
         return userSaleNft.stream()
-                .map(nft -> new NftListRes(nft.getNftSeq(), nft.getNftPictureLink()))
+                .map(nft -> new NftSaleListRes(nft.getNftSeq(), nft.getNftPictureLink()))
                 .collect(Collectors.toList());
     }
 
@@ -191,8 +191,16 @@ public class NFTServiceImpl implements NFTService {
     @Override
     @Transactional
     public Long cancelSale(CancelSaleReq cancelSaleReq) {
-       Long deleteBySaleCount =  saleRepository.deleteBySaleContractAddress(cancelSaleReq.getSaleContractAddress());
-       return deleteBySaleCount;
+        String saleContractAddress = cancelSaleReq.getSaleContractAddress();
+
+        Long deleteBySaleCount = saleRepository.deleteBySaleContractAddress(saleContractAddress);
+        Optional<Sale> sale = saleRepository.findBySaleContractAddress(saleContractAddress);
+
+        if(sale.isEmpty()) return null;
+        // 판매취소 -> 판매중 상태를 True에서 False로 변경
+        sale.get().getNft().setNftForSale(false);
+
+        return deleteBySaleCount;
     }
 
 }

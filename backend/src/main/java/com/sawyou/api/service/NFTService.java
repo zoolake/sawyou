@@ -4,10 +4,7 @@ import com.sawyou.api.request.CancelSaleReq;
 import com.sawyou.api.request.NftMintReq;
 import com.sawyou.api.request.NftPurchaseReq;
 import com.sawyou.api.request.NftSaleReq;
-import com.sawyou.api.response.NftInfoRes;
-import com.sawyou.api.response.NftListRes;
-import com.sawyou.api.response.NftOnSaleDetailRes;
-import com.sawyou.api.response.NftOnSaleRes;
+import com.sawyou.api.response.*;
 import com.sawyou.db.entity.NFT;
 import com.sawyou.db.entity.Sale;
 import java.util.List;
@@ -33,7 +30,7 @@ public interface NFTService {
     public Sale purchase(NftPurchaseReq nftPurchaseReq, Long UserSeq);
 
     // 유저가 판매중인 NFT 조회
-    List<NftListRes> getUserSaleList(String userId);
+    List<NftSaleListRes> getUserSaleList(String userId);
 
     // 판매중인 NFT 삭제
     Long cancelSale(CancelSaleReq cancelSaleReq);
