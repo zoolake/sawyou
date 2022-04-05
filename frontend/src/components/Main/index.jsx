@@ -66,11 +66,16 @@ const Main = (props) => {
         <div className="post_header">
           <div className="post_pfuser">
             <div>
-              <Avatar
+              {props.data.userProfile ? <Avatar
                 className="post_avatar"
                 alt="User"
-                src="/images/baseimg.jpg"
-              />
+                src={props.data.userProfile}
+              /> : <Avatar
+              className="post_avatar"
+              alt="User"
+              src="/images/baseimg.jpg"
+            /> }
+
             </div>
             <div className="post_user">
             {/* <h3>{username}</h3> */}           
