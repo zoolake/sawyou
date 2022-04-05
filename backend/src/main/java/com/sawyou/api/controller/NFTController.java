@@ -190,7 +190,7 @@ public class NFTController {
     }
 
 
-    @DeleteMapping("cancel")
+    @PostMapping("cancel")
     @ApiOperation(value = "NFT 삭제", notes = "판매중인 NFT를 삭제한다..")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
