@@ -58,7 +58,7 @@ const Profile = (props) => {
 
   // 내 게시글 조회
   const getPosts = async () => {
-    const response = await UserPost(params).then((res) => { setPosts(res.data.data) });
+    const response = await UserPost(params).then((res) => { setPosts(res.data.data)});    
   }
 
   const getProfile = async () => {
@@ -68,10 +68,10 @@ const Profile = (props) => {
   };
 
   const changeFollow = () => {
-    if (followCheck === true) {
+    if (followCheck === true){
       setFollowCheck(false)
-    }
-    else {
+    } 
+    else{
       setFollowCheck(true)
     }
   }
@@ -83,21 +83,21 @@ const Profile = (props) => {
 
   // 보유한 NFT 조회
   const getNfts = async () => {
-    const response = await ReadAllNft(params).then((res) => { setNfts(res.data.data) });
+    const response = await ReadAllNft(params).then((res) => { setNfts(res.data.data)});
   }
 
 
 
   // 판매중인 NFT 조회
   const getSales = async () => {
-    const response = await ReadAllSaleNft(params).then((res) => { setSales(res.data.data) });
+    const response = await ReadAllSaleNft(params).then((res) => { setSales(res.data.data)});
   }
 
   // 첫 렌더링 1회 진행
   useEffect(() => {
     getPosts();
     getProfile();
-    if (user === params) {
+    if (user === params){
       setMyProfile(true)
     }
     else {
@@ -136,11 +136,11 @@ const Profile = (props) => {
 
     return (
       <div>
-        <Grid
-          container
-          className={classes.root}
+        <Grid 
+          container 
+          className={classes.root} 
           spacing={2}
-        >
+        >            
           {posts && posts.map((post) => (
             <Grid item xs={12} sm={6} md={4}>
               <Card className="card__st">
@@ -160,16 +160,16 @@ const Profile = (props) => {
 
     return (
       <div>
-        <Grid
-          container
-          className={classes.root}
+        <Grid 
+          container 
+          className={classes.root} 
           spacing={2}
         >
           {nfts ? nfts.map((nft) => (
             <Grid item xs={12} sm={6} md={4}>
               <Card className="card__st">
                 <CardMedia className="media__st" key={nft.nftSeq}>
-                  <NftModal item={nft}>
+                  <NftModal  item={nft}>
                   </NftModal>
                 </CardMedia>
               </Card>
@@ -184,16 +184,16 @@ const Profile = (props) => {
 
     return (
       <div>
-        <Grid
-          container
-          className={classes.root}
+        <Grid 
+          container 
+          className={classes.root} 
           spacing={2}
         >
           {sales ? sales.map((sale) => (
             <Grid item xs={12} sm={6} md={4}>
-              <Card className="card__st">
+              <Card className="card__st">          
                 <CardMedia className="media__st" key={sale}>
-                  <OnSaleModal item={sale}>
+                  <OnSaleModal  item={sale}>
                   </OnSaleModal>
                 </CardMedia>
               </Card>
@@ -228,24 +228,24 @@ const Profile = (props) => {
                 <h2 class="profile_name">{params}</h2>
                 <div class="profile_edit edit_outer">
                   <div class="profile_edit edit_inner">
-                    {myProfile === true ? <a class="profile_edit_btn" href="/profileedit" tabIndex="0">프로필 편집</a>
-                      : followCheck === true ? <Button variant="contained" onClick={handleFollow}>팔로우 해제</Button> : <Button variant="contained" onClick={handleFollow}>팔로우</Button>}
+                    {myProfile === true ?  <a class="profile_edit_btn" href="/profileedit" tabIndex="0">프로필 편집</a>
+                    :  followCheck===true ? <Button variant="contained" onClick={handleFollow}>팔로우 해제</Button> : <Button variant="contained" onClick={handleFollow}>팔로우</Button>}
                   </div>
                 </div>
               </div>
               <ul class="article_follow">
-                <Button
-                  sx={{ justifyContent: 'left' }}
+               <Button
+                  sx={{justifyContent:'left'}}
                   style={{
                     font: "16px",
-                    color: "black",
+                    color : "black",
                     minWidth: "100px",
                     minHeight: "24px",
                     padding: "0 0 0 0px"
                   }}>
                   <Typography>게시글 0</Typography>
                 </Button>
-                <FollowerModal item={userData}></FollowerModal>
+                  <FollowerModal item={userData}></FollowerModal>
                 <li class="af_outer">
                   <FollowModal item={userData}></FollowModal>
                 </li>
