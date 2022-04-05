@@ -46,11 +46,11 @@ const Postmodal = (props) => {
     WritePost(body)
     .then(res => {
       handleClose()
+      window.location.reload()
     })
     .catch(err => {
       console.log(err)
     })
-    window.location.reload()
   }
   
   const onChangeContent = (e) => {

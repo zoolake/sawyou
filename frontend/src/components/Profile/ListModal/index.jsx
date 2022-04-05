@@ -105,9 +105,6 @@ const Postmodal = ({ item }) => {
     Change()
   };
 
-  const onSendDelete = (e) => {
-    Delete()
-  };
 
   const handleClickDialog = () => {
     setDialog(true);
@@ -116,6 +113,12 @@ const Postmodal = ({ item }) => {
   const handleDialogClose = () => {
     setDialog(false);
   };
+
+  const handleDialogClose2 = async () => {
+    const res = await Delete()
+    setDialog(false);
+    setOpen(false);
+  }
 
   const Change = async () => {
     const body = {
@@ -267,12 +270,12 @@ const Postmodal = ({ item }) => {
                 {"게시물을 삭제할까요?"}
               </DialogTitle>
               <DialogActions>
-                <Button onClick={handleDialogClose} autoFocus>삭제</Button>
+                <Button onClick={handleDialogClose2} autoFocus>삭제</Button>
                 <Button onClick={handleDialogClose}>취소</Button>
               </DialogActions>
             </Dialog>
           </Box>
-          <Box sx={{ height: '90%' }}>{post.postContent}</Box>
+          <Box sx={{ height: '90%' }}>{item.postContent}</Box>
           {
             item.postIsNft ?
               <Button sx={{ width: '100%' }} variant="contained" color="error" >이미 민팅된 게시물입니다.</Button> :
