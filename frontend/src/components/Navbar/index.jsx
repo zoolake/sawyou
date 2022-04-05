@@ -117,9 +117,16 @@ const UserHeader = (props) => {
     const body = {
       keyword : data
     }
-    const res = await SearchHashTagPost(body)
-    setResult(res.data.data)
+    const res = await SearchHashTagPost(body).then((res) => setResult(res.data.data))
+    .catch(setResult(''))
+    if (data === ''){
+      setResult('')
+      }
+    }
+  const handleSearch = () => {
+    console.log(3)
   }
+
 
   return (
     <Wrapper>
@@ -248,17 +255,23 @@ const UserHeader = (props) => {
                 </Box>
 
             </Box>
-
+            {/* onClick={onClickRedirectPathHandler(`/profile/${data.userId}`)} */}
           </Box>
         </Container>
       </AppBar>
       { onBox === 'True' && <Box sx={searchStyle} style={{zIndex: 2000}}>
-        { result && result.map((data) => (
-          <Button sx={{justifyContent:'left'}}>
+        { result && category === '계정' ? result.map((data) => (
+          <Button key={data.userId} sx={{justifyContent:'left'}} onClick={handleSearch}>
             <img class="img2" src="/images/baseimg_nav.jpg" />
             <Box sx={{ml:2}}><Typography>{data.userId}</Typography></Box>
           </Button>
-        )) }
+        )) : null}
+        { result && category === '해시태그' ? result.map((data) => (
+          <Button key={data.hashtagName} sx={{justifyContent:'left'}}>
+            <img class="img2" src="/images/baseimg_nav.jpg" />
+            <Box sx={{ml:2}}><Typography>{data.hashtagName}</Typography></Box>
+          </Button>
+        )) : null}
       </Box>}
       
     </Wrapper>
