@@ -11,11 +11,13 @@ import { ReadPost, ChangePost, DeletePost } from '../../../api/post'
 import Web3 from 'web3';
 import SsafyNFT from '../../../abi/SsafyNFT.json'
 import { useRecoilValue } from 'recoil';
+import { User } from '../../../States/User';
 import { Wallet } from '../../../States/Wallet';
 import { MintingNft } from '../../../api/nft';
 import { TokenOutlined } from '@mui/icons-material';
 import SaleFactory from '../../../abi/SaleFactory.json';
 import { CellNft } from '../../../api/nft';
+import { useParams } from 'react-router';
 
 const style = {
   position: 'absolute',
@@ -83,6 +85,7 @@ const Postmodal = ({ item }) => {
 
   /* 민팅 및 판매하기 관련 */
   const [web3, setWeb3] = React.useState();
+  const user = useRecoilValue(User);
   const wallet = useRecoilValue(Wallet);
 
   React.useEffect(() => {
@@ -143,6 +146,8 @@ const Postmodal = ({ item }) => {
     setNftSeq(data);
   }
 
+  const params = useParams().id;
+
   const viewMyPost = (
     <Box sx={style}
       component="form"
@@ -163,12 +168,16 @@ const Postmodal = ({ item }) => {
           </Box>
           <Box sx={{ height: '90%' }}>{post.postContent}</Box>
           {
-            item.postIsNft ?
-              <Button sx={{ width: '100%' }} variant="contained" color="error" >이미 민팅된 게시물입니다.</Button> :
-              isMintingLoaded !== true ? <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
-                <Button sx={{ width: '100%' }} variant="contained" onClick={handleMintingButtonClick} disabled={!isMintingLoaded}>
-                  민팅하기
-                </Button>
+            user !== params ?
+              <div></div> :
+              wallet === null ?
+                <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 연동 이후 이용이 가능합니다.</Button> :
+                item.postIsNft ?
+                  <Button sx={{ width: '100%' }} variant="contained" color="error" >이미 민팅된 게시물입니다.</Button> :
+                  isMintingLoaded !== true ? <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
+                    <Button sx={{ width: '100%' }} variant="contained" onClick={handleMintingButtonClick} disabled={!isMintingLoaded}>
+                      민팅하기
+                    </Button>
           }
         </Box>
 
