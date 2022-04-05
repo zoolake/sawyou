@@ -3,7 +3,6 @@ import Wrapper from './styles';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import DeleteIcon from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {LikePost, WriteComment, ReadCommnet} from '../../api/post'
@@ -46,14 +45,14 @@ const Main = (props) => {
     if (comment.trim() === '') {
       return;
     }
-    // setCommentArray(commentValueList => [comment, ...commentValueList]);
-    // setComment('');
-    // setIsValid(false);
+
     const body = {
       commentContent : comment
     }
-    WriteComment(props.data.postSeq, body)
-    getComment()
+    WriteComment(props.data.postSeq, body).then(
+      getComment(),
+      setComment('')
+    )
   };
 
   useEffect(() => {
@@ -66,27 +65,15 @@ const Main = (props) => {
         <div className="post_header">
           <div className="post_pfuser">
             <div>
-              {props.data.userProfile ? <Avatar
-                className="post_avatar"
-                alt="User"
-                src={props.data.userProfile}
-              /> : <Avatar
-              className="post_avatar"
-              alt="User"
-              src="/images/baseimg.jpg"
-            /> }
-
+              {props.data.userProfile 
+                ? <Avatar className="post_avatar" alt="User" src={props.data.userProfile}/> 
+                : <Avatar className="post_avatar" alt="User" src="/images/baseimg.jpg"/>}
             </div>
             <div className="post_user">
-            {/* <h3>{username}</h3> */}           
               <h4>{props.data.userId}</h4>
             </div>
           </div>
-          <div className="post_delete">
-            <DeleteIcon />
-          </div>
         </div>
-
         <img className="post_img" src={props.data.postPictureLink}></img>
         <div className="post_article">
           {like === true ?       
@@ -102,52 +89,26 @@ const Main = (props) => {
               sx = {{color:'black'}}
             />
             </Button>
-            }
+          }
           <div className="post_article_comment">
             <div>
-              {/* <h4 className="post_txt"><strong>{username}</strong> {caption}</h4> */}
-              <h4 className="post_text"><strong>{props.data.userId}</strong> {props.data.postContent}</h4>
+              <h4 className="post_text"><strong>{props.data.userId}</strong><span>&nbsp;</span>{props.data.postContent}</h4>
             </div>
-            {dataComment && dataComment.map((data) => <Typography>{data.commentContent}</Typography>)}
-            {/* <ul>
-              <Comment />
-            </ul> */}
+            <div className="post_comment">
+              {dataComment && dataComment.map((data) => 
+                <h4 className="post_user_comment"><strong>{data.userId}</strong><span>&nbsp;</span>{data.commentContent}</h4>
+              )}
+            </div>
           </div>
         </div>
-
-        {/* <form className="post_comment_container" method="POST">
-          <input
-            value={comment}
-            className="post_comment"
-            type="text"
-            placeholder="댓글 달기..."
-            onChange={event => {
-              setComment(event.target.value);
-            }}
-            onKeyUp={event => {
-              event.target.value.length > 0
-                ? setIsValid(true)
-                : setIsValid(false);
-            }}
-          />
-          <text
-            type="button"
-            className={
-              isValid === true ? 'commentUploadBtnActive' : 'commentUploadBtnDeactive'
-            }
-            onClick={btnColor}
-            disabled={isValid ? false : true}
-          >
-            게시
-          </text>
-        </form> */}
         <div className="commentContainer" >
           <form className="commentWrap">
-          <InputBase
-            placeholder="내용 입력"
-            onChange={onChange}
-            sx={{width:'90%', ml:1}}
-          />
+            <InputBase
+              placeholder="내용 입력"
+              onChange={onChange}
+              sx={{width:'90%', ml:1}}
+              value={comment}
+            />
             <Button>
               <Typography onClick={onSubmit}>게시</Typography>
             </Button>
