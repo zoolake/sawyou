@@ -19,10 +19,8 @@ const MainPage = (props) => {
   return (
     <Wrapper>
       <Navbar></Navbar>
-      {/* 현재는 이 방식이지만 추후에 map을 통하여 props를 뿌려주고, 이를 바탕으로 main페이지 여러개 출력(인피니티 스크롤 구현은 논의) */}
-      {/* {post && <div>{post[0].postContent}</div>} */}
       {post && post.map((data) => (
-        <Main data={data}></Main>
+        <Main key={data.postSeq} data={data}></Main>
       ))}       
     </Wrapper>
   )
