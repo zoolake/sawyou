@@ -13,6 +13,9 @@ import NftModal from './NftModal/index'
 import OnSaleModal from './OnSaleModal/index'
 import FollowerModal from './FollowerModal/index'
 import FollowModal from './FollowModal/index'
+import Card from '@mui/material/Card';
+import CardMedia from '@mui/material/CardMedia';
+
 import { UserPost } from '../../api/list';
 import { FollowingUser, Profile as Profile2 } from '../../api/user';
 import { User } from '../../States/User';
@@ -21,6 +24,13 @@ import { ReadAllNft, ReadAllSaleNft } from '../../api/nft';
 
 
 const Profile = (props) => {
+
+  const styles = theme => ({
+    Card: {
+      width: 300,
+      margin: 'auto'
+    },
+  });
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,7 +46,9 @@ const Profile = (props) => {
   }));
 
   const user = useRecoilValue(User);
+
   const params = useParams().id;
+
   const [posts, setPosts] = useState('');
   const [nfts, setNfts] = useState('');
   const [sales, setSales] = useState('');
@@ -46,8 +58,7 @@ const Profile = (props) => {
 
   // 내 게시글 조회
   const getPosts = async () => {
-    const response = await UserPost(params).then((res) => { setPosts(res.data.data)});
-    
+    const response = await UserPost(params).then((res) => { setPosts(res.data.data)});    
   }
 
   const getProfile = async () => {
@@ -73,13 +84,14 @@ const Profile = (props) => {
   // 보유한 NFT 조회
   const getNfts = async () => {
     const response = await ReadAllNft(params).then((res) => { setNfts(res.data.data)});
-}
+  }
+
+
 
   // 판매중인 NFT 조회
   const getSales = async () => {
     const response = await ReadAllSaleNft(params).then((res) => { setSales(res.data.data)});
   }
-
 
   // 첫 렌더링 1회 진행
   useEffect(() => {
@@ -92,6 +104,10 @@ const Profile = (props) => {
       setMyProfile(false)
     }
   }, []);
+
+
+
+  // const [spacing, setSpacing] = React.useState(2);
 
   const classes = useStyles();
   const [alignment, setAlignment] = React.useState('1');
@@ -120,17 +136,21 @@ const Profile = (props) => {
 
     return (
       <div>
-        <Grid container className={classes.root} spacing={2}>
-          <Grid item xs={12}>
-            <ImageList cols={3} gap={16}>
-              {posts && posts.map((post) => (
-                <ImageListItem className="myimg" key={post.postSeq}>
+        <Grid 
+          container 
+          className={classes.root} 
+          spacing={2}
+        >            
+          {posts && posts.map((post) => (
+            <Grid item xs={12} sm={6} md={4}>
+              <Card className="card__st">
+                <CardMedia className="media__st" key={post.postSeq}>
                   <ListModal item={post}>
                   </ListModal>
-                </ImageListItem>
-              ))}
-            </ImageList>
-          </Grid>
+                </CardMedia>
+              </Card>
+            </Grid>
+          ))}
         </Grid>
       </div>
     )
@@ -140,17 +160,21 @@ const Profile = (props) => {
 
     return (
       <div>
-        <Grid container className={classes.root} spacing={2}>
-          <Grid item xs={12}>
-            <ImageList cols={3} gap={16}>
-              {nfts ? nfts.map((nft) => (
-                <ImageListItem className="myimg" key={nft.nftSeq}>
+        <Grid 
+          container 
+          className={classes.root} 
+          spacing={2}
+        >
+          {nfts ? nfts.map((nft) => (
+            <Grid item xs={12} sm={6} md={4}>
+              <Card className="card__st">
+                <CardMedia className="media__st" key={nft.nftSeq}>
                   <NftModal  item={nft}>
                   </NftModal>
-                </ImageListItem>
-              )) : <span>보유한 NFT가 없습니다.</span>}
-            </ImageList>
-          </Grid>
+                </CardMedia>
+              </Card>
+            </Grid>
+          )) : <span>보유한 NFT가 없습니다.</span>}
         </Grid>
       </div>
     )
@@ -160,27 +184,25 @@ const Profile = (props) => {
 
     return (
       <div>
-        <Grid container className={classes.root} spacing={2}>
-          <Grid item xs={12}>
-            <ImageList cols={3} gap={16}>
-              {sales ? sales.map((sale) => (
-                <ImageListItem className="myimg" key={sale}>
-                  <OnSaleModal  item={sale}>
-                  </OnSaleModal>
-                </ImageListItem>
-              )) : <span>판매중인 NFT가 없습니다.</span>}
-            </ImageList>
-          </Grid>
+        <Grid 
+          container 
+          className={classes.root} 
+          spacing={2}
+        >
+          {sales ? sales.map((sale) => (
+            <Grid item xs={12} sm={6} md={4}>
+              <Card className="card__st">          
+                <CardMedia className="media__st" key={sale}>
+                  <NftModal  item={sale}>
+                  </NftModal>
+                </CardMedia>
+              </Card>
+            </Grid>
+          )) : <span>판매중인 NFT가 없습니다.</span>}
         </Grid>
       </div>
     )
   }
-
-  // const followButton = () => {
-  //   return (
-
-  //   )
-  // }
 
   return (
     <Wrapper>
