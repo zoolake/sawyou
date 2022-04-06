@@ -1,7 +1,7 @@
 import React, { useState, useEffect }  from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Input from '@mui/material/Input';
+import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Wrapper from '../styles';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
@@ -9,6 +9,9 @@ import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import InputBase from "@mui/material/InputBase";
 import {WritePost} from "../../../api/post"
+import { User } from '../../../States/User';
+import { UserImage } from '../../../States/UserImage';
+import { useRecoilValue } from 'recoil';
 
 const style = {
   position: 'absolute',
@@ -24,6 +27,11 @@ const style = {
   p: 1,
 };
 
+const image2 = {
+  height: "30px",
+  width: "30px"
+}
+
 const Postmodal = (props) => {
   const [open, setOpen] = React.useState(false);
   const [content, setContent] = React.useState('');
@@ -31,6 +39,8 @@ const Postmodal = (props) => {
   const handleClose = () => (setOpen(false), setContent(''), setSelectedImage(''));
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
+  const userImage = useRecoilValue(UserImage);
+  const user = useRecoilValue(User);
 
   useEffect(() => {
     if (selectedImage) {
@@ -106,8 +116,8 @@ const Postmodal = (props) => {
         </Box>
         <Box sx = {{mx: 1,width:'28%', justifyContent:'space-between'}}>
           <Box sx={{ display: 'flex'}}>
-            <img src="/images/baseimg_nav.jpg"></img>
-            <Typography sx={{ml:2,mt:0.2}}>아이디</Typography>
+          {userImage && (userImage ?<Avatar style={image2} src={userImage} /> : <img style={image2} src="/images/baseimg.png" />)}
+            <Typography sx={{ml:2,mt:0.2}}>{user}</Typography>
           </Box>
           <InputBase
             placeholder="내용 입력"
