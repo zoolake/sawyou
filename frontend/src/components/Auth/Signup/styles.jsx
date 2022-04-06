@@ -10,20 +10,13 @@ const Wrapper = styled.div`
   border: 1px solid #d4d2d2;
   box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
   width: 350px;
-  height: 470px;
+  height: 530px;
 
   .logo {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: sans-serif;
-    font-size: 48px;
-  }
-
-  .c1 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin-top: 8px;
   }
 
   .inputBox {
@@ -47,9 +40,15 @@ const Wrapper = styled.div`
     margin-top: 4px;
   }
 
-  .d1 {
+  .signup__form {
     display: flex;
+    align-items: center;
     justify-content: center;
+    margin-bottom: 4px;
+  }
+  
+  .form_2 {
+    margin-top: 8px;
   }
 
   a {

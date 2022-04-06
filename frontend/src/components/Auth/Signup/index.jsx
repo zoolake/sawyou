@@ -1,14 +1,11 @@
 import React, {useState} from 'react';
-import { 
-  Container, 
-  Button, 
-  TextField,
-  Box } 
-from '@mui/material';
+import { Button, Box } from '@mui/material';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Wrapper from './styles';
 import { RegisterUser, IdCheck } from '../../../api/user';
+import { Link } from 'react-router-dom';
+
 
 const Signup = () =>{
   const [id, setId] = useState('');
@@ -111,9 +108,9 @@ const Signup = () =>{
     <Wrapper>
       <Box component="form" onSubmit={onSubmit}>
         <div className="logo">
-          I SAW YOU
+          <img src='/images/sawyou.png' width="300" height="80"></img>
         </div>
-        <div className="c1">
+        <div className="signup__form">
           <input 
             type="text" 
             id="loginId" 
@@ -124,9 +121,7 @@ const Signup = () =>{
           >          
           </input>
         </div>
-        <div className="c1">
-
-
+        <div className="signup__form">
         <input 
           type="text" 
           id="name" 
@@ -137,7 +132,7 @@ const Signup = () =>{
         >          
         </input>
         </div>
-        <div className="c1">
+        <div className="signup__form">
 
         <input 
           type="text" 
@@ -149,8 +144,7 @@ const Signup = () =>{
         >                    
         </input>
         </div>
-        <div className="c1">
-
+        <div className="signup__form">
         <input 
           type="password" 
           id="password" 
@@ -161,8 +155,7 @@ const Signup = () =>{
         >          
         </input>
         </div>
-        <div className="c1">
-
+        <div className="signup__form">
         <input 
           type="password" 
           id="passwordcheck" 
@@ -173,8 +166,7 @@ const Signup = () =>{
         >          
         </input>
         </div>
-        <div className="c1">
-
+        <div className="signup__form">
         <Button
           className="signupBtn"
           variant="contained" 
@@ -183,13 +175,10 @@ const Signup = () =>{
           가입
         </Button>
         </div>
-        <div className="d1">
-          <p className="e1">
-            계정이 있으신가요?
-            <a href="/accounts/login">
-              로그인
-            </a>
-          </p>
+        <div className="signup__form">
+          <div className="signup__form form_2">
+            계정이 없으신가요?<Link to="/" style={{ textDecoration: 'none', padding: 8, color: 'blue'}}>로그인</Link>
+          </div>
         </div>
       </Box>
       <ToastContainer autoClose={5000} />

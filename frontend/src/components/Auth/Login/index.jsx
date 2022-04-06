@@ -10,7 +10,7 @@ import { LoginApi, Profile } from '../../../api/user';
 import { useRecoilState } from 'recoil';
 import { Wallet } from '../../../States/Wallet';
 import { Link } from 'react-router-dom';
-
+import { UserImage } from '../../../States/UserImage';
 
 const Login = (props) => {
   const [id, setId] = useState('');
