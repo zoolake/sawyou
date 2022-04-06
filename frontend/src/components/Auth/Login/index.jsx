@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
@@ -10,13 +9,13 @@ import { User } from '../../../States/User';
 import { LoginApi, Profile } from '../../../api/user';
 import { useRecoilState } from 'recoil';
 import { Wallet } from '../../../States/Wallet';
-import { UserImage } from '../../../States/UserImage';
+import { Link } from 'react-router-dom';
+
 
 const Login = (props) => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [passwordWaring, setPasswordWarning] = useState('');
-
   const [user, setUser] = useRecoilState(User);
   const [wallet, setWallet] = useRecoilState(Wallet);
   const [userImage, setuserImage] = useRecoilState(UserImage);
@@ -52,15 +51,14 @@ const Login = (props) => {
   };
 
 
-
   return (
     <Wrapper>
       <div>
         <Box component="form" onSubmit={onSubmitHandler}>
           <div className="logo">
-            I SAW YOU
+            <img src='/images/sawyou.png' width="300" height="80"></img>
           </div>
-          <div className="c1">
+          <div className="login__form">
             <input
               type="text"
               id="loginid"
@@ -71,7 +69,7 @@ const Login = (props) => {
             >
             </input>
           </div>
-          <div className="c1">
+          <div className="login__form form_1">
             <input
               type="password"
               id="password"
@@ -82,7 +80,7 @@ const Login = (props) => {
             >
             </input>
           </div>
-          <div className="c1">
+          <div className="login__form form_1">
             <Button
               className="signupBtn"
               type="submit"
@@ -92,7 +90,9 @@ const Login = (props) => {
             </Button>
           </div>
         </Box>
-
+      </div>
+      <div className="login__form form_1">
+        계정이 없으신가요?<Link to="/signup" style={{ textDecoration: 'none', padding: 8, color: 'blue'}}>회원가입</Link>
       </div>
     </Wrapper>
 
