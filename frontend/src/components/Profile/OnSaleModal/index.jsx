@@ -19,8 +19,8 @@ import { useRecoilValue } from 'recoil';
 import Web3 from 'web3';
 import { textAlign } from '@mui/system';
 import { useParams } from 'react-router';
-import { useNavigate  } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 const style = {
   position: 'absolute',
@@ -62,16 +62,16 @@ const Postmodal = (item) => {
     navigate(`/nft/${item.item.nftSeq}`);
     handleClose()
   };
-  
 
- 
+
+
   useEffect(() => {
     if (selectedImage) {
       setImageUrl(URL.createObjectURL(selectedImage));
     }
   }, [selectedImage]);
 
-  
+
   useEffect(() => {
 
     if (typeof window.ethereum != "undefined") {
@@ -115,64 +115,109 @@ const Postmodal = (item) => {
   const handlePurchaseButtonClick = async () => {
 
     setIsPurchaseLoaded(true);
-    console.log("saleContractAddress : ", saleInfo)
-    const saleContractAddress = saleInfo.saleContractAddress;
 
-    const salePrice = saleInfo.salePrice;
-    console.log("salePrice : ", saleInfo.salePrice)
+    try {
+      const saleContractAddress = saleInfo.saleContractAddress;
 
-    const erc20Contract = await new web3.eth.Contract(
-      SsafyToken.abi,
-      "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333"
-    );
+      const salePrice = saleInfo.salePrice;
 
-    const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress);
+      const erc20Contract = await new web3.eth.Contract(
+        SsafyToken.abi,
+        "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333"
+      );
 
-    const approve = await erc20Contract.methods.approve(saleContractAddress, salePrice).send({ from: wallet });
+      const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress);
 
-    const purchase = await saleContract.methods.purchase().send({ from: wallet });
+      const approve = await erc20Contract.methods.approve(saleContractAddress, salePrice).send({ from: wallet });
 
-    // send purchaseinfo to backend
-    const buyNft = await BuyNft({
-      "nftSeq": item.item.nftSeq,
-      "nftOwnerAddress": wallet
-    });
+      const purchase = await saleContract.methods.purchase().send({ from: wallet });
 
-    setIsPurchaseLoaded(false);
+      // send purchaseinfo to backend
+      const buyNft = await BuyNft({
+        "nftSeq": item.item.nftSeq,
+        "nftOwnerAddress": wallet
+      });
+
+      handleClose();
+      Swal.fire({
+        title: ' Success ',
+        text: '판매 취소에 성공하였습니다. ✨',
+        icon: 'success',
+        confirmButtonText: '확인'
+      })
+    }
+
+    catch (error) {
+      Swal.fire({
+        title: ' Error ',
+        text: '판매 취소에 실패하였습니다. 😢',
+        icon: 'error',
+        confirmButtonText: '확인',
+      })
+      console.log("error:", error);
+    }
+
+    finally {
+      setIsPurchaseLoaded(false);
+    }
+
   }
 
 
   // send cancel to blockchain network
   const handleCancelButtonClick = async () => {
     setIsPurchaseLoaded(true);
-    console.log("saleContractAddress : ", saleInfo)
 
-    if (typeof window.ethereum != "undefined") {
-      try {
-        const web = new Web3(window.ethereum);
-        setWeb3(web);
-      } catch (err) {
-        console.log(err);
+    try {
+      if (typeof window.ethereum != "undefined") {
+        try {
+          const web = new Web3(window.ethereum);
+          setWeb3(web);
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        console.log("ethereum is not defined")
       }
-    } else {
-      console.log("ethereum is not defined")
+      //saleContractAddress로 delete하자
+      const saleContractAddress = saleInfo.saleContractAddress;
+
+      console.log(saleContractAddress);
+      const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress)
+
+      const cancelSales = await saleContract.methods.cancelSales().send({ from: wallet }).then(() => { });
+      console.log(saleContractAddress);
+
+      //send cancelInfo to backend
+      const request = ({
+        "saleContractAddress": saleContractAddress
+      })
+      const cancelSale = await CancelSale(request);
+
+      handleClose();
+      Swal.fire({
+        title: ' Success ',
+        text: '판매 취소에 성공하였습니다. ✨',
+        icon: 'success',
+        confirmButtonText: '확인'
+      })
     }
-    //saleContractAddress로 delete하자
-    const saleContractAddress = saleInfo.saleContractAddress;
 
-    console.log(saleContractAddress);
-    const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress)
+    catch (error) {
+      handleClose();
+      Swal.fire({
+        title: ' Error ',
+        text: '판매 취소에 실패하였습니다. 😢',
+        icon: 'error',
+        confirmButtonText: '확인',
+      })
+      console.log("error:", error);
+    }
 
-    const cancelSales = await saleContract.methods.cancelSales().send({ from: wallet }).then(() => { });
-    console.log(saleContractAddress);
+    finally {
+      setIsPurchaseLoaded(false);
+    }
 
-    //send cancelInfo to backend
-    const request = ({
-      "saleContractAddress": saleContractAddress
-    })
-    const cancelSale = await CancelSale(request);
-
-    setIsPurchaseLoaded(false);
   }
 
 
@@ -185,12 +230,12 @@ const Postmodal = (item) => {
       isPurchaseLoaded ?
         <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
         userId !== saleInfo.sellerId ?
-          <Button sx={{ width: '100%' }} onClick={onClickRedirectPathHandler()}>
+          <Button sx={{ width: '100%' }} variant="contained" onClick={onClickRedirectPathHandler()}>
             구매하기
           </Button> :
           wallet !== saleInfo.nftOwnerAddress ?
             <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 주소가 일치하지 않습니다.</Button> :
-            <Button sx={{ width: '100%' }} onClick={handleCancelButtonClick}>
+            <Button sx={{ width: '100%' }} variant="contained" onClick={handleCancelButtonClick}>
               판매 취소
             </Button>
   )
@@ -215,23 +260,23 @@ const Postmodal = (item) => {
               <Box sx={{ display: 'flex', height: '50%' }}>
                 <img src="/images/baseimg_nav.jpg"></img>
               </Box>
-              <Typography variant="h6" sx={{ml:2,mt:0.2}}>{saleInfo.sellerName}</Typography>
+              <Typography variant="h6" sx={{ ml: 2, mt: 0.2 }}>{saleInfo.sellerName}</Typography>
             </Box>
 
-          <Box><Typography>작가 이름 : {saleInfo.nftAuthorName} </Typography></Box>
-          <Box><Typography>작품 제목 : {saleInfo.nftTitle} </Typography></Box>
-          <Box><Typography>작품 내용 : {saleInfo.nftDesc} </Typography></Box>
-          <Box><Typography>판매 가격 : {saleInfo.salePrice} </Typography></Box>
-          <Box><Typography>판매 시작 : {saleInfo.startDate} </Typography></Box>
-          <Box><Typography>판매 종료 : {saleInfo.endDate} </Typography></Box>
+            <Box><Typography>작가 이름 : {saleInfo.nftAuthorName} </Typography></Box>
+            <Box><Typography>작품 제목 : {saleInfo.nftTitle} </Typography></Box>
+            <Box><Typography>작품 내용 : {saleInfo.nftDesc} </Typography></Box>
+            <Box><Typography>판매 가격 : {saleInfo.salePrice} </Typography></Box>
+            <Box><Typography>판매 시작 : {saleInfo.startDate} </Typography></Box>
+            <Box><Typography>판매 종료 : {saleInfo.endDate} </Typography></Box>
           </Box>
 
           {loading}
 
 
-          </Box>
-          </Box>
+        </Box>
       </Box>
+    </Box>
   );
 
 

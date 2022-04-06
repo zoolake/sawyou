@@ -3,8 +3,14 @@ import Wrapper from './styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button'
 import { useParams } from 'react-router';
-import {ReadNft,ReadCellNft,CancelSale,BuyNft} from '../../../api/nft';
+import { ReadCellNft, BuyNft } from '../../../api/nft';
+import SsafyToken from '../../../abi/SsafyToken.json';
+import { Wallet } from '../../../States/Wallet';
+import { User } from '../../../States/User';
+import { useRecoilValue } from 'recoil';
+import Sale from '../../../abi/Sale.json';
 import Web3 from 'web3';
+
 
 
 
@@ -12,6 +18,10 @@ const Product = () => {
   const [saleInfo, setSaleInfo] = useState('');
   const params = useParams().id;
   const [web3, setWeb3] = React.useState();
+  const wallet = useRecoilValue(Wallet);
+  const [balance, setBalance] = useState('');
+  const userId = useRecoilValue(User);
+  const [isPurchaseLoaded, setIsPurchaseLoaded] = useState('');
 
   const background = {
     backgroundImage: `url(${saleInfo.nftPictureLink})`,
@@ -39,14 +49,50 @@ const Product = () => {
       console.log("ethereum is not defined")
     }
 
-     ReadCellNft(params).then((r) => {
-      console.log("saleInfo",r.data.data)
+    ReadCellNft(params).then((r) => {
+      console.log("saleInfo", r.data.data)
       setSaleInfo(r.data.data);
     })
-  },[])
+    // getBalance();
+  }, [])
 
 
 
+  const handlePurchaseButtonClick = async () => {
+
+    setIsPurchaseLoaded(true);
+    console.log("saleContractAddress : ", saleInfo)
+    const saleContractAddress = saleInfo.saleContractAddress;
+
+    const salePrice = saleInfo.salePrice;
+    console.log("salePrice : ", saleInfo.salePrice)
+
+    const erc20Contract = await new web3.eth.Contract(
+      SsafyToken.abi,
+      "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333"
+    );
+
+    const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress);
+
+    const approve = await erc20Contract.methods.approve(saleContractAddress, salePrice).send({ from: wallet });
+
+    const purchase = await saleContract.methods.purchase().send({ from: wallet });
+
+    // send purchaseinfo to backend
+    const buyNft = await BuyNft({
+      "nftSeq": params,
+      "nftOwnerAddress": wallet
+    });
+
+    setIsPurchaseLoaded(false);
+  }
+
+  const getBalance = async () => {
+    // 잔액 확인을 위해 ERC-20 Contract 사용
+    const erc20Contract = await new web3.eth.Contract(SsafyToken.abi, "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333");
+    const temp = await erc20Contract.methods.balanceOf(wallet).call();
+    setBalance(temp);
+  }
 
 
   return (
@@ -61,7 +107,7 @@ const Product = () => {
       </section>
       <div className="standardWrap">
         <div className="detailPage__layout">
-          <section className="detailPage__content">
+          <section className="detailPage__aside">
             <h2 className="detailPage__title">{saleInfo.nftTitle}</h2>
             <article className="detailPage__section">
               <div className="detailPage__info">NFT 정보</div>
@@ -81,8 +127,8 @@ const Product = () => {
               </dl>
               <div>
                 작품 설명
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <div>
                   {saleInfo.nftDesc}
                 </div>
@@ -95,17 +141,20 @@ const Product = () => {
                 className="detailPage__price"
                 sx={{
                   width: 400,
-                  height: 344,
+                  height: 230,
                   backgroundColor: 'white'
-                  
+
                 }}
               >
                 <dl className="info">
                   <dt className="ether">보유 금액</dt>
-                  <dd className="ether">
-                    0.5
-                    ETH
-                  </dd>
+                  {
+                    balance === '' ?
+                      <Button onClick={getBalance}>잔액 조회하기</Button> :
+                      <dd className="ether">
+                        {balance} SSF
+                      </dd>
+                  }
                 </dl>
                 <dl className="info">
                   <dt className="ether">판매가</dt>
@@ -113,9 +162,11 @@ const Product = () => {
                     {saleInfo.salePrice} SSF
                   </dd>
                 </dl>
-                <Button 
+                <Button
                   variant="contained"
-                  className="detailPage__button"  
+                  className="detailPage__button"
+                  onClick={handlePurchaseButtonClick}
+                  sx={{ mt: 50 }}
                 >
                   구매하기
                 </Button>
@@ -127,11 +178,11 @@ const Product = () => {
 
         </div>
 
-      </div>
+      </div >
 
 
 
-    </Wrapper>
+    </Wrapper >
   )
 }
 

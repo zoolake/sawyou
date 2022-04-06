@@ -196,12 +196,12 @@ public class NFTServiceImpl implements NFTService {
     public Long cancelSale(CancelSaleReq cancelSaleReq) {
         String saleContractAddress = cancelSaleReq.getSaleContractAddress();
 
-        Long deleteBySaleCount = saleRepository.deleteBySaleContractAddress(saleContractAddress);
         Optional<Sale> sale = saleRepository.findBySaleContractAddress(saleContractAddress);
-
         if (sale.isEmpty()) return null;
         // 판매취소 -> 판매중 상태를 True에서 False로 변경
         sale.get().getNft().setNftForSale(false);
+
+        Long deleteBySaleCount = saleRepository.deleteBySaleContractAddress(saleContractAddress);
 
         return deleteBySaleCount;
     }
