@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import InputBase from "@mui/material/InputBase";
 import { ProfileImage} from "../../../api/user"
+import { useParams } from 'react-router';
 
 const style = {
   position: 'absolute',
@@ -32,6 +33,7 @@ const ImageModal = (props) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const forImage = props.item.userProfile
+  const params = useParams().id;
 
   useEffect(() => {
     if (selectedImage) {
@@ -107,8 +109,7 @@ const ImageModal = (props) => {
 
   return (
     <div>
-            
-      <Button
+      {props.userData === params ? <Button
         key={"add"}
         onClick={handleOpen}
         style={{
@@ -121,7 +122,23 @@ const ImageModal = (props) => {
             <img src={forImage} alt={forImage} height="100%" width="100%" />
           </Box>
         ) : <img alt="프로필 사진" class="profile_image" src="/images/baseimg.jpg"></img> }
-        </Button>
+        </Button> : 
+        <Button
+        disabled
+        key={"add"}
+        onClick={handleOpen}
+        style={{
+          minWidth: "150px",
+          minHeight: "150px",
+          padding: '0 0 0 0px'
+        }}>
+        {forImage ? (
+          <Box sx={{width:'100%',height:'100%'}}>
+            <img src={forImage} alt={forImage} height="100%" width="100%" />
+          </Box>
+        ) : <img alt="프로필 사진" class="profile_image" src="/images/baseimg.jpg"></img> }
+        </Button>}
+
       <Modal
       open={open}
       onClose={handleClose}
