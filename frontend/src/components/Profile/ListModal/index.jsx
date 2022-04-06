@@ -6,6 +6,7 @@ import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Dialog from '@mui/material/Dialog';
+import Avatar from '@mui/material/Avatar';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -18,11 +19,9 @@ import SsafyNFT from '../../../abi/SsafyNFT.json'
 import { useRecoilValue } from 'recoil';
 import { Wallet } from '../../../States/Wallet';
 import { MintingNft } from '../../../api/nft';
-import { CommentsDisabledOutlined, TokenOutlined } from '@mui/icons-material';
-import SaleFactory from '../../../abi/SaleFactory.json';
-import { CellNft } from '../../../api/nft';
 import Swal from 'sweetalert2';
 import { User } from '../../../States/User';
+import { ReadCommnet} from '../../../api/post';
 
 
 const style = {
@@ -70,7 +69,7 @@ const style4 = {
 }
 
 
-const Postmodal = ({ item }) => {
+const Postmodal = ({ item, propuser }) => {
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const [change, setChange] = React.useState(false);
@@ -84,6 +83,8 @@ const Postmodal = ({ item }) => {
   const [mintContent, setMintContent] = useState('');
   const [mintArtist, setMintArtist] = useState('');
   const [mintTitle, setMintTitle] = useState('');
+  const [comment, setComment] = useState('');
+  const user = useRecoilValue(User);
 
   const handleOpen2 = () => {
     if (open2 === false) {
@@ -100,10 +101,13 @@ const Postmodal = ({ item }) => {
     }
     setOpen(false); 
     setChange(false);
+
   }
   const Read = async () => {
     const res = await ReadPost(userSeq)
     SetPost(res.data.data)
+    const res2 = await ReadCommnet(userSeq)
+    setComment(res2.data.data)
   }
 
   const onChangeContent = (e) => {
@@ -145,8 +149,7 @@ const Postmodal = ({ item }) => {
   };
 
   useEffect(() => {
-    // Read()
-    console.log(item)
+    Read()
   }, []);
 
   /* 민팅 및 판매하기 관련 */
@@ -278,30 +281,44 @@ const Postmodal = ({ item }) => {
         </Box>
         <Box sx={{ mx: 1, width: '31.7%', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', height: '5%', alignItems: 'center' }}>
-            <img src="/images/baseimg_nav.jpg"></img>
+            {propuser.userProfile 
+              ? <Avatar className="post_avatar" alt="User" src={propuser.userProfile }/> 
+              : <Avatar className="post_avatar" alt="User" src="/images/baseimg.jpg"/>}
             <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box>
-            <Button onClick={handleChange} sx={{ width: '5%', minHeight: 0, minWidth: 40 }}><AutoFixNormalIcon sx={{ color: 'black' }}></AutoFixNormalIcon></Button>
-            <Button
-              onClick={handleClickDialog}
-              sx={{ width: '5%', minWidth: 40 }}>
-              <DeleteIcon sx={{ color: 'black' }}></DeleteIcon>
-            </Button>
-            <Dialog
-              open={dialog}
-              onClose={handleDialogClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">
-                {"게시물을 삭제할까요?"}
-              </DialogTitle>
-              <DialogActions>
-                <Button onClick={handleDialogClose2} autoFocus>삭제</Button>
-                <Button onClick={handleDialogClose}>취소</Button>
-              </DialogActions>
-            </Dialog>
+           {item.userId === user ? 
+                      <Box sx={{display: 'flex'}}>
+                       <Button onClick={handleChange} sx={{  minHeight: 0, minWidth: 40 }}><AutoFixNormalIcon sx={{ color: 'black' }}></AutoFixNormalIcon></Button>
+                       <Button
+                         onClick={handleClickDialog}
+                         sx={{  minWidth: 40 }}>
+                         <DeleteIcon sx={{ color: 'black' }}></DeleteIcon>
+                       </Button>
+                       <Dialog
+                         open={dialog}
+                         onClose={handleDialogClose}
+                         aria-labelledby="alert-dialog-title"
+                         aria-describedby="alert-dialog-description"
+                       >
+                         <DialogTitle id="alert-dialog-title">
+                           {"게시물을 삭제할까요?"}
+                         </DialogTitle>
+                         <DialogActions>
+                           <Button onClick={handleDialogClose2} autoFocus>삭제</Button>
+                           <Button onClick={handleDialogClose}>취소</Button>
+                         </DialogActions>
+                       </Dialog>
+                      </Box>
+                       : null} 
+
+
           </Box>
-          <Box sx={{ height: '90%' }}>{item.postContent}</Box>
+          <Box sx={{ height: '90%' }}>
+            <Box sx={{display:'flex',alignItems: 'baseline '}}><Typography variant="h5">{item.userId}</Typography><Typography sx={{ ml: 2 }}>{post.postContent}</Typography></Box>
+            { comment && comment.map((data) => 
+              <Box sx={{display:'flex', alignItems: 'baseline '}}><Typography variant="h5">{data.userId}</Typography><Typography sx={{ ml: 2 }}>{data.commentContent}</Typography></Box>
+            )}
+          </Box>
+
           {
             item.userId !== userId ?
               <div></div> :
@@ -340,10 +357,11 @@ const Postmodal = ({ item }) => {
           </Box>
         </Box>
         <Box sx={{ mx: 1, width: '31.7%', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex', height: '5%', alignItems: 'center' }}>
-            <img src="/images/baseimg_nav.jpg"></img>
-            <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box>
-          </Box>
+          <Box sx={{ display: 'flex', height: '7%', alignItems: 'center' }}>
+            {propuser.userProfile 
+              ? <Avatar className="post_avatar" alt="User" src={propuser.userProfile }/> 
+              : <Avatar className="post_avatar" alt="User" src="/images/baseimg.jpg"/>}
+          <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box></Box>
           <Box sx={{ height: '90%' }}><InputBase onChange={onChangeContent} multiline={true} fullWidth defaultValue={content} sx={{ height: '3%' }}></InputBase></Box>
           <Button onClick={onSendChange} sx={{ width: '100%' }}>수정하기</Button>
         </Box>
