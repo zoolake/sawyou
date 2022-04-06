@@ -59,7 +59,8 @@ const Postmodal = (item) => {
     if (selectedImage) {
       setImageUrl(URL.createObjectURL(selectedImage));
     }
-  }, [selectedImage]); 
+  }, [selectedImage]);
+
   
   useEffect(() => {
 
@@ -200,11 +201,14 @@ const Postmodal = (item) => {
             <Box sx={{ display: 'flex', height:'50%'}}>
               <img src="/images/baseimg_nav.jpg"></img>
             </Box>
-            <Typography variant="h6" sx={{ml:2,mt:0.2}}>{onwerid}</Typography>
+            <Typography variant="h6" sx={{ml:2,mt:0.2}}>{saleInfo.sellerName}</Typography>
           </Box>
-          <Box><Typography>작성자 : {nftDetail.nftOwnerName} </Typography></Box>
-          <Box><Typography>제작 시간 : {nftDetail.nftCreatedAt} </Typography></Box>
-            <Box><Typography>작품 제목 : {nftDetail.nftTitle} </Typography></Box>
+          <Box><Typography>작가 이름 : {saleInfo.nftAuthorName} </Typography></Box>
+          <Box><Typography>작품 제목 : {saleInfo.nftTitle} </Typography></Box>
+          <Box><Typography>작품 내용 : {saleInfo.nftDesc} </Typography></Box>
+          <Box><Typography>판매 가격 : {saleInfo.salePrice} </Typography></Box>
+          <Box><Typography>판매 시작 : {saleInfo.startDate} </Typography></Box>
+          <Box><Typography>판매 종료 : {saleInfo.endDate} </Typography></Box>
           
           </Box>
            
