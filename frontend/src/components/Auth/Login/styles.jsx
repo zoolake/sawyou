@@ -16,7 +16,6 @@ height: 360px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: sans-serif;
   margin-top: 8px;
 }
 
