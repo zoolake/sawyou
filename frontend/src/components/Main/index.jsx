@@ -7,17 +7,22 @@ import Typography from '@mui/material/Typography';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {LikePost, WriteComment, ReadCommnet} from '../../api/post'
 import InputBase from "@mui/material/InputBase";
-
+import { useRecoilState } from 'recoil';
+import { User } from '../../States/User';
+import { useNavigate } from 'react-router-dom';
 
 
 const Main = (props) => {
+  const navigate = useNavigate(); // for redirect
   const [comment, setComment] = useState('');
+  const [user, setUser] = useRecoilState(User);
   const [commentArray, setCommentArray] = useState([]);
   const [isValid, setIsValid] = useState(true);
   const [imgurl, setImgurl] = useState([''])
   const [like, setLike] = useState(props.data.postIsLike)
   const [dataComment, setDataComment] = useState('');
   const [count, setCount] = useState(1);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handelLike = (e) => {
     sendLike()
@@ -47,6 +52,18 @@ const Main = (props) => {
       event.target.value = '';
     }
   }
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const onClickRedirectPathHandler = name => e => {
+    window.scrollTo(0, 0);
+    navigate(`${name}`);
+  };
 
   const handleCommentInput = event => {
     setComment(event.target.value);
@@ -83,11 +100,11 @@ const Main = (props) => {
           <div className="post_pfuser">
             <div>
               {props.data.userProfile 
-                ? <Avatar className="post_avatar" alt="User" src={props.data.userProfile}/> 
+                ? <Avatar className="post_avatar" alt="User" src={props.data.userProfile} onClick={onClickRedirectPathHandler(`/profile/${user}`)}/> 
                 : <Avatar className="post_avatar" alt="User" src="/images/baseimg.jpg"/>}
             </div>
             <div className="post_user">
-              <h4>{props.data.userId}</h4>
+              <h4 onClick={onClickRedirectPathHandler(`/profile/${user}`)}>{props.data.userId}</h4>
             </div>
           </div>
         </div>
