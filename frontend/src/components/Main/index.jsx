@@ -14,7 +14,6 @@ const Main = (props) => {
   const [comment, setComment] = useState('');
   const [commentArray, setCommentArray] = useState([]);
   const [isValid, setIsValid] = useState(true);
-  const onChange = event => setComment(event.target.value);
   const [imgurl, setImgurl] = useState([''])
   const [like, setLike] = useState(props.data.postIsLike)
   const [dataComment, setDataComment] = useState('');
@@ -38,7 +37,24 @@ const Main = (props) => {
     const res = await ReadCommnet(props.data.postSeq)
     setDataComment(res.data.data)
   }
-  
+
+  const handleKeyPress = event => {
+    if (event.key === 'Enter' && event.target.value !== '') {
+      event.preventDefault();
+      const repoArray = [...comment];
+      repoArray.push({});
+      setComment(repoArray);
+      event.target.value = '';
+    }
+  }
+
+  const handleCommentInput = event => {
+    setComment(event.target.value);
+  };
+
+  const onChange = event => {
+    setComment(event.target.value);
+  }  
 
   const onSubmit = event => {
     event.preventDefault();
@@ -81,7 +97,7 @@ const Main = (props) => {
             <Button onClick={handelLike}sx = {{minWidth:'24px'}} style={{padding:'0px'}}>     
             <FavoriteIcon 
               className="post_like"
-              sx = {{color:'black'}}
+              sx = {{color:'red'}}
             />
             </Button> :
             <Button onClick={handelLike}sx = {{minWidth:'24px'}} style={{padding:'0px'}}>        
@@ -103,10 +119,16 @@ const Main = (props) => {
           </div>
         </div>
         <div className="commentContainer" >
-          <form className="commentWrap">
+          <form className="commentWrap" onSubmit="return false">
             <InputBase
               placeholder="내용 입력"
               onChange={onChange}
+              onKeyPress={event => { 
+                handleKeyPress(event);
+              }}
+              onKeyUp={event => {
+                handleCommentInput(event);
+              }}
               sx={{width:'90%', ml:1}}
               value={comment}
             />
