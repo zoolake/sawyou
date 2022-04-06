@@ -3,11 +3,11 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   position: relative;
   top: 70px;
+  
   .img2 {
     width: 100%;
     height: 100%;
   }
-
 
   .profile_main {
     flex-grow: 1;
@@ -19,7 +19,6 @@ const Wrapper = styled.div`
     box-sizing: content-box;
     width: calc(100% - 40px);
     margin-bottom: 0;
-    // flex-grow: 1;
     margin: 0 auto 30px;
     max-width: 935px;
   }
@@ -37,7 +36,6 @@ const Wrapper = styled.div`
   .profile_image_mid {
     height: 150px;
     width: 150px;
-    // display: block;
     margin-left: auto;
     margin-right: auto;
   }
@@ -195,7 +193,6 @@ const Wrapper = styled.div`
     display: inline!important;
     margin: 0!important;
     color: rgba(var(--i1d,38,38,38),1);
-    // font-weight: 600;
     font-size: 16px;
     line-height: 24px;
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
@@ -204,6 +201,10 @@ const Wrapper = styled.div`
   .card__st {
     width: 300px;
     height: 300px;
+  }
+
+  .media__nft__st {
+    background-color: #7837d4;
   }
 
 `;
