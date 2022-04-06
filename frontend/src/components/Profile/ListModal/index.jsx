@@ -23,7 +23,6 @@ import Swal from 'sweetalert2';
 import { User } from '../../../States/User';
 import { ReadCommnet} from '../../../api/post';
 
-
 const style = {
   position: 'absolute',
   top: '50%',
@@ -69,7 +68,7 @@ const style4 = {
 }
 
 
-const Postmodal = ({ item, propuser }) => {
+const Postmodal = ({ item }) => {
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const [change, setChange] = React.useState(false);
@@ -108,6 +107,7 @@ const Postmodal = ({ item, propuser }) => {
     SetPost(res.data.data)
     const res2 = await ReadCommnet(userSeq)
     setComment(res2.data.data)
+    const res3 = await ReadCommnet(userSeq)
   }
 
   const onChangeContent = (e) => {
@@ -281,8 +281,8 @@ const Postmodal = ({ item, propuser }) => {
         </Box>
         <Box sx={{ mx: 1, width: '31.7%', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', height: '5%', alignItems: 'center' }}>
-            {propuser.userProfile 
-              ? <Avatar className="post_avatar" alt="User" src={propuser.userProfile }/> 
+            {item.userProfile 
+              ? <Avatar className="post_avatar" alt="User" src={item.userProfile }/> 
               : <Avatar className="post_avatar" alt="User" src="/images/baseimg.jpg"/>}
             <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box>
            {item.userId === user ? 
@@ -358,8 +358,8 @@ const Postmodal = ({ item, propuser }) => {
         </Box>
         <Box sx={{ mx: 1, width: '31.7%', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', height: '7%', alignItems: 'center' }}>
-            {propuser.userProfile 
-              ? <Avatar className="post_avatar" alt="User" src={propuser.userProfile }/> 
+            {item.userProfile 
+              ? <Avatar className="post_avatar" alt="User" src={item.userProfile }/> 
               : <Avatar className="post_avatar" alt="User" src="/images/baseimg.jpg"/>}
           <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box></Box>
           <Box sx={{ height: '90%' }}><InputBase onChange={onChangeContent} multiline={true} fullWidth defaultValue={content} sx={{ height: '3%' }}></InputBase></Box>
