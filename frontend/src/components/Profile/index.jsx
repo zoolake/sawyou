@@ -144,13 +144,25 @@ const Profile = (props) => {
         >            
           {posts && posts.map((post) => (
             <Grid item xs={12} sm={6} md={4}>
-              <Card className="card__st">
-                <CardMedia className="media__st" key={post.postSeq}>
-                  <ListModal item={post}>
-                  </ListModal>
-                </CardMedia>
-              </Card>
+              { 
+                post.postIsNft === true 
+              ?                 
+                <Card className="card__st">
+                  <CardMedia className="media__nft__st" key={post.postSeq}>
+                    <ListModal item={post}>
+                    </ListModal>
+                  </CardMedia>
+                </Card>
+              :
+                <Card className="card__st">
+                  <CardMedia className="media__st" key={post.postSeq}>
+                    <ListModal item={post}>
+                    </ListModal>
+                  </CardMedia>
+                </Card>
+              }
             </Grid>
+
           ))}
         </Grid>
       </div>
