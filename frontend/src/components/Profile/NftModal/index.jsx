@@ -1,21 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Button, Grid, Alert, Box, Modal, CircularProgress, TextField, Avatar } from '@mui/material';
-import Wrapper from '../styles';
-import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
-import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
-import Typography from '@mui/material/Typography';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { ReadNft, ReadCellNft, CellNft } from '../../../api/nft';
-import Sale from '../../../abi/Sale.json';
+import { 
+  Button,
+  Box, 
+  Modal,
+  CircularProgress, 
+  TextField, 
+  Avatar,
+  Table,
+  TableContainer,
+  TableRow,
+  Typography
+ } 
+from '@mui/material';
+import { ReadNft, CellNft } from '../../../api/nft';
 import { User } from '../../../States/User';
 import { Wallet } from '../../../States/Wallet';
 import { useRecoilValue } from 'recoil';
+import { useParams } from 'react-router';
+import { Profile}  from '../../../api/user';
 import Web3 from 'web3';
 import SaleFactory from '../../../abi/SaleFactory.json';
 import SsafyNFT from '../../../abi/SsafyNFT.json';
-import { useParams } from 'react-router';
 import Swal from 'sweetalert2';
-import { Profile}  from '../../../api/user';
+
 
 const style = {
   position: 'absolute',
@@ -25,10 +32,7 @@ const style = {
   width: '65%',
   height: '90%',
   bgcolor: 'background.paper',
-  border: '2px solid #000',
-  borderRadius: 6,
   boxShadow: 24,
-  p: 1,
 };
 
 const style2 = {
@@ -40,7 +44,7 @@ const style2 = {
   height: '200px',
   bgcolor: 'background.paper',
   border: '2px solid #000',
-  borderRadius: 6,
+  // borderRadius: 6,
   boxShadow: 24,
   p: 1,
 };
@@ -210,7 +214,6 @@ const Postmodal = ({ item, userData }) => {
       "salePrice": 2,
       "saleContractAddress": saleContractAddress,
     }
-
     await CellNft(request);
   }
 
@@ -236,64 +239,193 @@ const Postmodal = ({ item, userData }) => {
         </Button></Box>
     </Box>
   );
+
   const newpost = (
-    <Box sx={style}
-      component="form"
-    >
-      <Box sx={{ display: 'flex', height: '100%' }}>
-        <Box sx={{ width: '68.3%', display: 'flex', justifyContent: 'center' }}>
-          <Box sx={{ width: '100%', height: '100%' }}>
-            <img src={item.nftPictureLink} alt={item.nftPictureLink} height="100%" width="100%" />
-          </Box>
-        </Box>
-        <Box sx={{ mx: 1, width: '31.7%' }}>
-          <Box sx={{ height: '95%' }}>
-            <Box sx={{ display: 'flex', height: '8%', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', height: '50%' }}>
-              {userProfile
-              ? <Avatar sx={{ width: 30, height: 30 }} alt="User" src={userProfile}/> 
-              : <Avatar sx={{ width: 30, height: 30 }} alt="User" src="/images/baseimg.jpg"/>}
-              </Box>
-              <Typography variant="h6" sx={{ ml: 2, mt: 0.2 }}>{nftDetail.nftOwnerName}</Typography>
+      <Box sx={style} component="form">
+        <Box sx={{ display: 'flex', height: '100%' }}>
+          <Box sx={{ width: '68%', display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{ width: '100%', height: '100%' }}>
+              <img src={item.nftPictureLink} alt={item.nftPictureLink} height="100%" width="100%"/>
             </Box>
-            <Box><Typography>작가 이름 : {nftDetail.nftAuthorName} </Typography></Box>
-            <Box><Typography>작품 제목 : {nftDetail.nftTitle} </Typography></Box>
-            <Box><Typography>작품 내용 : {nftDetail.nftDesc} </Typography></Box>
           </Box>
-          {
-            // 판매자라면 보이게 끔 (로그인한 아이디와 현재 보는 프로필의 주인과 같다면)
-            // 지갑주소와 ownerAddress가 동일한지 확인
-            user !== params ?
-              <div></div> :
-              wallet === null ?
-                <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 연동 이후 이용이 가능합니다.</Button> :
-                wallet !== nftDetail.nftOwnerAddress ?
-                  <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 주소가 일치하지 않습니다.</Button> :
-                  isSaleLoaded !== true ? <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
-                    item.nftForSale === true ?
-                      <Button sx={{ width: '100%' }} variant="contained" color="warning" >판매중</Button> :
-                      <Button sx={{ width: '100%' }} variant="contained" onClick={handleOpen2} disabled={!isSaleLoaded}>
-                        판매하기
-                        <Modal
-                          open={open2}
-                          onClose={handleClose2}
-                          aria-labelledby="modal-modal-title"
-                          aria-describedby="modal-modal-description"
-                          closeAfterTransition
-                        >
-                          {pricemodal}
-                        </Modal>
-                      </Button>
-
-          }
+          <Box sx={{ width: '32%' }}>
+            <Box sx={{ height: '95%' }}>
+              <Box sx={{ display: 'flex', height: '7%', alignItems: 'center' }} borderBottom={1} borderColor="#e3e3e3">
+                <Box sx={{ display: 'flex', height: '50%' }}>
+                {userProfile
+                ? <Avatar sx={{ width: 30, height: 30, mx: 1.2 }} alt="User" src={userProfile}/> 
+                : <Avatar sx={{ width: 30, height: 30 }} alt="User" src="/images/baseimg.jpg"/>}
+                </Box>
+                <Typography 
+                  variant="h6" 
+                  sx={{ mt: 0.2 }}
+                >
+                  {nftDetail.nftOwnerName}
+                </Typography>
+              </Box>
+              <Box sx={{ width: '100%', mx: 1.2, mt: 2 }}>
+                <Typography variant="h3" gutterBottom>
+                    {nftDetail.nftTitle}
+                </Typography>
+              </Box>
+              <Typography 
+                variant="h6" 
+                gutterBottom 
+                component="div" 
+                sx={{ mx: 1.2, mt: 1 }}
+              >
+                NFT 정보
+              </Typography>
+              <TableContainer>
+              <Table>
+              <TableRow sx={{ border: 1, borderColor:"#e3e3e3" }}>
+              <Typography 
+                variant="h7" 
+                gutterBottom 
+                display='flex' 
+                justifyContent='space-between'
+                alignItems='center'
+                sx={{ mx: 1.2, my: 1 }}
+              >
+                작가명
+                <Typography variant="h7">
+                  {nftDetail.nftAuthorName}
+                </Typography>
+              </Typography>
+              <Typography 
+                variant="h7"
+                gutterBottom 
+                display='flex' 
+                justifyContent='space-between'
+                alignItems='center'
+                sx={{ mx: 1.2, my: 1 }}
+              >
+                작품명
+                <Typography variant="h7"> 
+                  {nftDetail.nftTitle}
+                </Typography>
+              </Typography>
+              <Typography 
+                variant="h7" 
+                gutterBottom 
+                display='flex' 
+                justifyContent='space-between'
+                alignItems='center'
+                sx={{ mx: 1.2, my: 1 }}
+              >
+                토큰 ID
+                <Typography variant="h7">
+                  {nftDetail.nftTokenId}
+                </Typography>
+              </Typography>              
+              </TableRow>
+              </Table>
+              </TableContainer>
+              <br/>
+              <TableContainer>
+                <Table>
+                  <TableRow sx={{ border: 1, borderColor:"#e3e3e3" }}>
+                    <Typography 
+                      variant="h6" 
+                      gutterBottom
+                      sx={{ mx: 1.2, my: 1 }}
+                    >
+                      작품 내용
+                      <Typography 
+                        variant="body2"
+                      >
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        가나다라마바사아자차카타파하
+                        {nftDetail.nftDesc}
+                      </Typography>
+                    </Typography>
+                  </TableRow>
+                </Table>
+              </TableContainer>
+              <Typography 
+                variant="body1"
+                sx={{ mx: 1.2, my: 1 }}
+              >
+                Market 유의사항
+                <Typography variant="body2" sx={{ mx: 0.1, my: 1 }}> 
+                  1. 구매는 SSAFY WALLET 내 이더리움(ETH)이 차감되는 방식으로 진행됩니다.
+                </Typography>
+                <Typography variant="body2" sx={{ mx: 0.1, my: 1 }}>
+                  2. 구매 거래가 체결되면 거래 취소가 불가하므로 신중하게 결정하여 진행해주세요.
+                </Typography>
+                <Typography variant="body2" sx={{ mx: 0.1, my: 1 }}>
+                  3. 해당 NFT에 연계된 디지털상품 관련 분쟁 (지식재산권 분쟁 포함)이 발생한 경우 해당 NFT에 대한 거래지원이 종료될 수 있습니다.
+                </Typography>
+              </Typography>
+            </Box>
+            {
+              // 판매자라면 보이게 끔 (로그인한 아이디와 현재 보는 프로필의 주인과 같다면)
+              // 지갑주소와 ownerAddress가 동일한지 확인
+              user !== params 
+              ?
+                <div></div> 
+              :
+                wallet === null 
+                ?
+                  <Button sx={{ ml: 0.5, width: '98%' }} variant="contained" color="error" >
+                    지갑 연동 이후 이용이 가능합니다.
+                  </Button> :
+                  wallet !== nftDetail.nftOwnerAddress 
+                  ?
+                    <Button sx={{ ml: 0.5, width: '98%' }} variant="contained" color="error" >
+                      지갑 주소가 일치하지 않습니다.
+                      </Button> 
+                  :
+                    isSaleLoaded !== true 
+                    ? 
+                      <Box sx={{ textAlign: 'center' }}>
+                        <CircularProgress />
+                      </Box> 
+                    :
+                      item.nftForSale === true 
+                      ?
+                        <Button sx={{ ml: 0.5, width: '98%' }} variant="contained" color="warning" >
+                          판매중
+                        </Button> 
+                      :
+                        <Button sx={{ ml: 0.5, width: '98%' }} variant="contained" onClick={handleOpen2} disabled={!isSaleLoaded}>
+                          판매하기
+                          <Modal
+                            open={open2}
+                            onClose={handleClose2}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                            closeAfterTransition
+                          >
+                            {pricemodal}
+                          </Modal>
+                        </Button>
+            }
+          </Box>
         </Box>
-
       </Box>
 
-    </Box>
-
   );
-
 
   return (
     <div class='div2'>
