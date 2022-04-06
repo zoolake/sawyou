@@ -305,7 +305,7 @@ const UserHeader = (props) => {
                   minWidth: "40px",
                   minHeight: "40px"
                 }}>
-                {userImage2 && (userImage2 ?<Avatar style={image2} src={userImage2} /> : <img style={image2} src="/images/baseimg.png" />)}
+                {userImage2 ? <Avatar style={image2} src={userImage2} /> : <img style={image2} src="/images/baseimg.jpg" />}
               </Button>
               <Menu
                 sx={{ mt: '40px' }}
