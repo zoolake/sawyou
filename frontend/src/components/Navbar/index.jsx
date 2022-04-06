@@ -119,6 +119,7 @@ const UserHeader = (props) => {
     localStorage.removeItem('access_token');
   }
 
+
   // const handelOnBox = () => {
   //   if (onBox === 'True'){
   //     setOnBox('False');
@@ -137,6 +138,8 @@ const UserHeader = (props) => {
 
   const handleChange = (e) => {
     setCategory(e.target.value);
+    setSearch('');
+    setResult('');
   }
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
@@ -328,13 +331,13 @@ const UserHeader = (props) => {
       { onBox === 'True' && <Box sx={searchStyle} style={{zIndex: 2000}} onBlur={handelOnBox}>
         { result && category === '계정' ? result.map((data) => (
           <Button key={data.userId} sx={{justifyContent:'left'}} onMouseDown={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
-            <img class="img2" src="/images/baseimg_nav.jpg" />
+            {data.userProfile ?  <img class="img2" src={data.userProfile} /> : <img class="img2" src="/images/baseimg_nav.jpg" />}
             <Box sx={{ml:2}}><Typography>{data.userId}</Typography></Box>
           </Button>
         )) : null}
         { result && category === '해시태그' ? result.map((data) => (
           <Button key={data.hashtagName} sx={{justifyContent:'left'}} onMouseDown={handleSearch}>
-            <img class="img2" src="/images/baseimg_nav.jpg" />
+            {/* <img class="img2" src="/images/baseimg_nav.jpg" /> */}
             <Box sx={{ml:2}}><Typography>{data.hashtagName}</Typography></Box>
           </Button>
         )) : null}
