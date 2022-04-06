@@ -19,6 +19,7 @@ import { MintingNft } from '../../../api/nft';
 import Swal from 'sweetalert2';
 import { User } from '../../../States/User';
 import { ReadCommnet, LikePost } from '../../../api/post';
+import { Link } from "react-router-dom";
 
 const style = {
   position: 'absolute',
@@ -377,7 +378,14 @@ const Postmodal = ({ item }) => {
                     {item.userId}
                   </strong>
                   <span>&nbsp;</span>
-                  {post.postContent}
+                    {post && post.postContent.split(/(#[^\s]+)/g).map((v) => {
+                    if (v.match(/#[^\s]+/)) {
+                      return (
+                        <a href={"/search/tags/" + v.slice(1)}>{v}</a>
+                      );
+                    }
+                    return v;
+                  })}
                 </h4>
               </Box>
               { comment && comment.map((data) => 
