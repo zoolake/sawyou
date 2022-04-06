@@ -42,7 +42,7 @@ public class NFTServiceImpl implements NFTService {
      * written by 정혁
      */
     public List<NftOnSaleRes> getOnSaleList() {
-        List<NftOnSaleRes> sale = saleRepository.findByIsSold(false).stream()
+        List<NftOnSaleRes> sale = saleRepository.findTop2ByIsSoldOrderByNftNftSeqDesc(false).stream()
                 .map(Sale -> new NftOnSaleRes(Sale))
                 .collect(Collectors.toList());
         return sale;
