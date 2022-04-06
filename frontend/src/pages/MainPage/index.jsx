@@ -2,14 +2,14 @@ import React, {useState, useEffect} from 'react';
 import Main from '../../components/Main';
 import Wrapper from './styles';
 import Navbar from '../../components/Navbar/index';
-import {ReadAllPost} from '../../api/list'
+import {ReadAllPost, ReadFollowingPost} from '../../api/list'
 
 
 const MainPage = (props) => {
   const [post,setPost] = useState('')
 
   const Read = async () => {
-    const res = await ReadAllPost().then((res) => setPost(res.data.data));
+    const res = await ReadFollowingPost().then((res) => setPost(res.data.data));
   };
 
   useEffect(() => {
