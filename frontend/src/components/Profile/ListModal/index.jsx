@@ -75,7 +75,6 @@ const Postmodal = ({ item }) => {
   const [open2, setOpen2] = React.useState(false);
   const [change, setChange] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => { (setOpen(false)); setChange(false) };
   const handleClose2 = () => setOpen2(false);
   const [post, SetPost] = useState('');
   const userSeq = item.postSeq
@@ -95,6 +94,13 @@ const Postmodal = ({ item }) => {
     }
   }
 
+  const handleClose = () => {
+    if (isMintingLoaded === false) {
+      return
+    }
+    setOpen(false); 
+    setChange(false);
+  }
   const Read = async () => {
     const res = await ReadPost(userSeq)
     SetPost(res.data.data)
