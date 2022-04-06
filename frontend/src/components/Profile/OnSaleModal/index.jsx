@@ -231,9 +231,6 @@ const Postmodal = (item) => {
           {loading}
         </Box>
       </Box>
-
-    </Box>
-
   );
 
 
