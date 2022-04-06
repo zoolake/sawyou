@@ -41,6 +41,11 @@ const image2 = {
   width: "27px"
 }
 
+const image3 = {
+  height: "38px",
+  width: "140px"
+}
+
 const UserHeader = (props) => {
   const navigate = useNavigate(); // for redirect
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -221,7 +226,7 @@ const UserHeader = (props) => {
               sx={{ my: "auto", fontSize: 20, color: 'black' }}
               onClick={onClickRedirectPathHandler('/')}
             >
-              <img src="/images/base.png" />
+              <img style={image3} src="/images/base.png" />
             </Button>
             <Box sx={{ display: 'flex', mt: 1.5 }}>
               <Box

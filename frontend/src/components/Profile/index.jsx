@@ -215,7 +215,7 @@ const Profile = (props) => {
                 <div class="profile_image_inner">
                   <button class="profile_btn">
                     {/* <img alt="프로필 사진" class="profile_image" src="/images/baseimg.jpg"></img> */}
-                    <ImageModal item={userData}></ImageModal>
+                    <ImageModal item={userData} userData={user}></ImageModal>
                   </button>
                   <div>
                     <form encType="multipart/form-data" method="POST" role="presentation">
