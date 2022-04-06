@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Box, Input, Button, InputBase, Grid, CircularProgress, TextField, Alert, AlertTitle } from '@mui/material';
-import Wrapper from '../styles';
-import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
-import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
+import { Modal, Box, Button, InputBase, CircularProgress, TextField } from '@mui/material';
+import Wrapper from './styles';
 import Typography from '@mui/material/Typography';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Dialog from '@mui/material/Dialog';
 import Avatar from '@mui/material/Avatar';
 import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { ReadPost, ChangePost, DeletePost } from '../../../api/post'
 import Web3 from 'web3';
 import SsafyNFT from '../../../abi/SsafyNFT.json'
@@ -21,7 +18,7 @@ import { Wallet } from '../../../States/Wallet';
 import { MintingNft } from '../../../api/nft';
 import Swal from 'sweetalert2';
 import { User } from '../../../States/User';
-import { ReadCommnet} from '../../../api/post';
+import { ReadCommnet, LikePost } from '../../../api/post';
 
 const style = {
   position: 'absolute',
@@ -57,20 +54,29 @@ const style3 = {
   width: '100%',
   alignItems: 'center',
   justifyContent: 'center'
-}
+};
+
 const style4 = {
   display: 'flex',
   height: '50%',
   width: '100%',
   alignItems: 'center',
   justifyContent: 'center'
+};
 
-}
-
+const searchStyle = {
+  bgcolor: 'white',
+  border: '1px solid #dedede',
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'auto',
+};
 
 const Postmodal = ({ item }) => {
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
+  const [like, setLike] = useState(item.postIsLike);
+  const [likeCnt, setLikeCnt] = useState(item.postLikeCnt);
   const [change, setChange] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose2 = () => setOpen2(false);
@@ -100,8 +106,25 @@ const Postmodal = ({ item }) => {
     }
     setOpen(false); 
     setChange(false);
-
   }
+
+  const handelLike = (e) => {
+    sendLike()
+    if (like === true) {
+      setLike(false)
+      setLikeCnt(count => count - 1)
+    }
+    else {
+      setLike(true)
+      setLikeCnt(count => count + 1)
+    }
+  }
+
+  const sendLike = async() => {
+    const res = await LikePost(item.data.postSeq)
+  }
+
+
   const Read = async () => {
     const res = await ReadPost(userSeq)
     SetPost(res.data.data)
@@ -269,65 +292,103 @@ const Postmodal = ({ item }) => {
 
 
   const viewMyPost = (
-    <Box sx={style}
-      component="form"
-    >
-      <Box sx={{ display: 'flex', height: '100%' }}>
-        <Box sx={{ width: '68.3%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Box sx={{ width: '100%', height: '100%' }}>
-            <img src={item.postPictureLink} height="100%" width="100%" />
-            {/* <img src={props.item.img} alt={props.item.img} height="100%" width="100%" /> */}
+    
+    <Wrapper>
+      <Box sx={style}
+        component="form"
+      >
+        <Box className="box_header" sx={{ display: 'flex', height: '100%' }}>
+          <Box sx={{ width: '68.3%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Box sx={{ width: '100%', height: '100%' }}>
+              <img src={item.postPictureLink} height="100%" width="100%" />
+            </Box>
           </Box>
-        </Box>
-        <Box sx={{ mx: 1, width: '31.7%', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex', height: '5%', alignItems: 'center' }}>
-            {item.userProfile 
-              ? <Avatar sx={{ width: 30, height: 30 }} alt="User" src={item.userProfile }/> 
-              : <Avatar sx={{ width: 30, height: 30 }} alt="User" src="/images/baseimg.jpg"/>}
-            <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box>
-           {item.userId === user ? 
-                      <Box sx={{display: 'flex'}}>
-                       <Button onClick={handleChange} sx={{  minHeight: 0, minWidth: 40 }}><AutoFixNormalIcon sx={{ color: 'black' }}></AutoFixNormalIcon></Button>
-                       <Button
-                         onClick={handleClickDialog}
-                         sx={{  minWidth: 40 }}>
-                         <DeleteIcon sx={{ color: 'black' }}></DeleteIcon>
-                       </Button>
-                       <Dialog
-                         open={dialog}
-                         onClose={handleDialogClose}
-                         aria-labelledby="alert-dialog-title"
-                         aria-describedby="alert-dialog-description"
-                       >
-                         <DialogTitle id="alert-dialog-title">
-                           {"게시물을 삭제할까요?"}
-                         </DialogTitle>
-                         <DialogActions>
-                           <Button onClick={handleDialogClose2} autoFocus>삭제</Button>
-                           <Button onClick={handleDialogClose}>취소</Button>
-                         </DialogActions>
-                       </Dialog>
-                      </Box>
-                       : null} 
-
-
-          </Box>
-          <Box sx={{ height: '90%' }}>
-            <Box sx={{display:'flex',alignItems: 'baseline '}}><Typography variant="h5">{item.userId}</Typography><Typography sx={{ ml: 2 }}>{post.postContent}</Typography></Box>
-            { comment && comment.map((data) => 
-              <Box sx={{display:'flex', alignItems: 'baseline '}}><Typography variant="h5">{data.userId}</Typography><Typography sx={{ ml: 2 }}>{data.commentContent}</Typography></Box>
-            )}
-          </Box>
-
-          {
-            item.userId !== userId ?
-              <div></div> :
-              item.postIsNft ?
-                <Button sx={{ width: '100%' }} variant="contained" color="error" >이미 민팅된 게시물입니다.</Button> :
-                isMintingLoaded !== true ? <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
-                  wallet === null ?
-                    <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 연동 이후 이용이 가능합니다.</Button> :
-                    <Button sx={{ width: '100%' }} variant="contained" onClick={handleOpen2} disabled={!isMintingLoaded}>
+          <Box sx={{ mx: 1, width: '31.7%', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', height: '5%', alignItems: 'center' }}>
+              {item.userProfile 
+                ? <Avatar sx={{ width: 30, height: 30 }} alt="User" src={item.userProfile }/> 
+                : <Avatar sx={{ width: 30, height: 30 }} alt="User" src="/images/baseimg.jpg"/>}
+              <Box sx={{ width: '100%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box>
+            {item.userId === user ? 
+                        <Box sx={{display: 'flex'}}>
+                        <Button onClick={handleChange} sx={{  minHeight: 0, minWidth: 40 }}><AutoFixNormalIcon sx={{ color: 'black' }}></AutoFixNormalIcon></Button>
+                        <Button
+                          onClick={handleClickDialog}
+                          sx={{  minWidth: 40 }}>
+                          <DeleteIcon sx={{ color: 'black' }}></DeleteIcon>
+                        </Button>
+                        <Dialog
+                          open={dialog}
+                          onClose={handleDialogClose}
+                          aria-labelledby="alert-dialog-title"
+                          aria-describedby="alert-dialog-description"
+                        >
+                          <DialogTitle id="alert-dialog-title">
+                            {"게시물을 삭제할까요?"}
+                          </DialogTitle>
+                          <DialogActions>
+                            <Button onClick={handleDialogClose2} autoFocus>삭제</Button>
+                            <Button onClick={handleDialogClose}>취소</Button>
+                          </DialogActions>
+                        </Dialog>
+                        </Box>
+                        : null} 
+            </Box>
+            <Box sx={{ height: '75%' }} style={searchStyle}>
+              <Box sx={{display: 'flex', alignItems: 'baseline'}}>
+                <h4 className="post_text">
+                  <strong>
+                    {item.userId}
+                  </strong>
+                  <span>&nbsp;</span>
+                  {post.postContent}
+                </h4>
+              </Box>
+              { comment && comment.map((data) => 
+                <Box sx={{display: 'flex', alignItems: 'baseline'}}>
+                  <h4 className="post_article_comment">
+                    <strong>
+                      {data.userId}
+                    </strong>
+                    <span>&nbsp;</span>
+                    {data.commentContent}
+                  </h4>
+                </Box>
+              )}
+            </Box>
+            <Box sx={{ height: '14%', mb: 1 }} style={searchStyle}>
+              <div className="post__likeCnt">
+                {like === true ?       
+                  <Button onClick={handelLike} sx={{minWidth:'24px'}} style={{padding:'0px'}}>     
+                  <FavoriteIcon 
+                    className="post_like"
+                    sx = {{color:'red'}}
+                  />
+                  </Button> :
+                  <Button onClick={handelLike} sx={{minWidth:'24px'}} style={{padding:'0px'}}>        
+                  <FavoriteBorderIcon 
+                    className="post_like"
+                    sx = {{color:'black'}}
+                  />
+                  </Button>
+                }
+                좋아요 {likeCnt}개
+              </div>
+            </Box> 
+            {
+              item.userId !== userId ? <div></div> : item.postIsNft 
+              ? <Button sx={{ width: '100%' }} variant="contained" color="error" >
+                  이미 민팅된 게시물입니다.
+                </Button>
+              : isMintingLoaded !== true 
+                ? <Box sx={{ textAlign: 'center' }}>
+                    <CircularProgress />
+                  </Box> 
+                : wallet === null 
+                  ? <Button sx={{ width: '100%' }} variant="contained" color="error" >
+                      지갑 연동 이후 이용이 가능합니다.
+                    </Button> 
+                  : <Button sx={{ width: '100%' }} variant="contained" onClick={handleOpen2} disabled={!isMintingLoaded}>
                       민팅하기
                       <Modal
                         open={open2}
@@ -339,10 +400,11 @@ const Postmodal = ({ item }) => {
                         {Mint}
                       </Modal>
                     </Button>
-          }
+            }
+          </Box>
         </Box>
-      </Box>
-    </Box >
+      </Box >
+    </Wrapper>
   );
 
   const ChangeModal = (
@@ -362,7 +424,7 @@ const Postmodal = ({ item }) => {
               ? <Avatar sx={{ width: 30, height: 30 }} alt="User" src={item.userProfile }/> 
               : <Avatar sx={{ width: 30, height: 30 }} alt="User" src="/images/baseimg.jpg"/>}
           <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box></Box>
-          <Box sx={{ height: '90%' }}><InputBase onChange={onChangeContent} multiline={true} fullWidth defaultValue={content} sx={{ height: '3%' }}></InputBase></Box>
+          <Box sx={{ height: '89%' }}><InputBase onChange={onChangeContent} multiline={true} fullWidth defaultValue={content} sx={{ height: '3%' }}></InputBase></Box>
           <Button onClick={onSendChange} sx={{ width: '100%' }}>수정하기</Button>
         </Box>
       </Box>
