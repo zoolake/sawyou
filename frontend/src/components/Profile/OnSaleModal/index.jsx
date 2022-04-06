@@ -185,7 +185,7 @@ const Postmodal = (item) => {
       isPurchaseLoaded ?
         <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
         userId !== saleInfo.sellerId ?
-          <Button sx={{ width: '100%' }} onClick={handlePurchaseButtonClick}>
+          <Button sx={{ width: '100%' }} onClick={onClickRedirectPathHandler()}>
             구매하기
           </Button> :
           wallet !== saleInfo.nftOwnerAddress ?
@@ -215,21 +215,22 @@ const Postmodal = (item) => {
               <Box sx={{ display: 'flex', height: '50%' }}>
                 <img src="/images/baseimg_nav.jpg"></img>
               </Box>
-              <Typography variant="h6" sx={{ ml: 2, mt: 0.2 }}>{onwerid}</Typography>
+              <Typography variant="h6" sx={{ml:2,mt:0.2}}>{saleInfo.sellerName}</Typography>
             </Box>
-            <Typography variant="h6" sx={{ml:2,mt:0.2}}>{saleInfo.sellerName}</Typography>
-          </Box>
+
           <Box><Typography>작가 이름 : {saleInfo.nftAuthorName} </Typography></Box>
           <Box><Typography>작품 제목 : {saleInfo.nftTitle} </Typography></Box>
           <Box><Typography>작품 내용 : {saleInfo.nftDesc} </Typography></Box>
           <Box><Typography>판매 가격 : {saleInfo.salePrice} </Typography></Box>
           <Box><Typography>판매 시작 : {saleInfo.startDate} </Typography></Box>
           <Box><Typography>판매 종료 : {saleInfo.endDate} </Typography></Box>
-          
           </Box>
 
           {loading}
-        </Box>
+
+
+          </Box>
+          </Box>
       </Box>
   );
 

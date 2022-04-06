@@ -61,7 +61,6 @@ const Postmodal = ({ item }) => {
   const [time, setTime] = React.useState('2022-03-30');
   const [title, setTtile] = React.useState('맛잇는 햄버거');
   const handleOpen = () => setOpen(true);
-  const handleClose = () => (setOpen(false));
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [nftDetail, setNftDetail] = useState('');
@@ -70,6 +69,13 @@ const Postmodal = ({ item }) => {
   const user = useRecoilValue(User);
   const [price, setPrice] = useState('');
   const [web3, setWeb3] = React.useState();
+
+  const handleClose = () => {
+    if (isSaleLoaded === false) {
+      return
+    }
+    setOpen(false); 
+  }
 
   const handleOpen2 = () => {
     if (open2 === false) {
