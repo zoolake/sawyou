@@ -162,11 +162,15 @@ const UserHeader = (props) => {
   const onClickRedirectPathHandler = name => e => {
     window.scrollTo(0, 0);
     navigate(`${name}`);
-    // handelOffBox();
+    setSearch('');
+  };
+
+  const onClickRedirectPathHandler2 = name => e => {
+    window.scrollTo(0, 0);
+    navigate(`${name}`);
     setSearch('');
     window.location.reload()
   };
-
   const handleInputSearch = (e) => {
     setSearch(e.target.value)
 
