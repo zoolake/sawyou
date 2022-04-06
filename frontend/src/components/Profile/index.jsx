@@ -237,6 +237,7 @@ const Profile = (props) => {
               </div>
               <ul class="article_follow">
                <Button
+                  disabled
                   sx={{justifyContent:'left'}}
                   style={{
                     font: "16px",
@@ -245,7 +246,7 @@ const Profile = (props) => {
                     minHeight: "24px",
                     padding: "0 0 0 0px"
                   }}>
-                  <Typography>게시글 0</Typography>
+                  <Typography>게시글 {userData.postCnt}</Typography>
                 </Button>
                   <FollowerModal item={userData}></FollowerModal>
                 <li class="af_outer">
