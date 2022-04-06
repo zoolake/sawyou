@@ -61,6 +61,9 @@ public class UserServiceImpl implements UserService {
     private PostLikeRepositorySupport postLikeRepositorySupport;
 
     @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
     private PostRepositorySupport postRepositorySupport;
 
     @Autowired
@@ -110,6 +113,7 @@ public class UserServiceImpl implements UserService {
 
         List<Following> following = followingRepository.findByUser_UserSeq(userSeq);
         List<Follower> follower = followerRepository.findByFollowerFromSeq(userSeq);
+        List<Post> post = postRepository.findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(userSeq);
 
         return UserRes.builder()
                 .userSeq(user.getUserSeq())
@@ -118,6 +122,7 @@ public class UserServiceImpl implements UserService {
                 .userEmail(user.getUserEmail())
                 .userDesc(user.getUserDesc())
                 .userProfile(user.getUserProfile())
+                .postCnt(post.size())
                 .followingCnt(following.size())
                 .followerCnt(follower.size())
                 .isFollowing(isFollowing)
