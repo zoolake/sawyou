@@ -7,7 +7,8 @@ const Wrapper = styled.div`
   }
   .fieldset{
     border-bottom: 0px !important;
-}
+  }
+  
 `;
 
 export default Wrapper;

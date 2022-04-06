@@ -81,9 +81,9 @@ const Postmodal = (props) => {
         </Button>
       </Box>
       {follower && follower.map((item) =>
-        <Button sx={{justifyContent:'left'}} onClick={onClickRedirectPathHandler(`/profile/${item.userId}`)}>
+        <Button style={{textTransform: 'lowercase'}} sx={{justifyContent:'left'}} onClick={onClickRedirectPathHandler(`/profile/${item.userId}`)}>
           { item.userProfile ? <Avatar style={image2} src={item.userProfile} /> : <img style={image2} src="/images/baseimg_nav.jpg" />}
-        <Box sx={{ml:2}}><Typography>{item.userId}</Typography></Box>
+        <Box sx={{ml:2}}><Typography>{item.userId} ({item.userName})</Typography></Box>
       </Button>)
       }
 
