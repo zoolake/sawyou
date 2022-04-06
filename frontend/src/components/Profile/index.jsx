@@ -170,7 +170,7 @@ const Profile = (props) => {
             <Grid item xs={12} sm={6} md={4}>
               <Card className="card__st">
                 <CardMedia className="media__st" key={nft.nftSeq}>
-                  <NftModal  item={nft}>
+                  <NftModal  item={nft} userData={params}>
                   </NftModal>
                 </CardMedia>
               </Card>
@@ -194,7 +194,7 @@ const Profile = (props) => {
             <Grid item xs={12} sm={6} md={4}>
               <Card className="card__st">          
                 <CardMedia className="media__st" key={sale}>
-                  <OnSaleModal  item={sale}>
+                  <OnSaleModal  item={sale} userData={params}>
                   </OnSaleModal>
                 </CardMedia>
               </Card>

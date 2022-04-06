@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CircularProgress } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Input from '@mui/material/Input';
+import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Wrapper from '../styles';
@@ -21,6 +21,8 @@ import { textAlign } from '@mui/system';
 import { useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
+import { Profile}  from '../../../api/user';
+
 
 const style = {
   position: 'absolute',
@@ -37,8 +39,7 @@ const style = {
 };
 
 const Postmodal = (item) => {
-  console.log("이상해요!!", item.item);
-
+  console.log("이상해요!!!!", item.item);
 
   const [open, setOpen] = React.useState(false);
   const [onwerid, setOwnerid] = React.useState('소유자');
@@ -56,6 +57,7 @@ const Postmodal = (item) => {
   const [web3, setWeb3] = React.useState();
   const [isPurchaseLoaded, setIsPurchaseLoaded] = useState(false);
   const navigate = useNavigate();
+  const [userProfile, setUserProfile] = useState('');
 
   const onClickRedirectPathHandler = name => e => {
     window.scrollTo(0, 0);
@@ -69,11 +71,11 @@ const Postmodal = (item) => {
     if (selectedImage) {
       setImageUrl(URL.createObjectURL(selectedImage));
     }
+    Profile(item.userData).then((res)=>{setUserProfile(res.data.data.userProfile)})
   }, [selectedImage]);
 
 
   useEffect(() => {
-
     if (typeof window.ethereum != "undefined") {
       try {
         const web = new Web3(window.ethereum);
@@ -89,6 +91,8 @@ const Postmodal = (item) => {
       console.log("saleInfo", r.data.data)
       setSaleInfo(r.data.data);
     })
+
+
   }, [])
 
   /*
@@ -236,7 +240,9 @@ const Postmodal = (item) => {
           <Box sx={{ height: '95%' }}>
             <Box sx={{ display: 'flex', height: '8%', alignItems: 'center' }}>
               <Box sx={{ display: 'flex', height: '50%' }}>
-                <img src="/images/baseimg_nav.jpg"></img>
+              {userProfile
+              ? <Avatar sx={{ width: 30, height: 30 }} src={userProfile}/>
+              : <Avatar sx={{ width: 30, height: 30 }} alt="User" src={userProfile}/>}
               </Box>
               <Typography variant="h6" sx={{ ml: 2, mt: 0.2 }}>{saleInfo.sellerName}</Typography>
             </Box>
