@@ -10,7 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { ReadPost, ChangePost, DeletePost } from '../../../api/post'
+import { ReadPost, ChangePost, DeletePost, WriteComment } from '../../../api/post'
 import Web3 from 'web3';
 import SsafyNFT from '../../../abi/SsafyNFT.json'
 import { useRecoilValue } from 'recoil';
@@ -90,6 +90,39 @@ const Postmodal = ({ item }) => {
   const [mintTitle, setMintTitle] = useState('');
   const [comment, setComment] = useState('');
   const user = useRecoilValue(User);
+  const [count, setCount] = useState(1);
+  const [commentContent, setCommentContent] = useState('');
+
+  const handleKeypress = e => {
+    if (e.key === 'Enter') {
+      onSubmit(e);
+    }
+  };
+
+  const onChange = event => {
+    setCommentContent(event.target.value);
+  }  
+
+  const onSubmit = event => {
+    event.preventDefault();
+    if (commentContent.trim() === '') {
+      return;
+    }
+    const body = {
+      commentContent : commentContent
+    }
+    WriteComment(item.postSeq, body).then(
+      getComment(),
+      setCommentContent(''),
+      setCount(count => count + 1),
+    )
+  };
+
+  const getComment = async() => {
+    const res = await ReadCommnet(item.postSeq)
+    setComment(res.data.data)
+  }
+
 
   const handleOpen2 = () => {
     if (open2 === false) {
@@ -121,7 +154,7 @@ const Postmodal = ({ item }) => {
   }
 
   const sendLike = async() => {
-    const res = await LikePost(item.data.postSeq)
+    const res = await LikePost(item.postSeq)
   }
 
 
@@ -130,7 +163,6 @@ const Postmodal = ({ item }) => {
     SetPost(res.data.data)
     const res2 = await ReadCommnet(userSeq)
     setComment(res2.data.data)
-    const res3 = await ReadCommnet(userSeq)
   }
 
   const onChangeContent = (e) => {
@@ -174,6 +206,10 @@ const Postmodal = ({ item }) => {
   useEffect(() => {
     Read()
   }, []);
+
+  useEffect(() => {
+    getComment()
+  }, [count]);
 
   /* 민팅 및 판매하기 관련 */
   const [web3, setWeb3] = React.useState();
@@ -334,7 +370,7 @@ const Postmodal = ({ item }) => {
                         </Box>
                         : null} 
             </Box>
-            <Box sx={{ height: '75%' }} style={searchStyle}>
+            <Box sx={{ height: '81%' }} style={searchStyle}>
               <Box sx={{display: 'flex', alignItems: 'baseline'}}>
                 <h4 className="post_text">
                   <strong>
@@ -356,7 +392,7 @@ const Postmodal = ({ item }) => {
                 </Box>
               )}
             </Box>
-            <Box sx={{ height: '14%', mb: 1 }} style={searchStyle}>
+            <Box sx={{ height: '8.5%', mb: 1 }} style={searchStyle}>
               <div className="post__likeCnt">
                 {like === true ?       
                   <Button onClick={handelLike} sx={{minWidth:'24px'}} style={{padding:'0px'}}>     
@@ -374,6 +410,21 @@ const Postmodal = ({ item }) => {
                 }
                 좋아요 {likeCnt}개
               </div>
+              <div className="commentContainer" >
+                <div className="commentWrap" onSubmit="return false">
+                  <InputBase
+                    placeholder="내용 입력"
+                    onChange={onChange}
+                    onKeyPress={handleKeypress}
+                    sx={{width:'80%', ml:1}}
+                    value={commentContent}
+                  />
+                  <Button>
+                    <Typography onClick={onSubmit}>게시</Typography>
+                  </Button>
+                </div>
+              </div> 
+
             </Box> 
             {
               item.userId !== userId ? <div></div> : item.postIsNft 
