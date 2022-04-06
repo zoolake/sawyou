@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface SaleRepository extends JpaRepository<Sale, Long> {
     //findTop300ByOrderBySeqDesc
 //    List<Sale> findByIsSold(Boolean isSold);
-    List<Sale> findTop2ByIsSoldOrderByNftNftSeqDesc(Boolean isSold);
+    List<Sale> findTop10ByIsSoldOrderByNftNftSeqDesc(Boolean isSold);
 
     Sale findByNftNftSeqAndIsSold(Long nftSeq, Boolean isSold);
 
