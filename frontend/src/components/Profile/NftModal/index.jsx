@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Button, Grid, Alert, Box, Modal, CircularProgress, TextField } from '@mui/material';
+import { Input, Button, Grid, Alert, Box, Modal, CircularProgress, TextField, Avatar } from '@mui/material';
 import Wrapper from '../styles';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
@@ -15,6 +15,7 @@ import SaleFactory from '../../../abi/SaleFactory.json';
 import SsafyNFT from '../../../abi/SsafyNFT.json';
 import { useParams } from 'react-router';
 import Swal from 'sweetalert2';
+import { Profile}  from '../../../api/user';
 
 const style = {
   position: 'absolute',
@@ -52,7 +53,7 @@ const style3 = {
   justifyContent: 'center'
 }
 
-const Postmodal = ({ item }) => {
+const Postmodal = ({ item, userData }) => {
   console.log("item:", item);
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -70,6 +71,9 @@ const Postmodal = ({ item }) => {
   const user = useRecoilValue(User);
   const [price, setPrice] = useState('');
   const [web3, setWeb3] = React.useState();
+  const [userSeq, setUserSeq] = useState('');
+  const [userProfile, setUserProfile] = useState('');
+
 
   const handleClose = () => {
     if (isSaleLoaded === false) {
@@ -103,8 +107,11 @@ const Postmodal = ({ item }) => {
     }
     ReadNft(item.nftSeq).then((res) => {
       setNftDetail(res.data.data)
+      setUserSeq(res.data.data.nftOwnerName)
       console.log("ReadNft:", res.data.data)
     });
+    Profile(userData).then((res)=>{setUserProfile(res.data.data.userProfile)})
+    console.log(userProfile)
   }, [selectedImage]);
 
   /* 판매 관련 */
@@ -243,7 +250,9 @@ const Postmodal = ({ item }) => {
           <Box sx={{ height: '95%' }}>
             <Box sx={{ display: 'flex', height: '8%', alignItems: 'center' }}>
               <Box sx={{ display: 'flex', height: '50%' }}>
-                <img src="/images/baseimg_nav.jpg"></img>
+              {userProfile
+              ? <Avatar sx={{ width: 30, height: 30 }} alt="User" src={userProfile}/> 
+              : <Avatar sx={{ width: 30, height: 30 }} alt="User" src="/images/baseimg.jpg"/>}
               </Box>
               <Typography variant="h6" sx={{ ml: 2, mt: 0.2 }}>{nftDetail.nftOwnerName}</Typography>
             </Box>
