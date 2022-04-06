@@ -8,7 +8,6 @@ const SearchResultPage = (props) => {
 
   return (
     <Wrapper>
-      <Navbar></Navbar>
       <Result></Result>
     </Wrapper>
 

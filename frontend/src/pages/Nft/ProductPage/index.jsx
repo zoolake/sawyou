@@ -7,7 +7,6 @@ const ProductPage = (props) => {
 
   return (
     <Wrapper>
-      <Navbar></Navbar>
       <Product></Product>
     </Wrapper>
 

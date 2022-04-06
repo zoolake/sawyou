@@ -11,6 +11,8 @@ import Result from './pages/SearchResultPage/';
 import { User } from './States/User';
 import { useRecoilValue } from 'recoil';
 import { useEffect } from 'react';
+import Navbar from './components/Navbar/index'
+
 
 function App() {
   let isLoggedIn = false;
@@ -26,6 +28,8 @@ function App() {
 
   return (
     <BrowserRouter>
+      {isLoggedIn && <Navbar></Navbar>}
+
       <Routes>
         <Route path="/signup" element={<Signup/>} />
         <Route exact path="/" element={isLoggedIn ? <Main/> : <Login/>} />

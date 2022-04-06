@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Wrapper from './styles';
 import TextField from '@mui/material/TextField';
 import { User } from '../../../States/User';
-import { LoginApi } from '../../../api/user';
+import { LoginApi, Profile } from '../../../api/user';
 import { useRecoilState } from 'recoil';
 import { Wallet } from '../../../States/Wallet';
 import { Link } from 'react-router-dom';
@@ -18,6 +18,7 @@ const Login = (props) => {
   const [passwordWaring, setPasswordWarning] = useState('');
   const [user, setUser] = useRecoilState(User);
   const [wallet, setWallet] = useRecoilState(Wallet);
+  const [userImage, setuserImage] = useRecoilState(UserImage);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -30,6 +31,7 @@ const Login = (props) => {
         const res = await LoginApi(body).then((res) => localStorage.setItem('access_token', res.data.data))
         setUser(id)
         setWallet(null)
+        const res2 = await Profile(id).then((res) => setuserImage(res.data.data.userProfile))
       }
       catch {
         alert('회원정보를 확인해주세요')

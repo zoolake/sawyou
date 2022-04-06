@@ -5,9 +5,11 @@ import Postmodal from './Postmodal/index';
 import WalletIdx from './Wallet/index';
 import { User } from '../../States/User';
 import { Wallet } from '../../States/Wallet';
+import { UserImage } from '../../States/UserImage';
 import { useRecoilState } from 'recoil';
 import { SearchUserPost, SearchHashTagPost } from '../../api/list';
-
+import { Profile } from '../../api/user';
+import { useRecoilValue } from 'recoil';
 
 // MUI
 import AppBar from '@mui/material/AppBar';
@@ -34,6 +36,11 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import Web3 from "web3";
 import SsafyToken from '../../../src/abi/SsafyToken.json';
 
+const image2 = {
+  height: "27px",
+  width: "27px"
+}
+
 const UserHeader = (props) => {
   const navigate = useNavigate(); // for redirect
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -47,6 +54,8 @@ const UserHeader = (props) => {
   const [invisible, setInvisible] = useState(false);
   const [web3, setWeb3] = React.useState();
   const [balance, setBalance] = React.useState(null);
+  const [userData, setUserData] = useState('');
+  const userImage2 = useRecoilValue(UserImage);
 
   useEffect(() => {
     if (typeof window.ethereum != "undefined") {
@@ -64,8 +73,10 @@ const UserHeader = (props) => {
       // getBalance()
       setInvisible(false)
     }
+    
 
   }, []);
+
 
   const handleBadgeVisibility = async () => {
 
@@ -151,11 +162,17 @@ const UserHeader = (props) => {
   const onClickRedirectPathHandler = name => e => {
     window.scrollTo(0, 0);
     navigate(`${name}`);
-    // handelOffBox();
+    handleCloseUserMenu()
     setSearch('');
-    window.location.reload()
   };
 
+  const onClickRedirectPathHandler2 = name => e => {
+    window.scrollTo(0, 0);
+    navigate(`${name}`);
+    setSearch('');
+    
+    window.location.reload()
+  };
   const handleInputSearch = (e) => {
     setSearch(e.target.value)
 
@@ -177,6 +194,7 @@ const UserHeader = (props) => {
       setResult('')
     }
     // setResult(res.data.data)
+    console.log(result)
   }
 
   const searchHashTag = async (data) => {
@@ -188,6 +206,7 @@ const UserHeader = (props) => {
     if (data === '') {
       setResult('')
     }
+
   }
   const handleSearch = () => {
   }
@@ -280,8 +299,8 @@ const UserHeader = (props) => {
                   maxHeight: "60px",
                   minWidth: "40px",
                   minHeight: "40px"
-                }}  >
-                <img src="/images/baseimg_nav.jpg" />
+                }}>
+                {userImage2 && (userImage2 ?<Avatar style={image2} src={userImage2} /> : <img style={image2} src="/images/baseimg.png" />)}
               </Button>
               <Menu
                 sx={{ mt: '40px' }}
@@ -331,13 +350,14 @@ const UserHeader = (props) => {
       </AppBar>
       {onBox === 'True' && <Box sx={searchStyle} style={{ zIndex: 2000 }} onBlur={handelOnBox}>
         {result && category === '계정' ? result.map((data) => (
-          <Button key={data.userId} sx={{ justifyContent: 'left' }} onMouseDown={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
-            {data.userProfile ? <Avatar class="img2" src={data.userProfile} /> : <img class="img2" src="/images/baseimg_nav.jpg" />}
-            <Box sx={{ ml: 2 }}><Typography>{data.userId}</Typography></Box>
+          <Button style={{textTransform: 'lowercase'}} key={data.userId} sx={{ justifyContent: 'left' }} onMouseDown={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
+            {data.userProfile ? <Avatar sx={{ width: 30, height: 30 }} src={data.userProfile} /> : <img class="img2" src="/images/baseimg_nav.jpg" />}
+            {/* <Box sx={{ ml: 2 }}><Typography>{data.userId}</Typography></Box> */}
+            <Box sx={{ ml: 2 }}><Typography>{data.userId} ({data.userName})</Typography></Box>
           </Button>
         )) : null}
         {result && category === '해시태그' ? result.map((data) => (
-          <Button key={data.hashtagName} sx={{justifyContent:'left'}} onMouseDown={onClickRedirectPathHandler(`/search/tags/${data.hashtagSeq}`)}>
+          <Button style={{textTransform: 'lowercase'}} key={data.hashtagName} sx={{justifyContent:'left'}} onMouseDown={onClickRedirectPathHandler(`/search/tags/${data.hashtagSeq}`)}>
             {/* <img class="img2" src="/images/baseimg_nav.jpg" /> */}
             <Box sx={{ ml: 2 }}><Typography>{data.hashtagName}</Typography></Box>
           </Button>
