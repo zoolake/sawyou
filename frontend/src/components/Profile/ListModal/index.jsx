@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Box, Input, Button, InputBase, Grid, CircularProgress, TextField } from '@mui/material';
+import { Modal, Box, Input, Button, InputBase, Grid, CircularProgress, TextField, Alert, AlertTitle } from '@mui/material';
 import Wrapper from '../styles';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
@@ -21,6 +21,8 @@ import { MintingNft } from '../../../api/nft';
 import { CommentsDisabledOutlined, TokenOutlined } from '@mui/icons-material';
 import SaleFactory from '../../../abi/SaleFactory.json';
 import { CellNft } from '../../../api/nft';
+import Swal from 'sweetalert2';
+
 
 const style = {
   position: 'absolute',
@@ -45,25 +47,25 @@ const style2 = {
   height: '500px',
   bgcolor: 'background.paper',
   border: '2px solid #000',
-  borderRadius : 6,
+  borderRadius: 6,
   boxShadow: 24,
   p: 1,
 };
 
-const style3 ={
-  display:'flex',
-  height:'20%',
-  width:'100%',
+const style3 = {
+  display: 'flex',
+  height: '20%',
+  width: '100%',
   alignItems: 'center',
-  justifyContent:'center'
+  justifyContent: 'center'
 }
-const style4 ={
-  display:'flex',
-  height:'50%',
-  width:'100%',
+const style4 = {
+  display: 'flex',
+  height: '50%',
+  width: '100%',
   alignItems: 'center',
-  justifyContent:'center'
-  
+  justifyContent: 'center'
+
 }
 
 
@@ -84,10 +86,10 @@ const Postmodal = ({ item }) => {
   const [mintTitle, setMintTitle] = useState('');
 
   const handleOpen2 = () => {
-    if (open2 === false){
+    if (open2 === false) {
       setOpen2(true)
     }
-    else{
+    else {
       return;
     }
   }
@@ -175,8 +177,28 @@ const Postmodal = ({ item }) => {
       setTokenId(tempTokenId);
 
       await mintingOnServer(tempTokenId);
+
+      handleClose();
+      Swal.fire({
+        title: ' Success ',
+        text: '민팅에 성공하였습니다. ✨',
+        icon: 'success',
+        confirmButtonText: '확인'
+      })
+
     }
     catch (error) {
+      handleClose();
+      Swal.fire({
+        title: ' Error ',
+        text: '민팅에 실패하였습니다. 😢',
+        icon: 'error',
+        confirmButtonText: '확인',
+        // backdrop: `
+        // rgba(0,0,123,0.4)
+        // no-repeat
+        // `
+      })
       console.log("error:", error);
     }
 
@@ -204,38 +226,38 @@ const Postmodal = ({ item }) => {
   }
 
   const Mint = (
-      <Box sx={style2} >
-          <Box sx={style3}><Typography>작가 이름  </Typography>
-          <TextField
+    <Box sx={style2} >
+      <Box sx={style3}><Typography>작가 이름  </Typography>
+        <TextField
           id="outlined-start-adornment"
           sx={{ ml: 5, width: '50ch' }}
           onChange={(event) => setMintArtist(event.target.value)}
         /></Box>
-          <Box sx={style3}><Typography>작품 제목 </Typography>
-          <TextField
+      <Box sx={style3}><Typography>작품 제목 </Typography>
+        <TextField
           id="outlined-start-adornment"
           sx={{ ml: 5, width: '50ch' }}
           onChange={(event) => setMintTitle(event.target.value)}
         /></Box>
-          <Box sx={style4}><Typography>작품 설명  </Typography>
-          <TextField
+      <Box sx={style4}><Typography>작품 설명  </Typography>
+        <TextField
           multiline
           rows={7}
           id="outlined-start-adornment"
-          sx={{ ml: 5, width: '50ch'}}
+          sx={{ ml: 5, width: '50ch' }}
           onChange={(event) => setMintContent(event.target.value)}
         /></Box>
-          <Box sx={{display:'flex', height:'10%', width:'100%', alignItems: 'center', justifyContent:'center'}}>        
-            <Button
-            sx={{width:'30%'}}
-            variant="contained" 
-            type="submit"
-            onClick={handleMintingButtonClick}
-              >
-                민팅하기
-            </Button></Box>
+      <Box sx={{ display: 'flex', height: '10%', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+        <Button
+          sx={{ width: '30%' }}
+          variant="contained"
+          type="submit"
+          onClick={handleMintingButtonClick}
+        >
+          민팅하기
+        </Button></Box>
 
-      </Box>
+    </Box>
   );
 
 
@@ -255,8 +277,8 @@ const Postmodal = ({ item }) => {
             <img src="/images/baseimg_nav.jpg"></img>
             <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box>
             <Button onClick={handleChange} sx={{ width: '5%', minHeight: 0, minWidth: 40 }}><AutoFixNormalIcon sx={{ color: 'black' }}></AutoFixNormalIcon></Button>
-            <Button 
-              onClick={handleClickDialog} 
+            <Button
+              onClick={handleClickDialog}
               sx={{ width: '5%', minWidth: 40 }}>
               <DeleteIcon sx={{ color: 'black' }}></DeleteIcon>
             </Button>
@@ -283,22 +305,19 @@ const Postmodal = ({ item }) => {
                 <Button sx={{ width: '100%' }} variant="contained" onClick={handleOpen2} disabled={!isMintingLoaded}>
                   민팅하기
                   <Modal
-                  open={open2}
-                  onClose={handleClose2}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                  closeAfterTransition
+                    open={open2}
+                    onClose={handleClose2}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    closeAfterTransition
                   >
                     {Mint}
                   </Modal>
                 </Button>
           }
         </Box>
-
       </Box>
-
     </Box >
-
   );
 
   const ChangeModal = (
