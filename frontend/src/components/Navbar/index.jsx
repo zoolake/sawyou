@@ -153,6 +153,7 @@ const UserHeader = (props) => {
     navigate(`${name}`);
     // handelOffBox();
     setSearch('');
+    window.location.reload()
   };
 
   const handleInputSearch = (e) => {
@@ -336,7 +337,7 @@ const UserHeader = (props) => {
           </Button>
         )) : null}
         {result && category === '해시태그' ? result.map((data) => (
-          <Button key={data.hashtagName} sx={{ justifyContent: 'left' }} onMouseDown={handleSearch}>
+          <Button key={data.hashtagName} sx={{justifyContent:'left'}} onMouseDown={onClickRedirectPathHandler(`/search/tags/${data.hashtagSeq}`)}>
             {/* <img class="img2" src="/images/baseimg_nav.jpg" /> */}
             <Box sx={{ ml: 2 }}><Typography>{data.hashtagName}</Typography></Box>
           </Button>
