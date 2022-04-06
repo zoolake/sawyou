@@ -18,6 +18,7 @@ const Main = (props) => {
   const [imgurl, setImgurl] = useState([''])
   const [like, setLike] = useState(props.data.postIsLike)
   const [dataComment, setDataComment] = useState('');
+  const [count, setCount] = useState(1);
 
   const handelLike = (e) => {
     sendLike()
@@ -36,7 +37,6 @@ const Main = (props) => {
   const getComment = async() => {
     const res = await ReadCommnet(props.data.postSeq)
     setDataComment(res.data.data)
-    console.log(res)
   }
   
 
@@ -51,13 +51,14 @@ const Main = (props) => {
     }
     WriteComment(props.data.postSeq, body).then(
       getComment(),
-      setComment('')
+      setComment(''),
+      setCount(count => count + 1)
     )
   };
 
   useEffect(() => {
     getComment()
-  }, []);
+  }, [count]);
 
   return (
     <Wrapper>
