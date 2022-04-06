@@ -2,7 +2,7 @@ import React, { useState, useEffect }  from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import { useParams } from 'react-router';
-import Input from '@mui/material/Input';
+import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Wrapper from '../styles';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
@@ -29,6 +29,11 @@ const style = {
   flexDirection: 'column',
   overflow: 'auto',
 };
+
+const image2 = {
+  height: "30px",
+  width: "30px"
+}
 
 const Postmodal = (props) => {
   const params = useParams().id;
@@ -77,7 +82,7 @@ const Postmodal = (props) => {
       </Box>
       {follower && follower.map((item) =>
         <Button sx={{justifyContent:'left'}} onClick={onClickRedirectPathHandler(`/profile/${item.userId}`)}>
-        <img class="img2" src="/images/baseimg_nav.jpg" />
+          { item.userProfile ? <Avatar style={image2} src={item.userProfile} /> : <img style={image2} src="/images/baseimg_nav.jpg" />}
         <Box sx={{ml:2}}><Typography>{item.userId}</Typography></Box>
       </Button>)
       }

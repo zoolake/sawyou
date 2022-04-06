@@ -3,10 +3,12 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Avatar from '@mui/material/Avatar';
 import {ReadFollowerUser} from "../../../api/user"
 import CloseIcon from '@mui/icons-material/Close';
 import { useParams } from 'react-router';
 import { useNavigate  } from 'react-router-dom';
+import Wrapper from './styles';
 
 const style = {
   position: 'absolute',
@@ -24,6 +26,11 @@ const style = {
   flexDirection: 'column',
   overflow: 'auto',
 };
+
+const image2 = {
+  height: "30px",
+  width: "30px"
+}
 
 const Postmodal = (props) => {
   const params = useParams().id;
@@ -73,7 +80,7 @@ const Postmodal = (props) => {
       </Box>
       {follower && follower.map((item) =>
         <Button sx={{justifyContent:'left'}} onClick={onClickRedirectPathHandler(`/profile/${item.userId}`)}>
-        <img class="img2" src="/images/baseimg_nav.jpg" />
+          { item.userProfile ? <Avatar style={image2} src={item.userProfile} /> : <img style={image2} src="/images/baseimg_nav.jpg" />}
         <Box sx={{ml:2}}><Typography>{item.userId}</Typography></Box>
       </Button>)
       }
@@ -81,7 +88,7 @@ const Postmodal = (props) => {
     </Box>
   );
   return (
-    <div>
+    <Wrapper>
       <Button
         sx={{justifyContent:'left'}}
         key={"add"}
@@ -104,7 +111,7 @@ const Postmodal = (props) => {
       >
         {newpost}
       </Modal>
-    </div>
+    </Wrapper>
   )
 }
 

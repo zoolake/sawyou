@@ -202,7 +202,7 @@ const UserHeader = (props) => {
               sx={{ my: "auto", fontSize: 20, color: 'black' }}
               onClick={onClickRedirectPathHandler('/')}
             >
-              I SAW YOU
+              <img src="/images/base.png" />
             </Button>
             <Box sx={{ display: 'flex', mt: 1.5 }}>
               <Box
@@ -332,7 +332,7 @@ const UserHeader = (props) => {
       {onBox === 'True' && <Box sx={searchStyle} style={{ zIndex: 2000 }} onBlur={handelOnBox}>
         {result && category === '계정' ? result.map((data) => (
           <Button key={data.userId} sx={{ justifyContent: 'left' }} onMouseDown={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
-            {data.userProfile ? <img class="img2" src={data.userProfile} /> : <img class="img2" src="/images/baseimg_nav.jpg" />}
+            {data.userProfile ? <Avatar class="img2" src={data.userProfile} /> : <img class="img2" src="/images/baseimg_nav.jpg" />}
             <Box sx={{ ml: 2 }}><Typography>{data.userId}</Typography></Box>
           </Button>
         )) : null}
