@@ -231,7 +231,7 @@ const Profile = (props) => {
                 <div class="profile_edit edit_outer">
                   <div class="profile_edit edit_inner">
                     {myProfile === true ?  <a class="profile_edit_btn" href="/profileedit" tabIndex="0">프로필 편집</a>
-                    :  followCheck===true ? <Button variant="contained" onClick={handleFollow}>팔로우 해제</Button> : <Button variant="contained" onClick={handleFollow}>팔로우</Button>}
+                    :  followCheck===true ? <Button variant="contained" onClick={handleFollow}>팔로잉 해제</Button> : <Button variant="contained" onClick={handleFollow}>팔로잉</Button>}
                   </div>
                 </div>
               </div>
