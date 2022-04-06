@@ -9,21 +9,27 @@ margin-bottom: 32px;
 position: relative;
 border: 1px solid #d4d2d2;
 box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
-width: 350px;
-height: 260px;
+width: 400px;
+height: 360px;
 
 .logo {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: sans-serif;
-  font-size: 48px;
+  margin-top: 8px;
 }
-.c1 {
+
+.login__form {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 4px;
 }
+
+.form_1 {
+  margin-bottom: 18px;!important;  
+}
+
 .inputBox {
   width: 258px;
   height: 50px;

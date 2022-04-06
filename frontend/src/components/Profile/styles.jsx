@@ -191,6 +191,16 @@ const Wrapper = styled.div`
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   }
 
+  .si2 {
+    display: inline!important;
+    margin: 0!important;
+    color: rgba(var(--i1d,38,38,38),1);
+    // font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+
   .card__st {
     width: 300px;
     height: 300px;

@@ -41,6 +41,11 @@ const image2 = {
   width: "27px"
 }
 
+const image3 = {
+  height: "38px",
+  width: "140px"
+}
+
 const UserHeader = (props) => {
   const navigate = useNavigate(); // for redirect
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -162,6 +167,7 @@ const UserHeader = (props) => {
   const onClickRedirectPathHandler = name => e => {
     window.scrollTo(0, 0);
     navigate(`${name}`);
+    handleCloseUserMenu()
     setSearch('');
   };
 
@@ -169,6 +175,7 @@ const UserHeader = (props) => {
     window.scrollTo(0, 0);
     navigate(`${name}`);
     setSearch('');
+    
     window.location.reload()
   };
   const handleInputSearch = (e) => {
@@ -192,6 +199,7 @@ const UserHeader = (props) => {
       setResult('')
     }
     // setResult(res.data.data)
+    console.log(result)
   }
 
   const searchHashTag = async (data) => {
@@ -203,6 +211,7 @@ const UserHeader = (props) => {
     if (data === '') {
       setResult('')
     }
+
   }
   const handleSearch = () => {
   }
@@ -217,7 +226,7 @@ const UserHeader = (props) => {
               sx={{ my: "auto", fontSize: 20, color: 'black' }}
               onClick={onClickRedirectPathHandler('/')}
             >
-              <img src="/images/base.png" />
+              <img style={image3} src="/images/base.png" />
             </Button>
             <Box sx={{ display: 'flex', mt: 1.5 }}>
               <Box
@@ -346,13 +355,14 @@ const UserHeader = (props) => {
       </AppBar>
       {onBox === 'True' && <Box sx={searchStyle} style={{ zIndex: 2000 }} onBlur={handelOnBox}>
         {result && category === '계정' ? result.map((data) => (
-          <Button key={data.userId} sx={{ justifyContent: 'left' }} onMouseDown={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
-            {data.userProfile ? <Avatar class="img2" src={data.userProfile} /> : <img class="img2" src="/images/baseimg_nav.jpg" />}
-            <Box sx={{ ml: 2 }}><Typography>{data.userId}</Typography></Box>
+          <Button style={{textTransform: 'lowercase'}} key={data.userId} sx={{ justifyContent: 'left' }} onMouseDown={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
+            {data.userProfile ? <Avatar sx={{ width: 30, height: 30 }} src={data.userProfile} /> : <img class="img2" src="/images/baseimg_nav.jpg" />}
+            {/* <Box sx={{ ml: 2 }}><Typography>{data.userId}</Typography></Box> */}
+            <Box sx={{ ml: 2 }}><Typography>{data.userId} ({data.userName})</Typography></Box>
           </Button>
         )) : null}
         {result && category === '해시태그' ? result.map((data) => (
-          <Button key={data.hashtagName} sx={{justifyContent:'left'}} onMouseDown={onClickRedirectPathHandler(`/search/tags/${data.hashtagSeq}`)}>
+          <Button style={{textTransform: 'lowercase'}} key={data.hashtagName} sx={{justifyContent:'left'}} onMouseDown={onClickRedirectPathHandler(`/search/tags/${data.hashtagSeq}`)}>
             {/* <img class="img2" src="/images/baseimg_nav.jpg" /> */}
             <Box sx={{ ml: 2 }}><Typography>{data.hashtagName}</Typography></Box>
           </Button>

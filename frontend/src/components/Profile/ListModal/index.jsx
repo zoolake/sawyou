@@ -282,8 +282,8 @@ const Postmodal = ({ item }) => {
         <Box sx={{ mx: 1, width: '31.7%', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', height: '5%', alignItems: 'center' }}>
             {item.userProfile 
-              ? <Avatar className="post_avatar" alt="User" src={item.userProfile }/> 
-              : <Avatar className="post_avatar" alt="User" src="/images/baseimg.jpg"/>}
+              ? <Avatar sx={{ width: 30, height: 30 }} alt="User" src={item.userProfile }/> 
+              : <Avatar sx={{ width: 30, height: 30 }} alt="User" src="/images/baseimg.jpg"/>}
             <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box>
            {item.userId === user ? 
                       <Box sx={{display: 'flex'}}>
@@ -359,8 +359,8 @@ const Postmodal = ({ item }) => {
         <Box sx={{ mx: 1, width: '31.7%', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', height: '7%', alignItems: 'center' }}>
             {item.userProfile 
-              ? <Avatar className="post_avatar" alt="User" src={item.userProfile }/> 
-              : <Avatar className="post_avatar" alt="User" src="/images/baseimg.jpg"/>}
+              ? <Avatar sx={{ width: 30, height: 30 }} alt="User" src={item.userProfile }/> 
+              : <Avatar sx={{ width: 30, height: 30 }} alt="User" src="/images/baseimg.jpg"/>}
           <Box sx={{ width: '80%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box></Box>
           <Box sx={{ height: '90%' }}><InputBase onChange={onChangeContent} multiline={true} fullWidth defaultValue={content} sx={{ height: '3%' }}></InputBase></Box>
           <Button onClick={onSendChange} sx={{ width: '100%' }}>수정하기</Button>

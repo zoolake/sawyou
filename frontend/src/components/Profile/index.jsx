@@ -215,7 +215,7 @@ const Profile = (props) => {
                 <div class="profile_image_inner">
                   <button class="profile_btn">
                     {/* <img alt="프로필 사진" class="profile_image" src="/images/baseimg.jpg"></img> */}
-                    <ImageModal item={userData}></ImageModal>
+                    <ImageModal item={userData} userData={user}></ImageModal>
                   </button>
                   <div>
                     <form encType="multipart/form-data" method="POST" role="presentation">
@@ -231,12 +231,13 @@ const Profile = (props) => {
                 <div class="profile_edit edit_outer">
                   <div class="profile_edit edit_inner">
                     {myProfile === true ?  <a class="profile_edit_btn" href="/profileedit" tabIndex="0">프로필 편집</a>
-                    :  followCheck===true ? <Button variant="contained" onClick={handleFollow}>팔로우 해제</Button> : <Button variant="contained" onClick={handleFollow}>팔로우</Button>}
+                    :  followCheck===true ? <Button variant="contained" onClick={handleFollow}>팔로잉 해제</Button> : <Button variant="contained" onClick={handleFollow}>팔로잉</Button>}
                   </div>
                 </div>
               </div>
               <ul class="article_follow">
                <Button
+                  disabled
                   sx={{justifyContent:'left'}}
                   style={{
                     font: "16px",
@@ -245,7 +246,7 @@ const Profile = (props) => {
                     minHeight: "24px",
                     padding: "0 0 0 0px"
                   }}>
-                  <Typography>게시글 0</Typography>
+                  <Typography>게시글 {userData.postCnt}</Typography>
                 </Button>
                   <FollowerModal item={userData}></FollowerModal>
                 <li class="af_outer">
@@ -253,7 +254,11 @@ const Profile = (props) => {
                 </li>
               </ul>
               <div class="si_box">
-                <span class="si">{userData && userData.userDesc}</span>
+                <span class="si">{userData && userData.userName}</span>
+                <br />
+              </div>
+              <div class="si_box">
+                <span class="si2">{userData && userData.userDesc}</span>
                 <br />
               </div>
             </section>

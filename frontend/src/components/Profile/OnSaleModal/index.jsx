@@ -130,37 +130,13 @@ const Postmodal = (item) => {
 
       const approve = await erc20Contract.methods.approve(saleContractAddress, salePrice).send({ from: wallet });
 
-      const purchase = await saleContract.methods.purchase().send({ from: wallet });
-
-      // send purchaseinfo to backend
-      const buyNft = await BuyNft({
-        "nftSeq": item.item.nftSeq,
-        "nftOwnerAddress": wallet
-      });
-
-      handleClose();
-      Swal.fire({
-        title: ' Success ',
-        text: '판매 취소에 성공하였습니다. ✨',
-        icon: 'success',
-        confirmButtonText: '확인'
-      })
-    }
-
-    catch (error) {
-      Swal.fire({
-        title: ' Error ',
-        text: '판매 취소에 실패하였습니다. 😢',
-        icon: 'error',
-        confirmButtonText: '확인',
-      })
-      console.log("error:", error);
-    }
-
-    finally {
-      setIsPurchaseLoaded(false);
-    }
-
+    // send purchaseinfo to backend
+    const buyNft = await BuyNft({
+      "nftSeq": item.item.nftSeq,
+      "nftOwnerAddress": wallet
+    });
+   
+    setIsPurchaseLoaded(false);
   }
 
 
