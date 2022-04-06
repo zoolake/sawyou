@@ -7,6 +7,7 @@ import { User } from '../../States/User';
 import { Wallet } from '../../States/Wallet';
 import { useRecoilState } from 'recoil';
 import { SearchUserPost, SearchHashTagPost } from '../../api/list';
+import { Profile } from '../../api/user';
 
 
 // MUI
@@ -34,6 +35,11 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import Web3 from "web3";
 import SsafyToken from '../../../src/abi/SsafyToken.json';
 
+const image2 = {
+  height: "27px",
+  width: "27px"
+}
+
 const UserHeader = (props) => {
   const navigate = useNavigate(); // for redirect
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -47,6 +53,7 @@ const UserHeader = (props) => {
   const [invisible, setInvisible] = useState(false);
   const [web3, setWeb3] = React.useState();
   const [balance, setBalance] = React.useState(null);
+  const [userData, setUserData] = useState('');
 
   useEffect(() => {
     if (typeof window.ethereum != "undefined") {
@@ -64,8 +71,16 @@ const UserHeader = (props) => {
       // getBalance()
       setInvisible(false)
     }
+    getUser();
+
+    
+    
 
   }, []);
+
+  const getUser = async() => {
+    const res = Profile(user).then(res => setUserData(res.data.data))
+  }
 
   const handleBadgeVisibility = async () => {
 
@@ -280,8 +295,8 @@ const UserHeader = (props) => {
                   maxHeight: "60px",
                   minWidth: "40px",
                   minHeight: "40px"
-                }}  >
-                <img src="/images/baseimg_nav.jpg" />
+                }}>
+                {userData && (userData.userProfile ?<Avatar style={image2} src={userData.userProfile} /> : <img style={image2} src="/images/baseimg.png" />)}
               </Button>
               <Menu
                 sx={{ mt: '40px' }}
