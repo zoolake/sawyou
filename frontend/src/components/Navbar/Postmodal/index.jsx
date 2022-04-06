@@ -112,6 +112,7 @@ const Postmodal = (props) => {
           <InputBase
             placeholder="내용 입력"
             onChange={onChangeContent}
+            multiline
           />
         </Box>
         </Box>
