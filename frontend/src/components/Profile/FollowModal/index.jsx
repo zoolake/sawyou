@@ -52,6 +52,7 @@ const Postmodal = (props) => {
     window.scrollTo(0, 0);
     navigate(`${name}`);
     handleClose()
+    window.location.reload()
   };
 
 
