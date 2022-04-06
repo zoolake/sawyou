@@ -26,6 +26,8 @@ public class UserRes {
     private String userDesc;
     @ApiModelProperty(name = "유저 프로필 이미지 링크")
     private String userProfile;
+    @ApiModelProperty(name = "작성 게시글 수")
+    private int postCnt;
     @ApiModelProperty(name = "유저 팔로잉 수")
     private int followingCnt;
     @ApiModelProperty(name = "유저 팔로워 수")
