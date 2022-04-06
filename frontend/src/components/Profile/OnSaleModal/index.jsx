@@ -19,6 +19,7 @@ import { useRecoilValue } from 'recoil';
 import Web3 from 'web3';
 import { textAlign } from '@mui/system';
 import { useParams } from 'react-router';
+import { useNavigate  } from 'react-router-dom';
 
 
 const style = {
@@ -54,6 +55,15 @@ const Postmodal = (item) => {
   const userId = useRecoilValue(User);
   const [web3, setWeb3] = React.useState();
   const [isPurchaseLoaded, setIsPurchaseLoaded] = useState(false);
+  const navigate = useNavigate();
+
+  const onClickRedirectPathHandler = name => e => {
+    window.scrollTo(0, 0);
+    navigate(`/nft/${item.item.nftSeq}`);
+    handleClose()
+  };
+  
+
  
   useEffect(() => {
     if (selectedImage) {
@@ -170,11 +180,11 @@ const Postmodal = (item) => {
 
   const loading = (
     
-    wallet === null ?
-        <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 연동 이후 이용이 가능합니다.</Button> :     
+    wallet === 'null' ?
+        <Button sx={{ width: '100%' }} variant="contained" color="error">지갑 연동 이후 이용이 가능합니다.</Button> :     
           isPurchaseLoaded ? <Box sx={{textAlign:'center'}}><CircularProgress/></Box>:
             userId!==saleInfo.sellerId?
-            <Button sx={{ width: '100%' }} onClick={handlePurchaseButtonClick}>
+            <Button sx={{ width: '100%' }} onClick={onClickRedirectPathHandler()}>
               구매하기
             </Button> : <Button sx={{ width: '100%' }} onClick={handleCancelButtonClick}>
               판매 취소
