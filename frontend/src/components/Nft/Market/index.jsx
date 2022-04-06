@@ -2,26 +2,36 @@ import React from 'react';
 import Wrapper from './styles';
 import './slick.css';
 import './slick-theme.css'
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-
+import { ReadSaleNftTop10 } from '../../../api/nft'
+import { Profile } from '../../../api/user'
 import Slider from "react-slick";
-// import "slick-carousel/slick/slick.css"; 
-// import "slick-carousel/slick/slick-theme.css";
+import { Box, Card, CardActionArea, CardHeader, CardMedia, CardContent, Avatar, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 
 const Market = () => {
+  const [nfts, setNft] = React.useState();
+  const navigate = useNavigate();
+  React.useEffect(() => {
+    console.log("ㅡㅡ")
+    ReadSaleNftTop10().then(({data}) => {
+      console.log(data.data);
+
+      setNft(data.data);
+    })  
+  }, []);
+
+  const onClickRedirectPathHandler = (nftSeq) => {
+    console.log("click",nftSeq);
+    window.scrollTo(0, 0);
+    navigate(`/nft/${nftSeq}`);
+  };
 
   const settings = {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: 4,
     slidesToScroll: 1
   };
 
@@ -64,121 +74,32 @@ const Market = () => {
         <Typography className="headtitle t2" variant="h5" gutterBottom>              
           주목할만한 NFTs
         </Typography>
-        <Slider {...settings}>
-          <Card className="nftroot">
-            <CardActionArea>
-              <CardMedia
-                className="nftmedia"
-                image="/images/hallstatt.jpg"
-                title="Contemplative Reptile"
-              />              
-                <CardHeader
-                  avatar={
-                    <Avatar 
-                      aria-label="recipe" 
-                      src="/images/baseimg.jpg"
+        <Slider {...settings}>  
+          {
+            nfts && nfts.map((nft) => (
+              
+                <Card className="nftroot">
+                <CardActionArea onClick={event=>{onClickRedirectPathHandler(nft.nftSeq)}} >
+                  <CardMedia
+                    
+                    className="nftmedia"
+                    image={nft.nftPictureLink}
+                    title="Contemplative Reptile"
+                  />              
+                    <CardHeader
+                      avatar={
+                        <Avatar 
+                          aria-label="recipe" 
+                          src={nft.sellerProfile}
+                        />
+                      }
+                      title={nft.sellerName}
+                      subheader={nft.salePrice + " SSF"}        
                     />
-                  }
-                  title="Lizard"
-                  subheader="Username"              
-                />
-            </CardActionArea>
-          </Card>
-          <Card className="nftroot">
-            <CardActionArea>
-              <CardMedia
-                className="nftmedia"
-                image="/images/Zermatt.jpg"
-                title="Contemplative Reptile"
-              />              
-                <CardHeader
-                  avatar={
-                    <Avatar 
-                      aria-label="recipe" 
-                      src="/images/baseimg.jpg"
-                    />
-                  }
-                  title="Lizard"
-                  subheader="Username"              
-                />
-            </CardActionArea>
-          </Card>
-          <Card className="nftroot">
-            <CardActionArea>
-              <CardMedia
-                className="nftmedia"
-                image="/images/Chamonix.jpg"
-                title="Contemplative Reptile"
-              />              
-                <CardHeader
-                  avatar={
-                    <Avatar 
-                      aria-label="recipe" 
-                      src="/images/baseimg.jpg"
-                    />
-                  }
-                  title="Lizard"
-                  subheader="Username"              
-                />
-            </CardActionArea>
-          </Card>
-          <Card className="nftroot">
-            <CardActionArea>
-              <CardMedia
-                className="nftmedia"
-                image="/images/Tromso.jpg"
-                title="Contemplative Reptile"
-              />              
-                <CardHeader
-                  avatar={
-                    <Avatar 
-                      aria-label="recipe" 
-                      src="/images/baseimg.jpg"
-                    />
-                  }
-                  title="Lizard"
-                  subheader="Username"              
-                />
-            </CardActionArea>
-          </Card>
-          <Card className="nftroot">
-            <CardActionArea>
-              <CardMedia
-                className="nftmedia"
-                image="/images/Rovaniemi.jpg"
-                title="Contemplative Reptile"
-              />              
-                <CardHeader
-                  avatar={
-                    <Avatar 
-                      aria-label="recipe" 
-                      src="/images/baseimg.jpg"
-                    />
-                  }
-                  title="Lizard"
-                  subheader="Username"              
-                />
-            </CardActionArea>
-          </Card>
-          <Card className="nftroot">
-            <CardActionArea>
-              <CardMedia
-                className="nftmedia"
-                image="/images/Reykjavik.jpg"
-                title="Contemplative Reptile"
-              />              
-                <CardHeader
-                  avatar={
-                    <Avatar 
-                      aria-label="recipe" 
-                      src="/images/baseimg.jpg"
-                    />
-                  }
-                  title="Lizard"
-                  subheader="Username"              
-                />
-            </CardActionArea>
-          </Card>
+                </CardActionArea>
+              </Card>
+            ))
+          }
         </Slider>         
       </div>
     </Wrapper>
