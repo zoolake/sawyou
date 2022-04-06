@@ -38,6 +38,12 @@ const Wrapper = styled.div`
     font-weight: 600;
     font-size: 14px;
   }
+  
+  .commentWrap {
+    border: 1px solid lightgrey;
+    display: flex;
+    justify-content: space-between;
+  }
 
 
 `;
