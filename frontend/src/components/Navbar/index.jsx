@@ -5,10 +5,11 @@ import Postmodal from './Postmodal/index';
 import WalletIdx from './Wallet/index';
 import { User } from '../../States/User';
 import { Wallet } from '../../States/Wallet';
+import { UserImage } from '../../States/UserImage';
 import { useRecoilState } from 'recoil';
 import { SearchUserPost, SearchHashTagPost } from '../../api/list';
 import { Profile } from '../../api/user';
-
+import { useRecoilValue } from 'recoil';
 
 // MUI
 import AppBar from '@mui/material/AppBar';
@@ -54,6 +55,7 @@ const UserHeader = (props) => {
   const [web3, setWeb3] = React.useState();
   const [balance, setBalance] = React.useState(null);
   const [userData, setUserData] = useState('');
+  const userImage2 = useRecoilValue(UserImage);
 
   useEffect(() => {
     if (typeof window.ethereum != "undefined") {
@@ -71,16 +73,10 @@ const UserHeader = (props) => {
       // getBalance()
       setInvisible(false)
     }
-    getUser();
-
-    
     
 
   }, []);
 
-  const getUser = async() => {
-    const res = Profile(user).then(res => setUserData(res.data.data))
-  }
 
   const handleBadgeVisibility = async () => {
 
@@ -296,7 +292,7 @@ const UserHeader = (props) => {
                   minWidth: "40px",
                   minHeight: "40px"
                 }}>
-                {userData && (userData.userProfile ?<Avatar style={image2} src={userData.userProfile} /> : <img style={image2} src="/images/baseimg.png" />)}
+                {userImage2 && (userImage2 ?<Avatar style={image2} src={userImage2} /> : <img style={image2} src="/images/baseimg.png" />)}
               </Button>
               <Menu
                 sx={{ mt: '40px' }}
