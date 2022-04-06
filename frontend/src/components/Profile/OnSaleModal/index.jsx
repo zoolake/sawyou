@@ -115,27 +115,29 @@ const Postmodal = (item) => {
   const handlePurchaseButtonClick = async () => {
 
     setIsPurchaseLoaded(true);
+    console.log("saleContractAddress : ", saleInfo)
+    const saleContractAddress = saleInfo.saleContractAddress;
 
-    try {
-      const saleContractAddress = saleInfo.saleContractAddress;
+    const salePrice = saleInfo.salePrice;
+    console.log("salePrice : ", saleInfo.salePrice)
 
-      const salePrice = saleInfo.salePrice;
+    const erc20Contract = await new web3.eth.Contract(
+      SsafyToken.abi,
+      "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333"
+    );
 
-      const erc20Contract = await new web3.eth.Contract(
-        SsafyToken.abi,
-        "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333"
-      );
+    const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress);
 
-      const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress);
+    const approve = await erc20Contract.methods.approve(saleContractAddress, salePrice).send({ from: wallet });
 
-      const approve = await erc20Contract.methods.approve(saleContractAddress, salePrice).send({ from: wallet });
+    const purchase = await saleContract.methods.purchase().send({ from: wallet });
 
     // send purchaseinfo to backend
     const buyNft = await BuyNft({
       "nftSeq": item.item.nftSeq,
       "nftOwnerAddress": wallet
     });
-   
+
     setIsPurchaseLoaded(false);
   }
 
