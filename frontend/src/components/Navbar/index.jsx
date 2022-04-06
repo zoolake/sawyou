@@ -162,6 +162,7 @@ const UserHeader = (props) => {
   const onClickRedirectPathHandler = name => e => {
     window.scrollTo(0, 0);
     navigate(`${name}`);
+    handleCloseUserMenu()
     setSearch('');
   };
 
@@ -169,6 +170,7 @@ const UserHeader = (props) => {
     window.scrollTo(0, 0);
     navigate(`${name}`);
     setSearch('');
+    
     window.location.reload()
   };
   const handleInputSearch = (e) => {
