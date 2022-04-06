@@ -19,6 +19,7 @@ import { useRecoilValue } from 'recoil';
 import Web3 from 'web3';
 import { textAlign } from '@mui/system';
 import { useParams } from 'react-router';
+import { useNavigate  } from 'react-router-dom';
 
 
 const style = {
@@ -54,13 +55,23 @@ const Postmodal = (item) => {
   const userId = useRecoilValue(User);
   const [web3, setWeb3] = React.useState();
   const [isPurchaseLoaded, setIsPurchaseLoaded] = useState(false);
+  const navigate = useNavigate();
 
+  const onClickRedirectPathHandler = name => e => {
+    window.scrollTo(0, 0);
+    navigate(`/nft/${item.item.nftSeq}`);
+    handleClose()
+  };
+  
+
+ 
   useEffect(() => {
     if (selectedImage) {
       setImageUrl(URL.createObjectURL(selectedImage));
     }
   }, [selectedImage]);
 
+  
   useEffect(() => {
 
     if (typeof window.ethereum != "undefined") {
@@ -206,10 +217,15 @@ const Postmodal = (item) => {
               </Box>
               <Typography variant="h6" sx={{ ml: 2, mt: 0.2 }}>{onwerid}</Typography>
             </Box>
-            <Box><Typography>작성자 : {nftDetail.nftOwnerName} </Typography></Box>
-            <Box><Typography>제작 시간 : {nftDetail.nftCreatedAt} </Typography></Box>
-            <Box><Typography>작품 제목 : {nftDetail.nftTitle} </Typography></Box>
-
+            <Typography variant="h6" sx={{ml:2,mt:0.2}}>{saleInfo.sellerName}</Typography>
+          </Box>
+          <Box><Typography>작가 이름 : {saleInfo.nftAuthorName} </Typography></Box>
+          <Box><Typography>작품 제목 : {saleInfo.nftTitle} </Typography></Box>
+          <Box><Typography>작품 내용 : {saleInfo.nftDesc} </Typography></Box>
+          <Box><Typography>판매 가격 : {saleInfo.salePrice} </Typography></Box>
+          <Box><Typography>판매 시작 : {saleInfo.startDate} </Typography></Box>
+          <Box><Typography>판매 종료 : {saleInfo.endDate} </Typography></Box>
+          
           </Box>
 
           {loading}

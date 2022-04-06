@@ -11,7 +11,6 @@ const Wrapper = styled.div`
   }
 
   .product__bg {
-    background-image: url( "/images/neuschwanstein.jpg" );
     width: 150%;
     height: calc(100% + 20px);
     position: absolute;
