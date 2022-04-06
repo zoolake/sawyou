@@ -72,7 +72,7 @@ const Postmodal = (props) => {
           sx={{ color : 'black' }}>
         </Box>
         <Typography sx={{ my:'auto'}}>
-          팔로우
+          팔로잉
         </Typography>
         <Button onClick={handleClose}
           sx={{ color : 'black' ,minWidth:'30px'}}
@@ -102,7 +102,7 @@ const Postmodal = (props) => {
           minHeight: "24px",
           padding: "0 0 0 0px"
         }}>
-          <Typography>팔로우 {data.followingCnt}</Typography>
+          <Typography>팔로잉 {data.followingCnt}</Typography>
         </Button>
       <Modal
       open={open}
