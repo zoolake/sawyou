@@ -44,14 +44,17 @@ public class NftOnSaleDetailRes {
     private String nftCreatedAt;
 
     public NftOnSaleDetailRes(Sale sale) {
+        String startDate = sale.getSaleStartDate().toString();
+        String endDate = sale.getSaleEndDate().toString();
+
         this.userSeq = sale.getNft().getUser().getUserSeq();
         this.nftOwnerAddress = sale.getNft().getNftOwnerAddress();
         this.sellerName = sale.getNft().getUser().getUserName();
         this.sellerId = sale.getNft().getUser().getUserId();
         this.sellerProfile = sale.getNft().getUser().getUserProfile();
         this.salePrice = sale.getSalePrice();
-        this.startDate = sale.getSaleStartDate().toString();
-        this.endDate = sale.getSaleEndDate().toString();
+        this.startDate = startDate.substring(0, 10) + " " + startDate.substring(11,16);
+        this.endDate = endDate.substring(0, 10) + " " + endDate.substring(11,16);
         this.nftPictureLink = sale.getNft().getNftPictureLink();
         this.nftAuthorName = sale.getNft().getNftAuthorName();
         this.nftTitle = sale.getNft().getNftTitle();

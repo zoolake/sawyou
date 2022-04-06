@@ -14,6 +14,7 @@ import Web3 from 'web3';
 import SaleFactory from '../../../abi/SaleFactory.json';
 import SsafyNFT from '../../../abi/SsafyNFT.json';
 import { useParams } from 'react-router';
+import Swal from 'sweetalert2';
 
 const style = {
   position: 'absolute',
@@ -74,7 +75,7 @@ const Postmodal = ({ item }) => {
     if (isSaleLoaded === false) {
       return
     }
-    setOpen(false); 
+    setOpen(false);
   }
 
   const handleOpen2 = () => {
@@ -169,9 +170,23 @@ const Postmodal = ({ item }) => {
       // 백엔드 판매 API 호출
       await sellOnServer(saleContractAddress);
 
+      handleClose();
+      Swal.fire({
+        title: ' Success ',
+        text: '판매 등록에 성공하였습니다. ✨',
+        icon: 'success',
+        confirmButtonText: '확인'
+      })
     }
 
     catch (error) {
+      handleClose();
+      Swal.fire({
+        title: ' Error ',
+        text: '판매 등록에 실패하였습니다. 😢',
+        icon: 'error',
+        confirmButtonText: '확인',
+      })
       console.log("error:", error);
     }
 

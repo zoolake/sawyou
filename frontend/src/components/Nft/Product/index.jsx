@@ -13,6 +13,7 @@ import Web3 from 'web3';
 import { CircularProgress } from '@mui/material';
 
 
+
 const Product = () => {
   const [saleInfo, setSaleInfo] = useState('');
   const params = useParams().id;
@@ -49,8 +50,8 @@ const Product = () => {
       console.log("ethereum is not defined")
     }
 
-     ReadCellNft(params).then((r) => {
-      console.log("saleInfo",r.data.data)
+    ReadCellNft(params).then((r) => {
+      console.log("saleInfo", r.data.data)
       setSaleInfo(r.data.data);
      })
     setIsSuccess(false);
@@ -127,8 +128,8 @@ const Product = () => {
               </dl>
               <div>
                 작품 설명
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <div>
                   {saleInfo.nftDesc}
                 </div>
@@ -193,11 +194,11 @@ const Product = () => {
 
         </div>
 
-      </div>
+      </div >
 
 
 
-    </Wrapper>
+    </Wrapper >
   )
 }
 
