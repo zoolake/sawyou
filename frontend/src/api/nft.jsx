@@ -25,7 +25,7 @@ export const ReadNft = (num) => {
 }
 
 // 판매중인 NFT 조회
-export const ReadCellAllNft = () => {
+export const ReadSaleNftTop10 = () => {
   const instance = CreateInstance();
   try {
     const res = instance.get(`/nft/market`)
