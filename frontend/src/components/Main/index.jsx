@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {LikePost, WriteComment, ReadCommnet} from '../../api/post'
 import InputBase from "@mui/material/InputBase";
+import TextField from "@mui/material/TextField";
 import { useRecoilState } from 'recoil';
 import { User } from '../../States/User';
 import { useNavigate } from 'react-router-dom';
@@ -38,6 +39,12 @@ const Main = (props) => {
     }
   }
 
+  const handleKeypress = e => {
+  if (e.key === 'Enter') {
+    onSubmit(e);
+  }
+};
+
   const sendLike = async() => {
     const res = await LikePost(props.data.postSeq)
   }
@@ -47,15 +54,15 @@ const Main = (props) => {
     setDataComment(res.data.data)
   }
 
-  const handleKeyPress = event => {
-    if (event.key === 'Enter' && event.target.value !== '') {
-      event.preventDefault();
-      const repoArray = [...comment];
-      repoArray.push({});
-      setComment(repoArray);
-      event.target.value = '';
-    }
-  }
+  // const handleKeyPress = event => {
+  //   if (event.key === 'Enter' && event.target.value !== '') {
+  //     event.preventDefault();
+  //     const repoArray = [...comment];
+  //     repoArray.push({});
+  //     setComment(repoArray);
+  //     event.target.value = '';
+  //   }
+  // }
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
@@ -82,7 +89,6 @@ const Main = (props) => {
     if (comment.trim() === '') {
       return;
     }
-
     const body = {
       commentContent : comment
     }
@@ -156,23 +162,18 @@ const Main = (props) => {
           </div>
         </div>
         <div className="commentContainer" >
-          <form className="commentWrap" onSubmit="return false">
+          <div className="commentWrap" onSubmit="return false">
             <InputBase
               placeholder="내용 입력"
               onChange={onChange}
-              onKeyPress={event => { 
-                handleKeyPress(event);
-              }}
-              onKeyUp={event => {
-                handleCommentInput(event);
-              }}
+              onKeyPress={handleKeypress}
               sx={{width:'90%', ml:1}}
               value={comment}
             />
             <Button>
               <Typography onClick={onSubmit}>게시</Typography>
             </Button>
-          </form>
+          </div>
         </div>       
       </div>
     </Wrapper>
