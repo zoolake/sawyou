@@ -30,7 +30,6 @@ const ProfilePage = () => {
 
   return (
     <Wrapper>
-      <Navbar />
       {/* <Profile profile={profile} post={post} ></Profile> */}
       <Profile ></Profile>
     </Wrapper>

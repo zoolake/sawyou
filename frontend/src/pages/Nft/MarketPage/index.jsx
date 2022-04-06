@@ -7,7 +7,6 @@ const MarketplacePage = (props) => {
 
   return (
     <Wrapper>
-      <Navbar></Navbar>
       <Market></Market>
     </Wrapper>
 

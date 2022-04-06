@@ -18,7 +18,6 @@ const MainPage = (props) => {
 
   return (
     <Wrapper>
-      <Navbar></Navbar>
       {post && post.map((data) => (
         <Main key={data.postSeq} data={data}></Main>
       ))}       
