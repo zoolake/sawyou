@@ -39,11 +39,12 @@ const Wrapper = styled.div`
   .post_user {
     display: flex;
     align-items: flex-start;
+    cursor: pointer;
   }
-
 
   .post_avatar {
     margin-right: 10px;
+    cursor: pointer;
   }
 
   .post_like {
