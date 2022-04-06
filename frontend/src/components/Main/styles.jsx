@@ -61,6 +61,15 @@ const Wrapper = styled.div`
     padding: 0 8px;
     width: 100%;
   }
+
+  .post__likeCnt {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 6px auto;
+    font-weight: 500;
+    font-size: 14px;
+  }
   
   .post_article_comment {
     flex: 0 0 auto;
@@ -70,17 +79,32 @@ const Wrapper = styled.div`
   }
   
   .post_text {
-    margin: 0!important;
+    margin: 4px auto;
     font-weight: 500;
     font-size: 14px;
     line-height: 18px;
   }
 
+  .cur1 {
+    cursor: pointer;
+  }
+
+  .post__commentCnt {
+    margin: 6px auto;
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .post_comment {
+    margin-bottom: 2px;
+  }
+
   .post_user_comment {
-    display: flex;!important;
-    font-weight: 400;!important;
-    align-items: center;!important;
-    line-height: 1px;!important;
+    font-weight: 300;
+    align-items: center;
+    line-height: 1.5px;
+    font-size: 14px;
+    margin: 1 auto;
   }
 
   .commentWrap {

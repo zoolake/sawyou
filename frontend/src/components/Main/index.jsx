@@ -12,25 +12,29 @@ import { User } from '../../States/User';
 import { useNavigate } from 'react-router-dom';
 
 
-const Main = (props) => {
+const Main = (props) => { 
   const navigate = useNavigate(); // for redirect
   const [comment, setComment] = useState('');
+  const [commentCnt, setCommentCnt] = useState(props.data.postCommentCnt);
   const [user, setUser] = useRecoilState(User);
   const [commentArray, setCommentArray] = useState([]);
   const [isValid, setIsValid] = useState(true);
-  const [imgurl, setImgurl] = useState([''])
-  const [like, setLike] = useState(props.data.postIsLike)
+  const [imgurl, setImgurl] = useState(['']);
+  const [like, setLike] = useState(props.data.postIsLike);
+  const [likeCnt, setLikeCnt] = useState(props.data.postLikeCnt);
   const [dataComment, setDataComment] = useState('');
   const [count, setCount] = useState(1);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handelLike = (e) => {
     sendLike()
-    if (like === true){
+    if (like === true) {
       setLike(false)
+      setLikeCnt(count => count - 1)
     }
     else {
       setLike(true)
+      setLikeCnt(count => count + 1)
     }
   }
 
@@ -85,7 +89,8 @@ const Main = (props) => {
     WriteComment(props.data.postSeq, body).then(
       getComment(),
       setComment(''),
-      setCount(count => count + 1)
+      setCount(count => count + 1),
+      setCommentCnt(count => count + 1)
     )
   };
 
@@ -100,37 +105,52 @@ const Main = (props) => {
           <div className="post_pfuser">
             <div>
               {props.data.userProfile 
-                ? <Avatar className="post_avatar" alt="User" src={props.data.userProfile} onClick={onClickRedirectPathHandler(`/profile/${user}`)}/> 
+                ? <Avatar className="post_avatar" alt="User" src={props.data.userProfile} onClick={onClickRedirectPathHandler(`/profile/${props.data.userId}`)}/> 
                 : <Avatar className="post_avatar" alt="User" src="/images/baseimg.jpg"/>}
             </div>
             <div className="post_user">
-              <h4 onClick={onClickRedirectPathHandler(`/profile/${user}`)}>{props.data.userId}</h4>
+              <h4 onClick={onClickRedirectPathHandler(`/profile/${props.data.userId}`)}>{props.data.userId}</h4>
             </div>
           </div>
         </div>
         <img className="post_img" src={props.data.postPictureLink}></img>
         <div className="post_article">
-          {like === true ?       
-            <Button onClick={handelLike}sx = {{minWidth:'24px'}} style={{padding:'0px'}}>     
-            <FavoriteIcon 
-              className="post_like"
-              sx = {{color:'red'}}
-            />
-            </Button> :
-            <Button onClick={handelLike}sx = {{minWidth:'24px'}} style={{padding:'0px'}}>        
-            <FavoriteBorderIcon 
-              className="post_like"
-              sx = {{color:'black'}}
-            />
-            </Button>
-          }
+          <div className="post__likeCnt">
+            {like === true ?       
+              <Button onClick={handelLike} sx={{minWidth:'24px'}} style={{padding:'0px'}}>     
+              <FavoriteIcon 
+                className="post_like"
+                sx = {{color:'red'}}
+              />
+              </Button> :
+              <Button onClick={handelLike} sx={{minWidth:'24px'}} style={{padding:'0px'}}>        
+              <FavoriteBorderIcon 
+                className="post_like"
+                sx = {{color:'black'}}
+              />
+              </Button>
+            }
+            좋아요 {likeCnt}개
+          </div>
           <div className="post_article_comment">
             <div>
-              <h4 className="post_text"><strong>{props.data.userId}</strong><span>&nbsp;</span>{props.data.postContent}</h4>
+              <h4 className="post_text">
+                <strong className="cur1" onClick={onClickRedirectPathHandler(`/profile/${props.data.userId}`)}>
+                  {props.data.userId}
+                </strong><span>&nbsp;</span>
+                {props.data.postContent}
+              </h4>
             </div>
+            <div className="post__commentCnt">댓글 {commentCnt}개</div>            
             <div className="post_comment">
               {dataComment && dataComment.map((data) => 
-                <h4 className="post_user_comment"><strong>{data.userId}</strong><span>&nbsp;</span>{data.commentContent}</h4>
+                <h4 className="post_user_comment">
+                  <strong className="cur1" onClick={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
+                    {data.userId}
+                  </strong>
+                  <span>&nbsp;</span>
+                  {data.commentContent}
+                </h4>
               )}
             </div>
           </div>
