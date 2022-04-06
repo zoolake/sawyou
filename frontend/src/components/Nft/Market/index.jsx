@@ -58,7 +58,7 @@ const Market = () => {
                 />
             </CardActionArea>
           </Card>
-        </div> 
+        </div>  
       </div>
       <div className="notable">
         <Typography className="headtitle t2" variant="h5" gutterBottom>              

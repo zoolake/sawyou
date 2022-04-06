@@ -137,7 +137,7 @@ const Postmodal = (item) => {
       "nftSeq": item.item.nftSeq,
       "nftOwnerAddress": wallet
     });
-
+   
     setIsPurchaseLoaded(false);
   }
 
