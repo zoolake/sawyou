@@ -6,11 +6,12 @@ import { useParams } from 'react-router';
 import { ReadCellNft, BuyNft } from '../../../api/nft';
 import SsafyToken from '../../../abi/SsafyToken.json';
 import { Wallet } from '../../../States/Wallet';
-import { User } from '../../../States/User'; 
+import { User } from '../../../States/User';
 import { useRecoilValue } from 'recoil';
 import Sale from '../../../abi/Sale.json';
 import Web3 from 'web3';
 import { CircularProgress } from '@mui/material';
+import Swal from "sweetalert2";
 
 
 
@@ -19,11 +20,11 @@ const Product = () => {
   const params = useParams().id;
   const [web3, setWeb3] = React.useState();
   const wallet = useRecoilValue(Wallet);
-  const [balance,setBalance] =useState('0');
+  const [balance, setBalance] = useState('0');
   const userId = useRecoilValue(User);
   const [isPurchaseLoaded, setIsPurchaseLoaded] = useState('');
   const [isSuccess, setIsSuccess] = useState('');
-  
+
   const background = {
     backgroundImage: `url(${saleInfo.nftPictureLink})`,
     width: '150%',
@@ -38,7 +39,7 @@ const Product = () => {
   }
 
   useEffect(() => {
-    
+
     if (typeof window.ethereum != "undefined") {
       try {
         const web = new Web3(window.ethereum);
@@ -53,39 +54,62 @@ const Product = () => {
     ReadCellNft(params).then((r) => {
       console.log("saleInfo", r.data.data)
       setSaleInfo(r.data.data);
-     })
+    })
     setIsSuccess(false);
   }, [])
-  
+
 
 
   const handlePurchaseButtonClick = async () => {
 
     setIsPurchaseLoaded(true);
-    console.log("saleContractAddress : ", saleInfo)
-    const saleContractAddress = saleInfo.saleContractAddress;
-  
-    const salePrice = saleInfo.salePrice;
-    console.log("salePrice : ", saleInfo.salePrice)
-  
-    const erc20Contract = await new web3.eth.Contract(
-      SsafyToken.abi,
-      "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333"
-    );
-  
-    const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress);
-  
-    const approve = await erc20Contract.methods.approve(saleContractAddress, salePrice).send({ from: wallet });
-  
-    const purchase = await saleContract.methods.purchase().send({ from: wallet });
-  
-    // send purchaseinfo to backend
-    const buyNft = await BuyNft({
-      "nftSeq": params,
-      "nftOwnerAddress": wallet
-    });
-    setIsSuccess(true);
-    setIsPurchaseLoaded(false);
+
+    try {
+      console.log("saleContractAddress : ", saleInfo)
+      const saleContractAddress = saleInfo.saleContractAddress;
+
+      const salePrice = saleInfo.salePrice;
+      console.log("salePrice : ", saleInfo.salePrice)
+
+      const erc20Contract = await new web3.eth.Contract(
+        SsafyToken.abi,
+        "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333"
+      );
+
+      const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress);
+
+      const approve = await erc20Contract.methods.approve(saleContractAddress, salePrice).send({ from: wallet });
+
+      const purchase = await saleContract.methods.purchase().send({ from: wallet });
+
+      // send purchaseinfo to backend
+      const buyNft = await BuyNft({
+        "nftSeq": params,
+        "nftOwnerAddress": wallet
+      });
+      Swal.fire({
+        title: ' Error ',
+        text: '구매에 성공하였습니다. ✨',
+        icon: 'error',
+        confirmButtonText: '확인',
+      })
+      setIsSuccess(true);
+    }
+
+    catch (error) {
+      Swal.fire({
+        title: ' Error ',
+        text: '구매에 실패하였습니다. 😢',
+        icon: 'error',
+        confirmButtonText: '확인',
+      })
+      console.log("error:", error);
+      setIsSuccess(false);
+    }
+
+    finally {
+      setIsPurchaseLoaded(false);
+    }
   }
 
   const getBalance = async () => {
@@ -111,7 +135,7 @@ const Product = () => {
           <section className="detailPage__aside">
             <h2 className="detailPage__title">{saleInfo.nftTitle}</h2>
             <article className="detailPage__section">
-              <div  className="detailPage__info">NFT 정보</div>
+              <div className="detailPage__info">NFT 정보</div>
               <dl className="detailPage__info1 info">
                 <dt>소유자</dt>
                 <dd>
@@ -160,32 +184,30 @@ const Product = () => {
                 </dl>
                 {
                   isPurchaseLoaded ?
-                  <Button
-                  variant="contained"
-                  className="detailPage__button"
-                  onClick={handlePurchaseButtonClick}
-                  >
-                   <CircularProgress />
-                    </Button> : isSuccess ?
+                    <Box sx={{ textAlign: 'center', pt: 7 }}><CircularProgress /></Box> : isSuccess ?
                       <Button
                         variant="contained"
                         color="warning"
-                      className="detailPage__button"
-                      onClick={handlePurchaseButtonClick}
-                    >
-                    구매가 완료되었습니다
-                  </Button>:
-                    <Button
-                      variant="contained"
-                      className="detailPage__button"
-                      onClick={handlePurchaseButtonClick}
-                    >
-                    구매하기
+                        className="detailPage__button"
+                        onClick={handlePurchaseButtonClick}
+                      >
+                        구매가 완료되었습니다
+                      </Button> :
+                      <Button
+                        variant="contained"
+                        className="detailPage__button"
+                        onClick={handlePurchaseButtonClick}
+                      >
+                        구매하기
+                      </Button>
+                }
+                {
+                  !isPurchaseLoaded &&
+                  <Button variant="contained"
+                    className="detailPage__button"
+                    onClick={getBalance} >잔액조회
                   </Button>
                 }
-                <Button variant="contained"
-                  className="detailPage__button"
-                  onClick={getBalance} >잔액조회</Button>
               </Box>
             </div>
 
