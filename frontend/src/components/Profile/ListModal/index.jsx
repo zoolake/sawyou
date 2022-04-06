@@ -22,6 +22,7 @@ import { CommentsDisabledOutlined, TokenOutlined } from '@mui/icons-material';
 import SaleFactory from '../../../abi/SaleFactory.json';
 import { CellNft } from '../../../api/nft';
 import Swal from 'sweetalert2';
+import { User } from '../../../States/User';
 
 
 const style = {
@@ -145,6 +146,7 @@ const Postmodal = ({ item }) => {
   /* 민팅 및 판매하기 관련 */
   const [web3, setWeb3] = React.useState();
   const wallet = useRecoilValue(Wallet);
+  const userId = useRecoilValue(User);
 
   React.useEffect(() => {
     if (typeof window.ethereum != "undefined") {
@@ -194,10 +196,6 @@ const Postmodal = ({ item }) => {
         text: '민팅에 실패하였습니다. 😢',
         icon: 'error',
         confirmButtonText: '확인',
-        // backdrop: `
-        // rgba(0,0,123,0.4)
-        // no-repeat
-        // `
       })
       console.log("error:", error);
     }
@@ -299,21 +297,25 @@ const Postmodal = ({ item }) => {
           </Box>
           <Box sx={{ height: '90%' }}>{item.postContent}</Box>
           {
-            item.postIsNft ?
-              <Button sx={{ width: '100%' }} variant="contained" color="error" >이미 민팅된 게시물입니다.</Button> :
-              isMintingLoaded !== true ? <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
-                <Button sx={{ width: '100%' }} variant="contained" onClick={handleOpen2} disabled={!isMintingLoaded}>
-                  민팅하기
-                  <Modal
-                    open={open2}
-                    onClose={handleClose2}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                    closeAfterTransition
-                  >
-                    {Mint}
-                  </Modal>
-                </Button>
+            item.userId !== userId ?
+              <div></div> :
+              item.postIsNft ?
+                <Button sx={{ width: '100%' }} variant="contained" color="error" >이미 민팅된 게시물입니다.</Button> :
+                isMintingLoaded !== true ? <Box sx={{ textAlign: 'center' }}><CircularProgress /></Box> :
+                  wallet === null ?
+                    <Button sx={{ width: '100%' }} variant="contained" color="error" >지갑 연동 이후 이용이 가능합니다.</Button> :
+                    <Button sx={{ width: '100%' }} variant="contained" onClick={handleOpen2} disabled={!isMintingLoaded}>
+                      민팅하기
+                      <Modal
+                        open={open2}
+                        onClose={handleClose2}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                        closeAfterTransition
+                      >
+                        {Mint}
+                      </Modal>
+                    </Button>
           }
         </Box>
       </Box>
