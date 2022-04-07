@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Main from '../../components/Main';
-import Wrapper from './styles';
-import Navbar from '../../components/Navbar/index';
-import {ReadAllPost, ReadFollowingPost} from '../../api/list'
+import { ReadFollowingPost } from '../../api/list'
 import Box from '@mui/material/Box';
 
 

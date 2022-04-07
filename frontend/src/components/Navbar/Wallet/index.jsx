@@ -43,7 +43,6 @@ export default function TemporaryDrawer() {
         const web = new Web3(window.ethereum);
         setWeb3(web);
       } catch (err) {
-        console.log(err);
       }
     }
   }, []);
@@ -60,7 +59,6 @@ export default function TemporaryDrawer() {
     // 잔액 확인을 위해 ERC-20 Contract 사용
     const erc20Contract = await new web3.eth.Contract(SsafyToken.abi, "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333");
     const temp = await erc20Contract.methods.balanceOf(wallet).call();
-    console.log("balance:", temp);
     setBalance(temp);
   }
 

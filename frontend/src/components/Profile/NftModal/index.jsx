@@ -11,8 +11,7 @@ import {
   TableRow,
   Typography,
   InputAdornment
- } 
- 
+ }  
 from '@mui/material';
 import { ReadNft, CellNft } from '../../../api/nft';
 import { User } from '../../../States/User';
@@ -24,7 +23,6 @@ import Web3 from 'web3';
 import SaleFactory from '../../../abi/SaleFactory.json';
 import SsafyNFT from '../../../abi/SsafyNFT.json';
 import Swal from 'sweetalert2';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const style = {
   position: 'absolute',
@@ -33,8 +31,7 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: '65%',
   height: '90%',
-  bgcolor: 'background.paper',
-  boxShadow: 24,
+  bgcolor: 'background.paper'
 };
 
 const style2 = {
@@ -44,11 +41,7 @@ const style2 = {
   transform: 'translate(-50%, -50%)',
   width: '660px',
   height: '200px',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  // borderRadius: 6,
-  boxShadow: 24,
-  p: 1,
+  bgcolor: 'background.paper'
 };
 
 const style3 = {
@@ -60,19 +53,13 @@ const style3 = {
 }
 
 const Postmodal = ({ item, userData }) => {
-  console.log("item:", item);
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const handleClose2 = () => setOpen2(false);
-  const [onwerid, setOwnerid] = React.useState('소유자');
-  const [id, setId] = React.useState('민팅한 사람');
-  const [time, setTime] = React.useState('2022-03-30');
-  const [title, setTtile] = React.useState('맛잇는 햄버거');
   const handleOpen = () => setOpen(true);
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [nftDetail, setNftDetail] = useState('');
-  const [saleInfo, setSaleInfo] = useState('');
   const wallet = useRecoilValue(Wallet);
   const user = useRecoilValue(User);
   const [price, setPrice] = useState('');
@@ -102,7 +89,6 @@ const Postmodal = ({ item, userData }) => {
         const web = new Web3(window.ethereum);
         setWeb3(web);
       } catch (err) {
-        console.log(err);
       }
     }
   }, []);
@@ -114,10 +100,8 @@ const Postmodal = ({ item, userData }) => {
     ReadNft(item.nftSeq).then((res) => {
       setNftDetail(res.data.data)
       setUserSeq(res.data.data.nftOwnerName)
-      console.log("ReadNft:", res.data.data)
     });
     Profile(userData).then((res)=>{setUserProfile(res.data.data.userProfile)})
-    console.log(userProfile)
   }, [selectedImage]);
 
   /* 판매 관련 */
@@ -155,8 +139,6 @@ const Postmodal = ({ item, userData }) => {
       // 방금 생성한 Sale 컨트랙트 주소 추출
       const sales = await saleFactoryContract.methods.allSales().call();
       const saleContractAddress = sales[sales.length - 1];
-      console.log("sales.length:", sales.length);
-      console.log(saleContractAddress);
 
       // ERC-721 Contract
       const erc721Contract = await new web3.eth.Contract(
@@ -169,7 +151,6 @@ const Postmodal = ({ item, userData }) => {
         .approve(saleContractAddress, nftDetail.nftTokenId)
         .send({ from: wallet })
         .then(() => {
-          console.log("권한 이전");
         });
 
       // wallet으로 부터 Sale 컨트랙트로 토큰을 옮긴다.
@@ -177,7 +158,6 @@ const Postmodal = ({ item, userData }) => {
         .transferFrom(wallet, saleContractAddress, nftDetail.nftTokenId)
         .send({ from: wallet })
         .then(() => {
-          console.log("토큰 이전");
         });
 
       // 백엔드 판매 API 호출
@@ -200,7 +180,6 @@ const Postmodal = ({ item, userData }) => {
         icon: 'error',
         confirmButtonText: '확인',
       })
-      console.log("error:", error);
     }
 
     finally {

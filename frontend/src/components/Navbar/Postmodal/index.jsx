@@ -57,7 +57,6 @@ const Postmodal = (props) => {
       window.location.reload()
     })
     .catch(err => {
-      console.log(err)
     })
   }
   

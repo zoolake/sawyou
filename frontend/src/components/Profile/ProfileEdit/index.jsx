@@ -121,7 +121,7 @@ const Profileedit = () => {
       <Box component="form" onSubmit={onSubmit}>
 
         <div className="logo">
-          <img className="logo2" src={userImage} />  
+          <img className="logo2" src={userImage}/>  
           {user}
         </div>
         <div className="c1">
