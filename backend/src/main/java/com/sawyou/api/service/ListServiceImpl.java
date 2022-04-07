@@ -3,6 +3,7 @@ package com.sawyou.api.service;
 import com.sawyou.api.response.HashtagRes;
 import com.sawyou.api.response.PostRes;
 import com.sawyou.api.response.UserListRes;
+import com.sawyou.db.entity.Following;
 import com.sawyou.db.entity.Post;
 import com.sawyou.db.entity.PostLike;
 import com.sawyou.db.entity.User;
@@ -80,7 +81,11 @@ public class ListServiceImpl implements ListService {
         // 팔로잉 리스트에서 유저가 팔로잉하는 유저 목록을 찾고 -> 그 유저가 작성한 글 리스트를 뽑는다.
         List<PostRes> postResList = new ArrayList<>();
 
-        followingRepository.findByUser_UserSeq(userSeq).forEach(following -> {
+        // 자기 자신을 팔로우하는 객체를 하나를 추가해서 진행한다.
+        List<Following> followingList = followingRepository.findByUser_UserSeq(userSeq);
+        followingList.add(Following.builder().followingToSeq(userSeq).build());
+
+        followingList.forEach(following -> {
             Long toSeq = following.getFollowingToSeq();
             User user = userRepositorySupport.findUserByUserSeq(toSeq).get();
             postRepository.findByUser_UserSeqAndPostIsDeleteIsFalseOrderByPostWritingTimeDesc(user.getUserSeq()).forEach(post -> {
