@@ -290,6 +290,8 @@ const Postmodal = (item) => {
                       variant="h6" 
                       gutterBottom
                       sx={{ mx: 1.2, my: 1 }}
+                      fontWeight={600}
+                      fontSize="1rem"
                     >
                       작품 내용
                       <Typography 
@@ -315,7 +317,7 @@ const Postmodal = (item) => {
                     >
                       판매 가격
                       <Typography variant="h7">
-                        {saleInfo.salePrice}
+                        {saleInfo.salePrice} SSF
                       </Typography>
                     </Typography>
                     <Typography 
@@ -347,6 +349,25 @@ const Postmodal = (item) => {
                   </TableRow>
                 </Table>
               </TableContainer>
+              <Typography 
+                variant="body1"
+                fontWeight={600}
+                sx={{ mx: 1.2, my: 1 }}
+              >
+                Market 유의사항
+                <Typography variant="body2" sx={{ mx: 0.1, my: 1 }}> 
+                  1. 구매는 SSAFY WALLET 내 이더리움(ETH)이 차감되는 방식으로 진행됩니다.
+                </Typography>
+                <Typography variant="body2" sx={{ mx: 0.1, my: 1 }}>
+                  2. 구매 거래가 체결되면 거래 취소가 불가하므로 신중하게 결정하여 진행해주세요.
+                </Typography>
+                <Typography variant="body2" sx={{ mx: 0.1, my: 1 }}>
+                  3. 해당 NFT에 연계된 디지털상품 관련 분쟁 (지식재산권 분쟁 포함)이 발생한 경우 해당 NFT에 대한 거래지원이 종료될 수 있습니다.
+                </Typography>
+                <Typography variant="body2" sx={{ mx: 0.1, my: 1 }}>
+                  4. 해당 NFT 판매 시에는 서명이 필요합니다.
+                </Typography>
+              </Typography>
             </Box>
           </Box>
           {loading}

@@ -337,7 +337,8 @@ const Postmodal = ({ item, userData }) => {
                       <Typography 
                         variant="h6" 
                         gutterBottom
-                        fontWeight={400}
+                        fontWeight={600}
+                        fontSize="1rem"
                         sx={{ mx: 1.2, my: 1 }}
                       >
                         작품 내용
@@ -353,6 +354,7 @@ const Postmodal = ({ item, userData }) => {
                 </TableContainer>
                 <Typography 
                   variant="body1"
+                  fontWeight={600}
                   sx={{ mx: 1.2, my: 1 }}
                 >
                   Market 유의사항
