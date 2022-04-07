@@ -47,7 +47,7 @@ height: 360px;
   width: 264px;
   height: 50px;
   border-radius: 16px;
-  background-color: #5AD2FF;
+  background-color: #7389D0;
   margin-top: 4px;
 }
 
