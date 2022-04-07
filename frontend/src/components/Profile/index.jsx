@@ -26,12 +26,12 @@ import { ReadAllNft, ReadAllSaleNft } from '../../api/nft';
 
 const Profile = (props) => {
 
-  const styles = theme => ({
-    Card: {
-      width: 300,
-      margin: 'auto'
-    },
-  });
+  // const styles = theme => ({
+  //   Card: {
+  //     width: 300,
+  //     margin: 'auto'
+  //   },
+  // });
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -147,8 +147,8 @@ const Profile = (props) => {
               { 
                 post.postIsNft === true 
               ?                 
-                <Card className="card__st">
-                  <CardMedia className="media__nft__st" key={post.postSeq}>
+                <Card className="card__st nft_pr">
+                  <CardMedia className="media__st" key={post.postSeq}>
                     <ListModal item={post}>
                     </ListModal>
                   </CardMedia>

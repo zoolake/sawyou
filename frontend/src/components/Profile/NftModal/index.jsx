@@ -251,7 +251,7 @@ const Postmodal = ({ item, userData }) => {
           <Box sx={{ width: '32%' }}>
             <Box sx={{ height: '95%' }}>
               <Box sx={{ display: 'flex', height: '7%', alignItems: 'center' }} borderBottom={1} borderColor="#e3e3e3">
-                <Box sx={{ display: 'flex', height: '50%' }}>
+                <Box sx={{ display: 'flex', height: '50%', }}>
                 {userProfile
                 ? <Avatar sx={{ width: 30, height: 30, mx: 1.2 }} alt="User" src={userProfile}/> 
                 : <Avatar sx={{ width: 30, height: 30 }} alt="User" src="/images/baseimg.jpg"/>}
@@ -263,98 +263,108 @@ const Postmodal = ({ item, userData }) => {
                   {nftDetail.nftOwnerName}
                 </Typography>
               </Box>
-              <Box sx={{ width: '100%', mx: 1.2, mt: 2 }}>
-                <Typography variant="h3" gutterBottom>
+              <Box sx={{ mx: 1 }}>
+                <Box sx={{ width: '100%', mx: 1.2, mt: 2 }}>
+                  <Typography variant="h3" gutterBottom>
+                      {nftDetail.nftTitle}
+                  </Typography>
+                </Box>
+                <Typography 
+                  variant="h6" 
+                  gutterBottom 
+                  component="div" 
+                  sx={{ mx: 1.2, mt: 1 }}
+                >
+                  NFT 정보
+                </Typography>
+                <TableContainer>
+                <Table>
+                <TableRow sx={{ border: 1, borderColor:"#e3e3e3" }}>
+                <Typography 
+                  variant="h7" 
+                  gutterBottom 
+                  display='flex' 
+                  justifyContent='space-between'
+                  alignItems='center'
+                  fontWeight={600}
+                  sx={{ mx: 1.2, my: 1 }}
+                >
+                  작가명
+                  <Typography variant="h7" fontWeight={300}>
+                    {nftDetail.nftAuthorName}
+                  </Typography>
+                </Typography>
+                <Typography 
+                  variant="h7"
+                  gutterBottom 
+                  display='flex' 
+                  justifyContent='space-between'
+                  alignItems='center'
+                  fontWeight={600}
+                  sx={{ mx: 1.2, my: 1 }}
+                >
+                  작품명
+                  <Typography variant="h7" fontWeight={300}> 
                     {nftDetail.nftTitle}
+                  </Typography>
+                </Typography>
+                <Typography 
+                  variant="h7" 
+                  gutterBottom 
+                  display='flex' 
+                  justifyContent='space-between'
+                  alignItems='center'
+                  fontWeight={600}
+                  sx={{ mx: 1.2, my: 1 }}
+                >
+                  토큰 ID
+                  <Typography variant="h7" fontWeight={300}>
+                    {nftDetail.nftTokenId}
+                  </Typography>
+                </Typography>              
+                </TableRow>
+                </Table>
+                </TableContainer>
+                <br/>
+                <TableContainer>
+                  <Table>
+                    <TableRow sx={{ border: 1, borderColor:"#e3e3e3" }}>
+                      <Typography 
+                        variant="h6" 
+                        gutterBottom
+                        fontWeight={400}
+                        sx={{ mx: 1.2, my: 1 }}
+                      >
+                        작품 내용
+                        <Typography 
+                          variant="body2"
+                          fontWeight={300}
+                        >
+                          {nftDetail.nftDesc}
+                        </Typography>
+                      </Typography>
+                    </TableRow>
+                  </Table>
+                </TableContainer>
+                <Typography 
+                  variant="body1"
+                  sx={{ mx: 1.2, my: 1 }}
+                >
+                  Market 유의사항
+                  <Typography variant="body2" sx={{ mx: 0.1, my: 1 }}> 
+                    1. 구매는 SSAFY WALLET 내 이더리움(ETH)이 차감되는 방식으로 진행됩니다.
+                  </Typography>
+                  <Typography variant="body2" sx={{ mx: 0.1, my: 1 }}>
+                    2. 구매 거래가 체결되면 거래 취소가 불가하므로 신중하게 결정하여 진행해주세요.
+                  </Typography>
+                  <Typography variant="body2" sx={{ mx: 0.1, my: 1 }}>
+                    3. 해당 NFT에 연계된 디지털상품 관련 분쟁 (지식재산권 분쟁 포함)이 발생한 경우 해당 NFT에 대한 거래지원이 종료될 수 있습니다.
+                  </Typography>
+                  <Typography variant="body2" sx={{ mx: 0.1, my: 1 }}>
+                    4. 해당 NFT 판매 시에는 서명이 필요합니다.
+                  </Typography>
                 </Typography>
               </Box>
-              <Typography 
-                variant="h6" 
-                gutterBottom 
-                component="div" 
-                sx={{ mx: 1.2, mt: 1 }}
-              >
-                NFT 정보
-              </Typography>
-              <TableContainer>
-              <Table>
-              <TableRow sx={{ border: 1, borderColor:"#e3e3e3" }}>
-              <Typography 
-                variant="h7" 
-                gutterBottom 
-                display='flex' 
-                justifyContent='space-between'
-                alignItems='center'
-                sx={{ mx: 1.2, my: 1 }}
-              >
-                작가명
-                <Typography variant="h7">
-                  {nftDetail.nftAuthorName}
-                </Typography>
-              </Typography>
-              <Typography 
-                variant="h7"
-                gutterBottom 
-                display='flex' 
-                justifyContent='space-between'
-                alignItems='center'
-                sx={{ mx: 1.2, my: 1 }}
-              >
-                작품명
-                <Typography variant="h7"> 
-                  {nftDetail.nftTitle}
-                </Typography>
-              </Typography>
-              <Typography 
-                variant="h7" 
-                gutterBottom 
-                display='flex' 
-                justifyContent='space-between'
-                alignItems='center'
-                sx={{ mx: 1.2, my: 1 }}
-              >
-                토큰 ID
-                <Typography variant="h7">
-                  {nftDetail.nftTokenId}
-                </Typography>
-              </Typography>              
-              </TableRow>
-              </Table>
-              </TableContainer>
-              <br/>
-              <TableContainer>
-                <Table>
-                  <TableRow sx={{ border: 1, borderColor:"#e3e3e3" }}>
-                    <Typography 
-                      variant="h6" 
-                      gutterBottom
-                      sx={{ mx: 1.2, my: 1 }}
-                    >
-                      작품 내용
-                      <Typography 
-                        variant="body2"
-                      >
-                        {nftDetail.nftDesc}
-                      </Typography>
-                    </Typography>
-                  </TableRow>
-                </Table>
-              </TableContainer>
-              <Typography 
-                variant="body1"
-                sx={{ mx: 1.2, my: 1 }}
-              >
-                Market 유의사항
-                <Typography variant="body2" sx={{ mx: 0.1, my: 1 }}> 
-                  1. 구매는 SSAFY WALLET 내 이더리움(ETH)이 차감되는 방식으로 진행됩니다.
-                </Typography>
-                <Typography variant="body2" sx={{ mx: 0.1, my: 1 }}>
-                  2. 구매 거래가 체결되면 거래 취소가 불가하므로 신중하게 결정하여 진행해주세요.
-                </Typography>
-                <Typography variant="body2" sx={{ mx: 0.1, my: 1 }}>
-                  3. 해당 NFT에 연계된 디지털상품 관련 분쟁 (지식재산권 분쟁 포함)이 발생한 경우 해당 NFT에 대한 거래지원이 종료될 수 있습니다.
-                </Typography>
-              </Typography>
             </Box>
             {
               // 판매자라면 보이게 끔 (로그인한 아이디와 현재 보는 프로필의 주인과 같다면)

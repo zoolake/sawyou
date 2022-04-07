@@ -203,8 +203,8 @@ const Wrapper = styled.div`
     height: 300px;
   }
 
-  .media__nft__st {
-    background-color: #7837d4;
+  .nft_pr {
+    border: 3px solid #b59cd9;
   }
 
 `;
