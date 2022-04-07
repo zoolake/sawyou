@@ -276,6 +276,8 @@ const Postmodal = ({ item }) => {
         text: '민팅에 성공하였습니다. ✨',
         icon: 'success',
         confirmButtonText: '확인'
+      }).then((result) => {
+        window.location.reload()
       })
 
     }
@@ -291,7 +293,6 @@ const Postmodal = ({ item }) => {
 
     finally {
       setIsMintingLoaded(true);
-      window.location.reload()
     }
 
   };
