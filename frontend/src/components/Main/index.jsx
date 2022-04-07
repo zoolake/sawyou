@@ -28,6 +28,28 @@ const Main = (props) => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [post, setPost] = useState(props.data.postWritingTime);
 
+  const displayedAt = (createdAt) => {
+    var d = new Date(createdAt);
+    const milliSeconds = new Date() - d - 32400000
+    console.log(createdAt)
+    console.log(new Date())
+    console.log(milliSeconds)
+    const seconds = milliSeconds / 1000
+    if (seconds < 60) return `방금 전`
+    const minutes = seconds / 60
+    if (minutes < 60) return `${Math.floor(minutes)}분 전`
+    const hours = minutes / 60
+    if (hours < 24) return `${Math.floor(hours)}시간 전`
+    const days = hours / 24
+    if (days < 7) return `${Math.floor(days)}일 전`
+    const weeks = days / 7
+    if (weeks < 5) return `${Math.floor(weeks)}주 전`
+    const months = days / 30
+    if (months < 12) return `${Math.floor(months)}개월 전`
+    const years = days / 365
+    return `${Math.floor(years)}년 전`
+  }
+
   const handelLike = (e) => {
     sendLike()
     if (like === true) {
@@ -142,7 +164,7 @@ const Main = (props) => {
                 {props.data.postContent}
               </h4>
             </div>
-            <Moment toNow>{props.data.postWritingTime}</Moment>
+            <Typography variant='caption'>{displayedAt(props.data.postWritingTime)} 작성</Typography>
             <div className="post__commentCnt">댓글 {commentCnt}개</div>            
             <div className="post_comment">
               {dataComment && dataComment.map((data) => 
