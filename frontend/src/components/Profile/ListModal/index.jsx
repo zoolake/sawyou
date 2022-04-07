@@ -300,6 +300,7 @@ const Postmodal = ({ item }) => {
 
     finally {
       setIsMintingLoaded(true);
+      window.location.reload()
     }
 
   };
