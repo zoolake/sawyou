@@ -3,7 +3,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Wrapper from '../styles';
+import Wrapper from './styles';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -12,6 +12,8 @@ import {WritePost} from "../../../api/post"
 import { User } from '../../../States/User';
 import { UserImage } from '../../../States/UserImage';
 import { useRecoilValue } from 'recoil';
+import { borderBottom } from '@mui/system';
+
 
 const style = {
   position: 'absolute',
@@ -21,10 +23,6 @@ const style = {
   width: '45%',
   height: '65%',
   bgcolor: 'background.paper',
-  border: '2px solid #000',
-  borderRadius : 6,
-  boxShadow: 24,
-  p: 1,
 };
 
 const image2 = {
@@ -71,27 +69,22 @@ const Postmodal = (props) => {
 
 
   const newpost = (
-    <Box sx={style}
-    component="form"
-    >
-        <Box
-          sx = {{height:'5%', display: 'flex', justifyContent:'space-between'}}
-        >
-        <Button
-          onClick={handleClose}
-          sx={{ color : 'black' }}>
-        <ArrowBackIcon ></ArrowBackIcon>
-        </Button>
-        <Typography sx={{ my:'auto'}}>
-          새 게시물 만들기
-        </Typography>
-        <Button onClick={handlePost}>
-          공유하기
-        </Button>
-      </Box>
+    <Wrapper>
+      <Box sx={style} component="form">
+        <Box sx = {{height:'5%', display: 'flex', justifyContent:'space-between', borderBottom: '1px solid #d9d9d9'}}>
+          <Button onClick={handleClose} sx={{ color : 'black' }}>
+            <ArrowBackIcon ></ArrowBackIcon>
+          </Button>
+          <Typography sx={{ my:'auto'}}>
+            새 게시물 만들기
+          </Typography>
+          <Button onClick={handlePost}>
+            공유하기
+          </Button>
+        </Box>
 
       <Box sx={{ display: 'flex',height:'95%'}}>
-        <Box sx = {{width:'70%',display: 'flex', justifyContent:'center', alignItems:'center'}}>
+        <Box sx = {{width: '70%', display: 'flex', justifyContent:'center', alignItems:'center', borderRight: '1px solid #d9d9d9'}}>
 
         {(imageUrl && selectedImage) ? (
           <Box sx={{width:'100%',height:'100%'}}>
@@ -105,8 +98,8 @@ const Postmodal = (props) => {
               style={{ display: 'none' }}
               onChange={e => setSelectedImage(e.target.files[0])}
               />
-            <label htmlFor="select-image">
-              <Button sx={{my:'auto',width:150,height:30}} variant="contained" component="span" color="primary">
+            <label htmlFor="select-image" >
+              <Button sx={{ my: 'auto', width: 150, height:30 }} variant="contained" component="span" className="btn_color">
                 <Typography variant="h7">
                   컴퓨터에서 선택
                 </Typography>
@@ -114,19 +107,21 @@ const Postmodal = (props) => {
             </label>
             </Box> }
         </Box>
-        <Box sx = {{mx: 1,width:'28%', justifyContent:'space-between'}}>
-          <Box sx={{ display: 'flex'}}>
+        <Box sx={{ mx: 2, mt: 2, width:'28%', justifyContent:'space-between' }}>
+          <Box sx={{ display: 'flex' }}>
           {userImage && (userImage ?<Avatar style={image2} src={userImage} /> : <img style={image2} src="/images/baseimg.png" />)}
             <Typography sx={{ml:2,mt:0.2}}>{user}</Typography>
           </Box>
           <InputBase
+            sx={{ mt: 2 }}
             placeholder="내용 입력"
             onChange={onChangeContent}
             multiline
           />
         </Box>
         </Box>
-    </Box>
+      </Box>
+    </Wrapper>
   );
 
 
