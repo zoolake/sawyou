@@ -98,6 +98,15 @@ const Wrapper = styled.div`
     margin: 6px auto;
     font-weight: 500;
     font-size: 14px;
+    color: #777777;
+  }
+
+  .post__commentCnt2 {
+    margin: 6px auto;
+    font-weight: 500;
+    font-size: 14px;
+    color: #777777;
+    cursor: pointer;
   }
 
   .post_comment {
