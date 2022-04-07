@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  width: 600px;
+  width: 602px;
   height: auto;
 
   .post {
