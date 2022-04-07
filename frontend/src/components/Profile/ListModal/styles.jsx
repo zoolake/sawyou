@@ -22,6 +22,7 @@ const Wrapper = styled.div`
     align-items: center;
     font-size: 14px;
     margin: 0.5% 2%;
+    word-break: break-word;
   }
 
   .post_like {
