@@ -27,13 +27,20 @@ const Main = (props) => {
   const [count, setCount] = useState(1);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [post, setPost] = useState(props.data.postWritingTime);
+  const [checkComment, setCheckComment] = useState(false);
+
+  const handleCheck = () => {
+    if (checkComment){
+      setCheckComment(false)
+    }
+    else{
+      setCheckComment(true)
+    }
+  }
 
   const displayedAt = (createdAt) => {
     var d = new Date(createdAt);
     const milliSeconds = new Date() - d - 32400000
-    console.log(createdAt)
-    console.log(new Date())
-    console.log(milliSeconds)
     const seconds = milliSeconds / 1000
     if (seconds < 60) return `방금 전`
     const minutes = seconds / 60
@@ -173,9 +180,20 @@ const Main = (props) => {
               </h4>
             </div>
             <Typography variant='caption' color='#777777'>{displayedAt(props.data.postWritingTime)} 작성</Typography>
-            <div className="post__commentCnt">댓글 {commentCnt}개</div>            
+            { commentCnt < 4
+                ? <div className="post__commentCnt" onClick={handleCheck}>댓글 {commentCnt}개</div> 
+                : (checkComment 
+                  ?  <div className="post__commentCnt2" onClick={handleCheck}>댓글 숨기기</div>
+                  :  <div className="post__commentCnt2" onClick={handleCheck}>댓글 {commentCnt}개 모두 보기</div>
+                  )
+                        }
             <div className="post_comment">
-              {dataComment && dataComment.map((data) => 
+            {
+              !dataComment
+              ? null
+              : ( commentCnt < 4
+                ? 
+                dataComment.map((data) => 
                 <h4 className="post_user_comment">
                   <strong className="cur1" onClick={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
                     {data.userId}
@@ -183,7 +201,28 @@ const Main = (props) => {
                   <span>&nbsp;</span>
                   {data.commentContent}
                 </h4>
-              )}
+              ) 
+                  : ( checkComment
+                    ? dataComment.map((data) => 
+                      <h4 className="post_user_comment">
+                        <strong className="cur1" onClick={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
+                          {data.userId}
+                        </strong>
+                        <span>&nbsp;</span>
+                        {data.commentContent}
+                      </h4>
+                    ) 
+                      : dataComment.slice(0,3).map((data) => 
+                      <h4 className="post_user_comment">
+                        <strong className="cur1" onClick={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
+                          {data.userId}
+                        </strong>
+                        <span>&nbsp;</span>
+                        {data.commentContent}
+                      </h4> )
+                  ) 
+              )
+              }
             </div>
           </div>
         </div>
