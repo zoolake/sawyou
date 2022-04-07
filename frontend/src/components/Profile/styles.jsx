@@ -211,6 +211,10 @@ const Wrapper = styled.div`
     box-shadow: 5px 5px 3px 1px #d9d9d9;
   }
 
+  .btn_color {
+    background-color: #7389D0;
+  }
+
 `;
 
 export default Wrapper;
