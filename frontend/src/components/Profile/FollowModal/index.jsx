@@ -4,11 +4,7 @@ import Box from '@mui/material/Box';
 import { useParams } from 'react-router';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Wrapper from '../styles';
-import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import Typography from '@mui/material/Typography';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import InputBase from "@mui/material/InputBase";
 import {ReadFollowingUser} from "../../../api/user"
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate  } from 'react-router-dom';
@@ -21,13 +17,9 @@ const style = {
   width: '400px',
   height: '400px',
   bgcolor: 'background.paper',
-  border: '2px solid #000',
-  borderRadius : 6,
-  boxShadow: 24,
-  p: 1,
   display: 'flex',
   flexDirection: 'column',
-  overflow: 'auto',
+  overflow: 'auto'
 };
 
 const image2 = {
@@ -62,28 +54,23 @@ const Postmodal = (props) => {
 
 
   const newpost = (
-    <Box sx={style}
-    component="form"
-    >
-        <Box
-          sx = {{height:'5%', display: 'flex', justifyContent:'space-between'}}
-        >
-        <Box
-          sx={{ color : 'black' }}>
-        </Box>
-        <Typography sx={{ my:'auto'}}>
+    <Box sx={style} component="form">
+        <Box sx = {{height:'8%', display: 'flex', justifyContent:'space-between'}}>
+        <Box sx={{ color : 'black' }}></Box>
+        <Typography sx={{ mt: 0.8, ml: 2 }}>
           팔로잉
         </Typography>
         <Button onClick={handleClose}
-          sx={{ color : 'black' ,minWidth:'30px'}}
-          style={{padding: '0px'}}>
+          sx={{ color : 'black', minWidth: '30px' }}
+          style={{ padding: '0px' }}
+        >
           <CloseIcon></CloseIcon>
         </Button>
       </Box>
       {follower && follower.map((item) =>
         <Button style={{textTransform: 'lowercase'}} sx={{justifyContent:'left'}} onClick={onClickRedirectPathHandler(`/profile/${item.userId}`)}>
           { item.userProfile ? <Avatar style={image2} src={item.userProfile} /> : <img style={image2} src="/images/baseimg_nav.jpg" />}
-        <Box sx={{ml:2}}><Typography>{item.userId} ({item.userName})</Typography></Box>
+        <Box sx={{ mt: 0.8, ml: 1 }}><Typography>{item.userId} ({item.userName})</Typography></Box>
       </Button>)
       }
 
