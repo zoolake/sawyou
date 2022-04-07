@@ -236,116 +236,118 @@ const Postmodal = (item) => {
                 {saleInfo.sellerName}
               </Typography>
             </Box>
-            <Box sx={{ width: '100%', mx: 1.2, mt: 2 }}>
-              <Typography variant="h3" gutterBottom>
-                  {saleInfo.nftTitle}
+            <Box sx={{ mx: 1}}>
+              <Box sx={{ width: '100%', mx: 1.2, mt: 2 }}>
+                <Typography variant="h3" gutterBottom>
+                    {saleInfo.nftTitle}
+                </Typography>
+              </Box>
+              <Typography 
+                variant="h6" 
+                gutterBottom 
+                component="div" 
+                sx={{ mx: 1.2, mt: 1 }}
+              >
+                판매 정보
               </Typography>
-            </Box>
-            <Typography 
-              variant="h6" 
-              gutterBottom 
-              component="div" 
-              sx={{ mx: 1.2, mt: 1 }}
-            >
-              판매 정보
-            </Typography>
-            <TableContainer>
-              <Table>
-                <TableRow sx={{ border: 1, borderColor:"#e3e3e3" }}>
-                  <Typography 
-                    variant="h7" 
-                    gutterBottom 
-                    display='flex' 
-                    justifyContent='space-between'
-                    alignItems='center'
-                    sx={{ mx: 1.2, my: 1 }}
-                  >
-                    작가명
-                    <Typography variant="h7">
-                      {saleInfo.nftAuthorName}
-                    </Typography>
-                  </Typography>
-                  <Typography 
-                    variant="h7"
-                    gutterBottom 
-                    display='flex' 
-                    justifyContent='space-between'
-                    alignItems='center'
-                    sx={{ mx: 1.2, my: 1 }}
-                  >
-                    작품명
-                    <Typography variant="h7"> 
-                      {saleInfo.nftTitle}
-                    </Typography>
-                  </Typography>
-                </TableRow>
-              </Table>
-            </TableContainer>
-            <br/>
-            <TableContainer>
-              <Table>
-                <TableRow sx={{ border: 1, borderColor:"#e3e3e3" }}>
-                  <Typography 
-                    variant="h6" 
-                    gutterBottom
-                    sx={{ mx: 1.2, my: 1 }}
-                  >
-                    작품 내용
+              <TableContainer>
+                <Table>
+                  <TableRow sx={{ border: 1, borderColor:"#e3e3e3" }}>
                     <Typography 
-                      variant="body2"
+                      variant="h7" 
+                      gutterBottom 
+                      display='flex' 
+                      justifyContent='space-between'
+                      alignItems='center'
+                      sx={{ mx: 1.2, my: 1 }}
                     >
-                      {saleInfo.nftDesc}
+                      작가명
+                      <Typography variant="h7">
+                        {saleInfo.nftAuthorName}
+                      </Typography>
                     </Typography>
-                  </Typography>
-                </TableRow>
-              </Table>
-            </TableContainer>
-            <br/>
-            <TableContainer>
-              <Table>
-                <TableRow sx={{ border: 1, borderColor:"#e3e3e3" }}>
-                  <Typography 
-                    variant="h7" 
-                    gutterBottom 
-                    display='flex' 
-                    justifyContent='space-between'
-                    alignItems='center'
-                    sx={{ mx: 1.2, my: 1 }}
-                  >
-                    판매 가격
-                    <Typography variant="h7">
-                      {saleInfo.salePrice}
+                    <Typography 
+                      variant="h7"
+                      gutterBottom 
+                      display='flex' 
+                      justifyContent='space-between'
+                      alignItems='center'
+                      sx={{ mx: 1.2, my: 1 }}
+                    >
+                      작품명
+                      <Typography variant="h7"> 
+                        {saleInfo.nftTitle}
+                      </Typography>
                     </Typography>
-                  </Typography>
-                  <Typography 
-                    variant="h7" 
-                    gutterBottom 
-                    display='flex' 
-                    justifyContent='space-between'
-                    alignItems='center'
-                    sx={{ mx: 1.2, my: 1 }}
-                  >
-                    판매 시작
-                    <Typography variant="h7">
-                      {saleInfo.startDate}
+                  </TableRow>
+                </Table>
+              </TableContainer>
+              <br/>
+              <TableContainer>
+                <Table>
+                  <TableRow sx={{ border: 1, borderColor:"#e3e3e3" }}>
+                    <Typography 
+                      variant="h6" 
+                      gutterBottom
+                      sx={{ mx: 1.2, my: 1 }}
+                    >
+                      작품 내용
+                      <Typography 
+                        variant="body2"
+                      >
+                        {saleInfo.nftDesc}
+                      </Typography>
                     </Typography>
-                  </Typography>  
-                  <Typography 
-                    variant="h7" 
-                    gutterBottom 
-                    display='flex' 
-                    justifyContent='space-between'
-                    alignItems='center'
-                    sx={{ mx: 1.2, my: 1 }}
-                  >
-                    판매 종료
-                    <Typography variant="h7">
-                      {saleInfo.endDate}
+                  </TableRow>
+                </Table>
+              </TableContainer>
+              <br/>
+              <TableContainer>
+                <Table>
+                  <TableRow sx={{ border: 1, borderColor:"#e3e3e3" }}>
+                    <Typography 
+                      variant="h7" 
+                      gutterBottom 
+                      display='flex' 
+                      justifyContent='space-between'
+                      alignItems='center'
+                      sx={{ mx: 1.2, my: 1 }}
+                    >
+                      판매 가격
+                      <Typography variant="h7">
+                        {saleInfo.salePrice}
+                      </Typography>
                     </Typography>
-                  </Typography>                
-                </TableRow>
-              </Table>
-            </TableContainer>
+                    <Typography 
+                      variant="h7" 
+                      gutterBottom 
+                      display='flex' 
+                      justifyContent='space-between'
+                      alignItems='center'
+                      sx={{ mx: 1.2, my: 1 }}
+                    >
+                      판매 시작
+                      <Typography variant="h7">
+                        {saleInfo.startDate}
+                      </Typography>
+                    </Typography>  
+                    <Typography 
+                      variant="h7" 
+                      gutterBottom 
+                      display='flex' 
+                      justifyContent='space-between'
+                      alignItems='center'
+                      sx={{ mx: 1.2, my: 1 }}
+                    >
+                      판매 종료
+                      <Typography variant="h7">
+                        {saleInfo.endDate}
+                      </Typography>
+                    </Typography>                
+                  </TableRow>
+                </Table>
+              </TableContainer>
+            </Box>
           </Box>
           {loading}
         </Box>
