@@ -419,7 +419,7 @@ const Postmodal = ({ item }) => {
                     {post && post.postContent.split(/(#[^\s]+)/g).map((v) => {
                     if (v.match(/#[^\s]+/)) {
                       return (
-                        <a href={"/search/tags/" + v.slice(1)}>{v}</a>
+                        <a href={"/search/tags/" + v.slice(1)} className="post_hashtag">{v}</a>
                       );
                     }
                     return v;
