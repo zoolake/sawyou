@@ -48,6 +48,7 @@ const Profile = (props) => {
   const [userData, setUserData] = useState('');
   const [myProfile, setMyProfile] = useState('');
   const [followCheck, setFollowCheck] = useState('');
+  const [followercnt, setFollowercnt] = useState('');
 
   // 내 게시글 조회
   const getPosts = async () => {
@@ -58,14 +59,17 @@ const Profile = (props) => {
     const res = await Profile2(params)
     setUserData(res.data.data)
     setFollowCheck(res.data.data.following)
+    setFollowercnt(res.data.data.followerCnt)
   };
 
   const changeFollow = () => {
     if (followCheck === true){
       setFollowCheck(false)
+      setFollowercnt(followercnt => followercnt - 1)
     } 
     else{
       setFollowCheck(true)
+      setFollowercnt(followercnt => followercnt + 1)
     }
   }
 
@@ -252,7 +256,7 @@ const Profile = (props) => {
                   }}>
                   <Typography>게시글 {userData.postCnt}</Typography>
                 </Button>
-                  <FollowerModal item={userData}></FollowerModal>
+                  <FollowerModal item={userData} cnt={followercnt}></FollowerModal>
                 <li class="af_outer">
                   <FollowModal item={userData}></FollowModal>
                 </li>
