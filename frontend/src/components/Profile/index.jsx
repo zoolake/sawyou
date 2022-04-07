@@ -16,7 +16,6 @@ import FollowModal from './FollowModal/index'
 import ImageModal from './ImageModal/index'
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
-
 import { UserPost } from '../../api/list';
 import { FollowingUser, Profile as Profile2 } from '../../api/user';
 import { User } from '../../States/User';
@@ -25,13 +24,6 @@ import { ReadAllNft, ReadAllSaleNft } from '../../api/nft';
 
 
 const Profile = (props) => {
-
-  // const styles = theme => ({
-  //   Card: {
-  //     width: 300,
-  //     margin: 'auto'
-  //   },
-  // });
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -154,7 +146,7 @@ const Profile = (props) => {
                   </CardMedia>
                 </Card>
               :
-                <Card className="card__st">
+                <Card className="card__st no_pr">
                   <CardMedia className="media__st" key={post.postSeq}>
                     <ListModal item={post}>
                     </ListModal>

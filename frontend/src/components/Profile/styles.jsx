@@ -204,7 +204,11 @@ const Wrapper = styled.div`
   }
 
   .nft_pr {
-    border: 3px solid #b59cd9;
+    border: 2px solid #7389D0;
+  }
+
+  .no_pr {
+    box-shadow: 5px 5px 3px 1px #d9d9d9;
   }
 
 `;
