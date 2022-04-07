@@ -88,9 +88,9 @@ const Product = () => {
         "nftOwnerAddress": wallet
       });
       Swal.fire({
-        title: ' Error ',
+        title: ' Success ',
         text: '구매에 성공하였습니다. ✨',
-        icon: 'error',
+        icon: 'success',
         confirmButtonText: '확인',
       })
       setIsSuccess(true);
@@ -138,24 +138,24 @@ const Product = () => {
               <div className="detailPage__info" style={{ fontWeight: 500, fontSize: "2rem", marginBottom: "20px" }}>NFT 정보</div>
               <hr style={{ fontWeight: 200, fontSize: "2px" }}></hr>
               <dl className="detailPage__info1 info">
-                <dt style={{fontWeight: 600}}>소유자</dt>
+                <dt style={{ fontWeight: 600 }}>소유자</dt>
                 <dd>
                   {saleInfo.sellerName}
                 </dd>
               </dl>
               <dl className="detailPage__info1 info">
-                <dt style={{fontWeight: 600}}>컨트랙트 주소</dt>
-                <dd className="detailPage__contract">{saleInfo&&saleInfo.saleContractAddress.slice(0,4)}...{saleInfo&&saleInfo.saleContractAddress.slice(-4)}</dd>
+                <dt style={{ fontWeight: 600 }}>컨트랙트 주소</dt>
+                <dd className="detailPage__contract">{saleInfo && saleInfo.saleContractAddress.slice(0, 4)}...{saleInfo && saleInfo.saleContractAddress.slice(-4)}</dd>
               </dl>
               <dl className="detailPage__info1 info">
-                <dt style={{fontWeight: 600}}>토큰 ID</dt>
+                <dt style={{ fontWeight: 600 }}>토큰 ID</dt>
                 <dd>{saleInfo.nftTokenId}</dd>
               </dl>
-              <div style={{fontWeight: 600}}>
+              <div style={{ fontWeight: 600 }}>
                 작품 설명
                 <br />
                 <br />
-                <div style={{fontWeight: 400}}>
+                <div style={{ fontWeight: 400 }}>
                   {saleInfo.nftDesc}
                 </div>
               </div>
@@ -191,7 +191,7 @@ const Product = () => {
                       color="warning"
                     >
                       지갑 연동 후 이용이 가능합니다.
-                    </Button>:
+                    </Button> :
                     isPurchaseLoaded ?
                       <Box sx={{ textAlign: 'center', pt: 7 }}><CircularProgress /></Box> : isSuccess ?
                         <Button
@@ -212,12 +212,12 @@ const Product = () => {
                 }
                 {
                   wallet === null ?
-                  " ":
-                  !isPurchaseLoaded &&
-                  <Button variant="contained"
-                    className="detailPage__button"
-                    onClick={getBalance} >잔액조회
-                  </Button>
+                    " " :
+                    !isPurchaseLoaded &&
+                    <Button variant="contained"
+                      className="detailPage__button"
+                      onClick={getBalance} >잔액조회
+                    </Button>
                 }
               </Box>
             </div>
