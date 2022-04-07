@@ -19,6 +19,8 @@ const Profileedit = () => {
   const [confirmPasswordWarning, SetConfirmPasswordWarning] = useState(false);
   const [idWaring, setIdWaring] = useState(false);
   const navigate = useNavigate();
+  const [userImage, setUserImage] = useState();
+  
 
   const onClickRedirectPathHandler = (name) => {
     navigate(`/profile/${name}`);
@@ -30,6 +32,7 @@ const Profileedit = () => {
     setName(curUser.data.data.userName);
     setId(curUser.data.data.userId);
     setIntro(curUser.data.data.userDesc);
+    setUserImage(curUser.data.data.userProfile);
 
   }
 
@@ -118,8 +121,8 @@ const Profileedit = () => {
       <Box component="form" onSubmit={onSubmit}>
 
         <div className="logo">
-          <img className="logo" src="/images/baseimg_nav.jpg" />  
-          사용자 이름
+          <img className="logo2" src={userImage} />  
+          {user}
         </div>
         <div className="c1">
         <div className='text'><a>이름</a></div>
