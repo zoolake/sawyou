@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+        springboot:
+                container_name: springboot
+                build:
+                        context: /opt/S06P22A401/backend
+                ports:
+                        - "8080:8080"
+                volumes:
+                        - /opt/springboot/upload:/opt/upload
+        react:
+                container_name: react
+                build:
+                        context: /opt/S06P22A401/frontend
+                ports:
+                        - "3000:3000"
+        nginx:
+                image: nginx
+                container_name: nginx
+                volumes:
+                        - /opt/nginx/conf.d:/etc/nginx/conf.d
+                        - /opt/certbot/conf:/etc/letsencrypt
+                        - /opt/certbot/www:/var/www/certbot
+                ports:
+                        - "80:80"
+                        - "443:443"
+        certbot:
+                image: certbot/certbot
+                container_name: certbot
+                volumes:
+                         - /opt/certbot/conf:/etc/letsencrypt
+                         - /opt/certbot/www:/var/www/certbot
