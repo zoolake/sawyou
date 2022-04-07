@@ -408,7 +408,7 @@ const Postmodal = ({ item }) => {
             </Box>
             <Box sx={{ height: '81%' }} style={searchStyle}>
               <Box sx={{display: 'flex', alignItems: 'baseline'}}>
-                <h4 className="post_text" onClick={onClickRedirectPathHandler(`/profile/${item.userId}`)}>
+                <h4 className="post_text" onClick={onClickRedirectPathHandler(`/profile/${item.userId}`)}></h4>
                   <strong className="cur1">
                     {item.userId}
                   </strong>
@@ -421,7 +421,6 @@ const Postmodal = ({ item }) => {
                     }
                     return v;
                   })}
-                </h4>
               </Box>
               { comment && comment.map((data) => 
                 <Box sx={{display: 'flex', alignItems: 'baseline'}}>
