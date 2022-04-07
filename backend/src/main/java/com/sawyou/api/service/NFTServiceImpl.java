@@ -167,6 +167,7 @@ public class NFTServiceImpl implements NFTService {
         sale.setIsSold(true);
         nft.setNftOwnerAddress(owner);
         nft.setUser(user);
+        nft.setNftForSale(false);
         sale.setNft(nft);
         return sale;
     }
