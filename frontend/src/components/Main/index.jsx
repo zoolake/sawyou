@@ -7,10 +7,10 @@ import Typography from '@mui/material/Typography';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {LikePost, WriteComment, ReadCommnet} from '../../api/post'
 import InputBase from "@mui/material/InputBase";
-import TextField from "@mui/material/TextField";
 import { useRecoilState } from 'recoil';
 import { User } from '../../States/User';
 import { useNavigate } from 'react-router-dom';
+import Moment from 'react-moment';
 
 
 const Main = (props) => { 
@@ -26,6 +26,7 @@ const Main = (props) => {
   const [dataComment, setDataComment] = useState('');
   const [count, setCount] = useState(1);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [post, setPost] = useState(props.data.postWritingTime);
 
   const handelLike = (e) => {
     sendLike()
@@ -40,10 +41,11 @@ const Main = (props) => {
   }
 
   const handleKeypress = e => {
-  if (e.key === 'Enter') {
-    onSubmit(e);
-  }
-};
+    if (e.key === 'Enter') {
+      onSubmit(e);
+    }
+  };
+
 
   const sendLike = async() => {
     const res = await LikePost(props.data.postSeq)
@@ -54,15 +56,6 @@ const Main = (props) => {
     setDataComment(res.data.data)
   }
 
-  // const handleKeyPress = event => {
-  //   if (event.key === 'Enter' && event.target.value !== '') {
-  //     event.preventDefault();
-  //     const repoArray = [...comment];
-  //     repoArray.push({});
-  //     setComment(repoArray);
-  //     event.target.value = '';
-  //   }
-  // }
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
@@ -103,6 +96,8 @@ const Main = (props) => {
   useEffect(() => {
     getComment()
   }, [count]);
+
+
 
   return (
     <Wrapper>
@@ -147,6 +142,7 @@ const Main = (props) => {
                 {props.data.postContent}
               </h4>
             </div>
+            <Moment toNow>{props.data.postWritingTime}</Moment>
             <div className="post__commentCnt">댓글 {commentCnt}개</div>            
             <div className="post_comment">
               {dataComment && dataComment.map((data) => 
