@@ -234,8 +234,15 @@ const Profile = (props) => {
                 <h2 class="profile_name">{params}</h2>
                 <div class="profile_edit edit_outer">
                   <div class="profile_edit edit_inner">
-                    {myProfile === true ?  <a class="profile_edit_btn" href="/profileedit" tabIndex="0">프로필 편집</a>
-                    :  followCheck===true ? <Button variant="contained" onClick={handleFollow}>팔로잉 해제</Button> : <Button variant="contained" onClick={handleFollow}>팔로잉</Button>}
+                    {myProfile === true 
+                    ?  
+                      <a class="profile_edit_btn" href="/profileedit" tabIndex="0">프로필 편집</a>
+                    :  
+                      followCheck===true 
+                      ? 
+                        <Button variant="contained" onClick={handleFollow} className="btn_color">팔로잉 해제</Button> 
+                      : 
+                        <Button variant="contained" onClick={handleFollow} className="btn_color">팔로잉</Button>}
                   </div>
                 </div>
               </div>
