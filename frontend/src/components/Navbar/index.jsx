@@ -99,7 +99,6 @@ const UserHeader = (props) => {
   const connectWallet = async () => {
     // 메타마스크 지갑과 연결된 계정 정보를 받는 JSON-RPC Call API
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-    console.log(accounts[0]);
     setWallet(accounts[0]);
   };
 
@@ -136,16 +135,15 @@ const UserHeader = (props) => {
   }
 
 
-  // const handelOnBox = () => {
-  //   if (onBox === 'True'){
-  //     setOnBox('False');
-  //   }
-  //   else{
-  //     setOnBox('True');
-  //   }
-  // }
+
   const handelOnBox = () => {
-    setOnBox('True');
+    if (search){
+      setOnBox(true);
+    }
+    else{
+      return
+    }
+    
   }
   const handelOffBox = (e) => {
     setOnBox('false');
@@ -182,6 +180,13 @@ const UserHeader = (props) => {
   const handleInputSearch = (e) => {
     setSearch(e.target.value)
 
+    if (e.target.value){
+      setOnBox(true)
+    }
+    else{
+      setOnBox(false)
+    }
+
     if (category === '계정') {
       searchAccount(e.target.value)
     }
@@ -200,7 +205,6 @@ const UserHeader = (props) => {
       setResult('')
     }
     // setResult(res.data.data)
-    console.log(result)
   }
 
   const searchHashTag = async (data) => {
@@ -354,16 +358,16 @@ const UserHeader = (props) => {
           </Box>
         </Container>
       </AppBar>
-      {onBox === 'True' && <Box sx={searchStyle} style={{ zIndex: 2000 }} onBlur={handelOnBox}>
+      {onBox === true && <Box sx={searchStyle} style={{ zIndex: 2000 }} onBlur={handelOnBox}>
         {result && category === '계정' ? result.map((data) => (
-          <Button style={{textTransform: 'lowercase'}} key={data.userId} sx={{ justifyContent: 'left' }} onMouseDown={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
+          <Button style={{textTransform: 'lowercase'}} key={data.userId} sx={{ justifyContent: 'left' }} onMouseDown={onClickRedirectPathHandler2(`/profile/${data.userId}`)}>
             {data.userProfile ? <Avatar sx={{ width: 30, height: 30 }} src={data.userProfile} /> : <img class="img2" src="/images/baseimg_nav.jpg" />}
             {/* <Box sx={{ ml: 2 }}><Typography>{data.userId}</Typography></Box> */}
             <Box sx={{ ml: 2 }}><Typography>{data.userId} ({data.userName})</Typography></Box>
           </Button>
         )) : null}
         {result && category === '해시태그' ? result.map((data) => (
-          <Button style={{textTransform: 'lowercase'}} key={data.hashtagName} sx={{justifyContent:'left'}} onMouseDown={onClickRedirectPathHandler(`/search/tags/${data.hashtagName}`)}>
+          <Button style={{textTransform: 'lowercase'}} key={data.hashtagName} sx={{justifyContent:'left'}} onMouseDown={onClickRedirectPathHandler2(`/search/tags/${data.hashtagName}`)}>
             <img class="img2" src="/images/baseimg_hash.PNG" />
             <Box sx={{ ml: 2 }}><Typography>{data.hashtagName}</Typography></Box>
           </Button>
