@@ -14,7 +14,7 @@ const Wrapper = styled.div`
     font-weight: 500;
     font-size: 14px;
     line-height: 18px;
-    margin: 2% 2%;
+    margin: 3% 1%;
   }
 
   .post_article_comment {
@@ -40,12 +40,14 @@ const Wrapper = styled.div`
   }
   
   .commentWrap {
-    border: 1px solid lightgrey;
+    border-top: 1px solid lightgrey;
     display: flex;
     justify-content: space-between;
   }
+  
   .cur1 {
     cursor: pointer;
+    margin-left: 0;
   }
 
 

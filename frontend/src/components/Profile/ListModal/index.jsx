@@ -28,11 +28,7 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: '65%',
   height: '90%',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  borderRadius: 6,
-  boxShadow: 24,
-  p: 1,
+  bgcolor: 'background.paper'
 };
 
 const style2 = {
@@ -361,50 +357,54 @@ const Postmodal = ({ item }) => {
   const viewMyPost = (
     
     <Wrapper>
-      <Box sx={style}
-        component="form"
-      >
-        <Box className="box_header" sx={{ display: 'flex', height: '100%' }}>
-          <Box sx={{ width: '68.3%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Box sx={style} component="form">
+        <Box className="box_header" sx={{ display: 'flex', height: '100%', justifyContent: 'space-between' }}>
+          <Box sx={{ width: '68%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Box sx={{ width: '100%', height: '100%' }}>
               <img src={item.postPictureLink} height="100%" width="100%" />
             </Box>
           </Box>
-          <Box sx={{ mx: 1, width: '31.7%', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', height: '5%', alignItems: 'center' }}>
-              {item.userProfile 
-                ? <Avatar sx={{ width: 30, height: 30 }} alt="User" src={item.userProfile }/> 
-                : <Avatar sx={{ width: 30, height: 30 }} alt="User" src="/images/baseimg.jpg"/>}
+          <Box sx={{ width: '32%' }}>
+            <Box sx={{ ml: 1, display: 'flex', height: '5%', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}> 
+                {item.userProfile 
+                  ? <Avatar sx={{ width: 30, height: 30 }} alt="User" src={item.userProfile }/> 
+                  : <Avatar sx={{ width: 30, height: 30 }} alt="User" src="/images/baseimg.jpg"/>}
                 <h4 className="post_article_comment" onClick={onClickRedirectPathHandler(`/profile/${item.userId}`)}>
-                    <strong className="cur1">
-                      {item.userId}
-                    </strong>
-                  </h4>
-              {/* <Box sx={{ width: '100%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box> */}
-            {item.userId === user ? 
-                        <Box sx={{display: 'flex'}}>
-                        <Button onClick={handleChange} sx={{  minHeight: 0, minWidth: 40 }}><AutoFixNormalIcon sx={{ color: 'black' }}></AutoFixNormalIcon></Button>
-                        <Button
-                          onClick={handleClickDialog}
-                          sx={{  minWidth: 40 }}>
-                          <DeleteIcon sx={{ color: 'black' }}></DeleteIcon>
-                        </Button>
-                        <Dialog
-                          open={dialog}
-                          onClose={handleDialogClose}
-                          aria-labelledby="alert-dialog-title"
-                          aria-describedby="alert-dialog-description"
-                        >
-                          <DialogTitle id="alert-dialog-title">
-                            {"게시물을 삭제할까요?"}
-                          </DialogTitle>
-                          <DialogActions>
-                            <Button onClick={handleDialogClose2} autoFocus>삭제</Button>
-                            <Button onClick={handleDialogClose}>취소</Button>
-                          </DialogActions>
-                        </Dialog>
-                        </Box>
-                        : null} 
+                  <strong className="cur1">
+                    {item.userId}
+                  </strong>
+                </h4>
+              </Box>
+              {item.userId === user 
+              ? 
+                <Box>
+                  <Button onClick={handleChange} sx={{  minHeight: 0, minWidth: 40 }}>
+                    <AutoFixNormalIcon sx={{ color: 'black' }}></AutoFixNormalIcon>
+                  </Button>
+                  <Button
+                    onClick={handleClickDialog}
+                    sx={{  minWidth: 40 }}
+                  >
+                    <DeleteIcon sx={{ color: 'black' }}></DeleteIcon>
+                  </Button>
+                  <Dialog
+                    open={dialog}
+                    onClose={handleDialogClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {"게시물을 삭제할까요?"}
+                    </DialogTitle>
+                    <DialogActions>
+                      <Button onClick={handleDialogClose2} autoFocus>삭제</Button>
+                      <Button onClick={handleDialogClose}>취소</Button>
+                    </DialogActions>
+                  </Dialog>
+                </Box>
+              : 
+                null} 
             </Box>
             <Box sx={{ height: '81%' }} style={searchStyle}>
               <Box sx={{display: 'flex', alignItems: 'baseline'}}>
@@ -436,16 +436,16 @@ const Postmodal = ({ item }) => {
                 </Box>
               )}
             </Box>
-            <Box sx={{ height: '8.5%', mb: 1 }} style={searchStyle}>
+            <Box sx={{ height: '8%', mb: 1 }} style={searchStyle}>
               <div className="post__likeCnt">
                 {like === true ?       
-                  <Button onClick={handelLike} sx={{minWidth:'24px'}} style={{padding:'0px'}}>     
+                  <Button onClick={handelLike} sx={{ minWidth:'24px' }} style={{ padding:'0px' }}>     
                   <FavoriteIcon 
                     className="post_like"
                     sx = {{color:'red'}}
                   />
                   </Button> :
-                  <Button onClick={handelLike} sx={{minWidth:'24px'}} style={{padding:'0px'}}>        
+                  <Button onClick={handelLike} sx={{ minWidth:'24px' }} style={{ padding:'0px' }}>        
                   <FavoriteBorderIcon 
                     className="post_like"
                     sx = {{color:'black'}}
@@ -460,19 +460,19 @@ const Postmodal = ({ item }) => {
                     placeholder="내용 입력"
                     onChange={onChange}
                     onKeyPress={handleKeypress}
-                    sx={{width:'80%', ml:1}}
+                    sx={{ width:'80%', ml: 1 }}
                     value={commentContent}
+
                   />
                   <Button>
                     <Typography onClick={onSubmit}>게시</Typography>
                   </Button>
                 </div>
               </div> 
-
             </Box> 
             {
               item.userId !== userId ? <div></div> : item.postIsNft 
-              ? <Button sx={{ width: '100%' }} variant="contained" color="error" >
+              ? <Button sx={{ ml: 0.5, width: '98%' }} variant="contained" color="error" >
                   이미 민팅된 게시물입니다.
                 </Button>
               : isMintingLoaded !== true 
@@ -480,10 +480,10 @@ const Postmodal = ({ item }) => {
                     <CircularProgress />
                   </Box> 
                 : wallet === null 
-                  ? <Button sx={{ width: '100%' }} variant="contained" color="error" >
+                  ? <Button sx={{ ml: 0.5, width: '98%' }} variant="contained" color="error" >
                       지갑 연동 이후 이용이 가능합니다.
                     </Button> 
-                  : <Button sx={{ width: '100%' }} variant="contained" onClick={handleOpen2} disabled={!isMintingLoaded}>
+                  : <Button sx={{ ml: 0.5, width: '98%' }} variant="contained" onClick={handleOpen2} disabled={!isMintingLoaded}>
                       민팅하기
                       <Modal
                         open={open2}
