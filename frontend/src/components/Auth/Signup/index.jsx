@@ -193,7 +193,7 @@ const Signup = () =>{
         </div>
         <div className="signup__form">
           <div className="signup__form form_2">
-            계정이 없으신가요?<Link to="/" style={{ textDecoration: 'none', padding: 8, color: 'blue'}}>로그인</Link>
+            계정이 있으신가요?<Link to="/" style={{ textDecoration: 'none', padding: 8, color: 'blue'}}>로그인</Link>
           </div>
         </div>
       </Box>

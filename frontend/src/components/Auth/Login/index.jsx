@@ -53,8 +53,11 @@ const Login = (props) => {
 
   return (
     <Wrapper>
+      <div className="welcome">
+        <img src="images/main.png" width="640px" height="360px"></img>
+      </div>
       <div>
-        <Box component="form" onSubmit={onSubmitHandler}>
+        <Box component="form" onSubmit={onSubmitHandler} className="login_box">
           <div className="logo">
             <img src='/images/sawyou.png' width="300" height="80"></img>
           </div>
@@ -90,11 +93,12 @@ const Login = (props) => {
               로그인
             </Button>
           </div>
+          <div className="login__form form_1">
+            계정이 있으신가요?<Link to="/signup" style={{ textDecoration: 'none', padding: 8, color: 'blue'}}>회원가입</Link>
+          </div>
         </Box>
       </div>
-      <div className="login__form form_1">
-        계정이 있으신가요?<Link to="/signup" style={{ textDecoration: 'none', padding: 8, color: 'blue'}}>회원가입</Link>
-      </div>
+
     </Wrapper>
 
 
