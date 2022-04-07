@@ -174,6 +174,7 @@ const UserHeader = (props) => {
   const onClickRedirectPathHandler2 = name => e => {
     window.scrollTo(0, 0);
     navigate(`${name}`);
+    handleCloseUserMenu()
     setSearch('');
     
     window.location.reload()
@@ -323,7 +324,7 @@ const UserHeader = (props) => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <MenuItem key={"profile"} onClick={onClickRedirectPathHandler(`/profile/${user}`)}>
+                <MenuItem key={"profile"} onClick={onClickRedirectPathHandler2(`/profile/${user}`)}>
                   <Typography textAlign="center">프로필</Typography>
                 </MenuItem>
 
@@ -362,8 +363,8 @@ const UserHeader = (props) => {
           </Button>
         )) : null}
         {result && category === '해시태그' ? result.map((data) => (
-          <Button style={{textTransform: 'lowercase'}} key={data.hashtagName} sx={{justifyContent:'left'}} onMouseDown={onClickRedirectPathHandler(`/search/tags/${data.hashtagSeq}`)}>
-            {/* <img class="img2" src="/images/baseimg_nav.jpg" /> */}
+          <Button style={{textTransform: 'lowercase'}} key={data.hashtagName} sx={{justifyContent:'left'}} onMouseDown={onClickRedirectPathHandler(`/search/tags/${data.hashtagName}`)}>
+            <img class="img2" src="/images/baseimg_hash.png" />
             <Box sx={{ ml: 2 }}><Typography>{data.hashtagName}</Typography></Box>
           </Button>
         )) : null}

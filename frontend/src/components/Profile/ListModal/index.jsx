@@ -19,7 +19,7 @@ import { MintingNft } from '../../../api/nft';
 import Swal from 'sweetalert2';
 import { User } from '../../../States/User';
 import { ReadCommnet, LikePost } from '../../../api/post';
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 const style = {
   position: 'absolute',
@@ -93,6 +93,7 @@ const Postmodal = ({ item }) => {
   const user = useRecoilValue(User);
   const [count, setCount] = useState(1);
   const [commentContent, setCommentContent] = useState('');
+  const navigate = useNavigate();
 
   const displayedAt = (createdAt) => {
     var d = new Date(createdAt);
@@ -225,6 +226,12 @@ const Postmodal = ({ item }) => {
     handleClose()
     window.location.reload()
   };
+  const onClickRedirectPathHandler = name => e => {
+    window.scrollTo(0, 0);
+    navigate(`${name}`);
+    window.location.reload()
+  };
+
 
   useEffect(() => {
     Read()
@@ -367,7 +374,12 @@ const Postmodal = ({ item }) => {
               {item.userProfile 
                 ? <Avatar sx={{ width: 30, height: 30 }} alt="User" src={item.userProfile }/> 
                 : <Avatar sx={{ width: 30, height: 30 }} alt="User" src="/images/baseimg.jpg"/>}
-              <Box sx={{ width: '100%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box>
+                <h4 className="post_article_comment" onClick={onClickRedirectPathHandler(`/profile/${item.userId}`)}>
+                    <strong className="cur1">
+                      {item.userId}
+                    </strong>
+                  </h4>
+              {/* <Box sx={{ width: '100%' }}><Typography sx={{ ml: 2, mt: 0.2 }}>{item.userId}</Typography></Box> */}
             {item.userId === user ? 
                         <Box sx={{display: 'flex'}}>
                         <Button onClick={handleChange} sx={{  minHeight: 0, minWidth: 40 }}><AutoFixNormalIcon sx={{ color: 'black' }}></AutoFixNormalIcon></Button>
@@ -395,8 +407,8 @@ const Postmodal = ({ item }) => {
             </Box>
             <Box sx={{ height: '81%' }} style={searchStyle}>
               <Box sx={{display: 'flex', alignItems: 'baseline'}}>
-                <h4 className="post_text">
-                  <strong>
+                <h4 className="post_text" onClick={onClickRedirectPathHandler(`/profile/${item.userId}`)}>
+                  <strong className="cur1">
                     {item.userId}
                   </strong>
                   <span>&nbsp;</span>
@@ -412,8 +424,8 @@ const Postmodal = ({ item }) => {
               </Box>
               { comment && comment.map((data) => 
                 <Box sx={{display: 'flex', alignItems: 'baseline'}}>
-                  <h4 className="post_article_comment">
-                    <strong>
+                  <h4 className="post_article_comment" onClick={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
+                    <strong className="cur1">
                       {data.userId}
                     </strong>
                     <span>&nbsp;</span>

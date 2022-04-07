@@ -88,7 +88,7 @@ const Profile = (props) => {
               <div class="profile_image_mid">
                 <div class="profile_image_inner">
                   <button class="profile_btn">
-                    <img alt="프로필 사진" class="profile_image" src="/images/baseimg.jpg"></img>
+                    {(posts && posts) ?  <img alt="프로필 사진" class="profile_image" src={posts[0].postPictureLink}></img> :                     <img alt="프로필 사진" class="profile_image" src="/images/baseimg.jpg"></img>}
                   </button>
                   <div>
                     <form encType="multipart/form-data" method="POST" role="presentation">
@@ -98,6 +98,10 @@ const Profile = (props) => {
                 </div>
               </div>
             </div>
+            <div> 
+              <Typography variant='h5'> #{params}</Typography>
+            </div>
+
           </header>
           <My></My>
         </div>
