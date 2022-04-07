@@ -89,6 +89,11 @@ const Wrapper = styled.div`
     cursor: pointer;
   }
 
+  .post_hashtag {
+    color: #00376b;
+    text-decoration: none;
+  }
+
   .post__commentCnt {
     margin: 6px auto;
     font-weight: 500;
@@ -108,7 +113,7 @@ const Wrapper = styled.div`
   }
 
   .commentWrap {
-    border: 1px solid lightgrey;
+    border-top: 1px solid lightgrey;
     display: flex;
     justify-content: space-between;
   }

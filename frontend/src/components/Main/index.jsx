@@ -165,14 +165,14 @@ const Main = (props) => {
                     {props.data.postContent.split(/(#[^\s]+)/g).map((v) => {
                     if (v.match(/#[^\s]+/)) {
                       return (
-                        <a href={"/search/tags/" + v.slice(1)}>{v}</a>
+                        <a href={"/search/tags/" + v.slice(1)} className="post_hashtag">{v}</a>
                       );
                     }
                     return v;
                   })}
               </h4>
             </div>
-            <Typography variant='caption'>{displayedAt(props.data.postWritingTime)} 작성</Typography>
+            <Typography variant='caption' color='#777777'>{displayedAt(props.data.postWritingTime)} 작성</Typography>
             <div className="post__commentCnt">댓글 {commentCnt}개</div>            
             <div className="post_comment">
               {dataComment && dataComment.map((data) => 
