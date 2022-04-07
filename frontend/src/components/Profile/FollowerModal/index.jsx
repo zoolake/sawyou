@@ -100,7 +100,7 @@ const Postmodal = (props) => {
           minHeight: "24px",
           padding: "0 0 0 0px"
         }}>
-          <Typography>팔로워 {data.followerCnt}</Typography>
+          <Typography>팔로워 {props.cnt}</Typography>
         </Button>
       <Modal
       open={open}
