@@ -135,26 +135,27 @@ const Product = () => {
           <section className="detailPage__aside">
             <h2 className="detailPage__title">{saleInfo.nftTitle}</h2>
             <article className="detailPage__section">
-              <div className="detailPage__info">NFT 정보</div>
+              <div className="detailPage__info" style={{ fontWeight: 500, fontSize: "2rem", marginBottom: "20px" }}>NFT 정보</div>
+              <hr style={{ fontWeight: 200, fontSize: "2px" }}></hr>
               <dl className="detailPage__info1 info">
-                <dt>소유자</dt>
+                <dt style={{fontWeight: 600}}>소유자</dt>
                 <dd>
-                  <b>{saleInfo.sellerName}</b>
+                  {saleInfo.sellerName}
                 </dd>
               </dl>
               <dl className="detailPage__info1 info">
-                <dt>컨트랙트 주소</dt>
-                <dd className="detailPage__contract">{saleInfo.saleContractAddress.slice(0,4)}...{saleInfo.saleContractAddress.slice(-4) }</dd>
+                <dt style={{fontWeight: 600}}>컨트랙트 주소</dt>
+                <dd className="detailPage__contract">{saleInfo&&saleInfo.saleContractAddress.slice(0,4)}...{saleInfo&&saleInfo.saleContractAddress.slice(-4)}</dd>
               </dl>
               <dl className="detailPage__info1 info">
-                <dt>토큰 ID</dt>
+                <dt style={{fontWeight: 600}}>토큰 ID</dt>
                 <dd>{saleInfo.nftTokenId}</dd>
               </dl>
-              <div>
+              <div style={{fontWeight: 600}}>
                 작품 설명
                 <br />
                 <br />
-                <div>
+                <div style={{fontWeight: 400}}>
                   {saleInfo.nftDesc}
                 </div>
               </div>
@@ -183,25 +184,35 @@ const Product = () => {
                   </dd>
                 </dl>
                 {
-                  isPurchaseLoaded ?
-                    <Box sx={{ textAlign: 'center', pt: 7 }}><CircularProgress /></Box> : isSuccess ?
-                      <Button
-                        variant="contained"
-                        color="warning"
-                        className="detailPage__button"
-                        onClick={handlePurchaseButtonClick}
-                      >
-                        구매가 완료되었습니다
-                      </Button> :
-                      <Button
-                        variant="contained"
-                        className="detailPage__button"
-                        onClick={handlePurchaseButtonClick}
-                      >
-                        구매하기
-                      </Button>
+                  wallet === null ?
+                    <Button
+                      variant="contained"
+                      className="detailPage__button"
+                      color="warning"
+                    >
+                      지갑 연동 후 이용이 가능합니다.
+                    </Button>:
+                    isPurchaseLoaded ?
+                      <Box sx={{ textAlign: 'center', pt: 7 }}><CircularProgress /></Box> : isSuccess ?
+                        <Button
+                          variant="contained"
+                          color="warning"
+                          className="detailPage__button"
+                          onClick={handlePurchaseButtonClick}
+                        >
+                          구매가 완료되었습니다
+                        </Button> :
+                        <Button
+                          variant="contained"
+                          className="detailPage__button"
+                          onClick={handlePurchaseButtonClick}
+                        >
+                          구매하기
+                        </Button>
                 }
                 {
+                  wallet === null ?
+                  " ":
                   !isPurchaseLoaded &&
                   <Button variant="contained"
                     className="detailPage__button"
