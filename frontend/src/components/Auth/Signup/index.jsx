@@ -5,6 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Wrapper from './styles';
 import { RegisterUser, IdCheck } from '../../../api/user';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router';
 
 
 const Signup = () =>{
@@ -17,9 +19,10 @@ const Signup = () =>{
   const [emailWarning, setEmailWarning] = useState(true);
   const [idWaring, setIdWaring] = useState(true);
   const [idcheck, setIdCheck] = useState(true);
+  const navigate = useNavigate();
 
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (idWaring || emailWarning || confirmPasswordWarning || passwordWarning) {
       if(idWaring) {
@@ -36,7 +39,19 @@ const Signup = () =>{
       }
       return;
     }
-
+    const body2 = {
+      userId : id
+    }
+    var idcheck2 = await IdCheck(body2)
+    if(idcheck2.data.data === false) {
+      Swal.fire({
+        title: ' Error ',
+        text: '아이디가 중복됩니다. 😢',
+        icon: 'error',
+        confirmButtonText: '확인',
+      })
+      return
+    }
     const body = {
       userId : id,
       userPwd : password,
@@ -44,7 +59,13 @@ const Signup = () =>{
       userEmail : email
     };
     RegisterUser(body)
-    console.log(body)
+    Swal.fire({
+      title: ' Success ',
+      text: '가입에 성공하였습니다. ✨',
+      icon: 'success',
+      confirmButtonText: '확인'
+    })
+    navigate('/')
   };
 
   // Coustom Hook 이전
@@ -52,11 +73,10 @@ const Signup = () =>{
     const body = {
       userId : e.target.value
     };
-    var idcheck = await IdCheck(body)
-    console.log(idcheck.data.data)
 
     var reg_id = /^[a-zA-Z0-9_]{6,16}$/;
     if(!reg_id.test(e.target.value)){
+      setId(e.target.value);
       setIdWaring(true);
     }
     else{
@@ -64,9 +84,6 @@ const Signup = () =>{
       setId(e.target.value);
     }
 
-    if(!idcheck.data.data) {
-      setIdCheck(false);
-    }
   }
 
   const onChangeName = (e) => {
