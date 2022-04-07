@@ -278,6 +278,7 @@ const Postmodal = ({ item }) => {
         confirmButtonText: '확인'
       }).then((result) => {
         window.location.reload()
+      })
 
     }
     catch (error) {
