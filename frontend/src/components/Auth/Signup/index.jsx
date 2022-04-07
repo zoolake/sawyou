@@ -18,7 +18,6 @@ const Signup = () =>{
   const [confirmPasswordWarning, SetConfirmPasswordWarning] = useState(true);
   const [emailWarning, setEmailWarning] = useState(true);
   const [idWaring, setIdWaring] = useState(true);
-  const [idcheck, setIdCheck] = useState(true);
   const navigate = useNavigate();
 
 

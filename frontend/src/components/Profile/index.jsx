@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Wrapper from './styles';
 import { useParams } from 'react-router';
-import { ImageList, ImageListItem, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/material/Box';

@@ -1,15 +1,12 @@
 import React from 'react';
 import Market from '../../../components/Nft/Market';
-import Wrapper from './styles';
-import Navbar from '../../../components/Navbar';
 
-const MarketplacePage = (props) => {
+const MarketplacePage = () => {
 
   return (
     <Wrapper>
       <Market></Market>
     </Wrapper>
-
   )
 }
 

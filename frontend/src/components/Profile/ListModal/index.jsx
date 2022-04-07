@@ -94,9 +94,6 @@ const Postmodal = ({ item }) => {
   const displayedAt = (createdAt) => {
     var d = new Date(createdAt);
     const milliSeconds = new Date() - d - 32400000
-    console.log(createdAt)
-    console.log(new Date())
-    console.log(milliSeconds)
     const seconds = milliSeconds / 1000
     if (seconds < 60) return `방금 전`
     const minutes = seconds / 60
@@ -248,7 +245,6 @@ const Postmodal = ({ item }) => {
         const web = new Web3(window.ethereum);
         setWeb3(web);
       } catch (err) {
-        console.log(err);
       }
     }
   }, []);
@@ -291,7 +287,6 @@ const Postmodal = ({ item }) => {
         icon: 'error',
         confirmButtonText: '확인',
       })
-      console.log("error:", error);
     }
 
     finally {

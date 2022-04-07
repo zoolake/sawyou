@@ -1,15 +1,12 @@
 import React from 'react';
 import Product from '../../../components/Nft/Product';
-import Wrapper from './styles';
-import Navbar from '../../../components/Navbar';
 
-const ProductPage = (props) => {
+const ProductPage = () => {
 
   return (
     <Wrapper>
       <Product></Product>
     </Wrapper>
-
   )
 }
 

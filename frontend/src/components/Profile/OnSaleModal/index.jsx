@@ -31,25 +31,14 @@ const style = {
   width: '65%',
   height: '90%',
   bgcolor: 'background.paper',
-  // border: '2px solid #000',
-  // borderRadius: 6,
-  boxShadow: 24,
-  // p: 1,
-};
+  };
 
 const Postmodal = (item) => {
-  console.log("이상해요!!!!", item.item);
-
   const [open, setOpen] = React.useState(false);
-  const [onwerid, setOwnerid] = React.useState('소유자');
-  const [id, setId] = React.useState('민팅한 사람');
-  const [time, setTime] = React.useState('2022-03-30');
-  const [title, setTtile] = React.useState('맛잇는 햄버거');
   const handleOpen = () => setOpen(true);
   const handleClose = () => (setOpen(false));
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
-  const [nftDetail, setNftDetail] = useState('');
   const [saleInfo, setSaleInfo] = useState('abc');
   const wallet = useRecoilValue(Wallet);
   const userId = useRecoilValue(User);
@@ -63,8 +52,6 @@ const Postmodal = (item) => {
     navigate(`/nft/${item.item.nftSeq}`);
     handleClose()
   };
-
-
 
   useEffect(() => {
     if (selectedImage) {
@@ -80,13 +67,10 @@ const Postmodal = (item) => {
         const web = new Web3(window.ethereum);
         setWeb3(web);
       } catch (err) {
-        console.log(err);
       }
     } else {
-      console.log("ethereum is not defined")
     }
     ReadCellNft(item.item.nftSeq).then((r) => {
-      console.log("saleInfo", r.data.data)
       setSaleInfo(r.data.data);
     })
 
@@ -116,21 +100,15 @@ const Postmodal = (item) => {
   const handlePurchaseButtonClick = async () => {
 
     setIsPurchaseLoaded(true);
-    console.log("saleContractAddress : ", saleInfo)
     const saleContractAddress = saleInfo.saleContractAddress;
-
     const salePrice = saleInfo.salePrice;
-    console.log("salePrice : ", saleInfo.salePrice)
-
     const erc20Contract = await new web3.eth.Contract(
       SsafyToken.abi,
       "0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333"
     );
 
     const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress);
-
     const approve = await erc20Contract.methods.approve(saleContractAddress, salePrice).send({ from: wallet });
-
     const purchase = await saleContract.methods.purchase().send({ from: wallet });
 
     // send purchaseinfo to backend
@@ -152,19 +130,13 @@ const Postmodal = (item) => {
           const web = new Web3(window.ethereum);
           setWeb3(web);
         } catch (err) {
-          console.log(err);
         }
       } else {
-        console.log("ethereum is not defined")
       }
       //saleContractAddress로 delete하자
       const saleContractAddress = saleInfo.saleContractAddress;
-
-      console.log(saleContractAddress);
       const saleContract = await new web3.eth.Contract(Sale.abi, saleContractAddress)
-
       const cancelSales = await saleContract.methods.cancelSales().send({ from: wallet }).then(() => { });
-      console.log(saleContractAddress);
 
       //send cancelInfo to backend
       const request = ({
@@ -188,7 +160,6 @@ const Postmodal = (item) => {
         icon: 'error',
         confirmButtonText: '확인',
       })
-      console.log("error:", error);
     }
     finally {
       setIsPurchaseLoaded(false);

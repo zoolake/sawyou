@@ -44,7 +44,6 @@ const ImageModal = (props) => {
       window.location.reload()
     })
     .catch(err => {
-      console.log(err)
     })
   } 
 
