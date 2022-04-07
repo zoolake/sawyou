@@ -69,6 +69,13 @@ const searchStyle = {
   overflow: 'auto',
 };
 
+const searchStyle2 = {
+  bgcolor: 'white',
+  border: '1px solid #dedede',
+  display: 'flex',
+  flexDirection: 'column',
+};
+
 const Postmodal = ({ item }) => {
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -402,8 +409,8 @@ const Postmodal = ({ item }) => {
               : 
                 null} 
             </Box>
-            <Box sx={{ height: '81%' }} style={searchStyle}>
-              <Box sx={{display: 'flex', alignItems: 'baseline'}}>
+            <Box gutterbottom sx={{ height: '81%' }} style={searchStyle}>
+              <Box gutterbottom sx={{display: 'flex'}}>
                 <h4 className="post_text" onClick={onClickRedirectPathHandler(`/profile/${item.userId}`)}></h4>
                   <strong className="cur1">
                     {item.userId}
@@ -432,7 +439,7 @@ const Postmodal = ({ item }) => {
                 </Box>
               )}
             </Box>
-            <Box sx={{ height: '8%', mb: 1 }} style={searchStyle}>
+            <Box sx={{ height: '8%', mb: 0.5 }} style={searchStyle2}>
               <div className="post__likeCnt">
                 {like === true ?       
                   <Button onClick={handelLike} sx={{ minWidth:'24px' }} style={{ padding:'0px' }}>     
@@ -468,7 +475,7 @@ const Postmodal = ({ item }) => {
             </Box> 
             {
               item.userId !== userId ? <div></div> : item.postIsNft 
-              ? <Button sx={{ ml: 0.5, width: '98%' }} variant="contained" color="error" >
+              ? <Button sx={{ ml: 0.5, width: '98%', height:'4%' }} style={{padding: "0 0 0 0px"}} variant="contained" color="error" >
                   이미 민팅된 게시물입니다.
                 </Button>
               : isMintingLoaded !== true 
@@ -476,10 +483,10 @@ const Postmodal = ({ item }) => {
                     <CircularProgress />
                   </Box> 
                 : wallet === null 
-                  ? <Button sx={{ ml: 0.5, width: '98%' }} variant="contained" color="error" >
+                  ? <Button sx={{ ml: 0.5, width: '98%', height:'4%' }} style={{padding: "0 0 0 0px"}} variant="contained" color="error" >
                       지갑 연동 이후 이용이 가능합니다.
                     </Button> 
-                  : <Button sx={{ ml: 0.5, width: '98%' }} variant="contained" onClick={handleOpen2} disabled={!isMintingLoaded}>
+                  : <Button sx={{ ml: 0.5, width: '98%', height:'4%' }} style={{padding: "0 0 0 0px"}} variant="contained" onClick={handleOpen2} disabled={!isMintingLoaded}>
                       민팅하기
                       <Modal
                         open={open2}
