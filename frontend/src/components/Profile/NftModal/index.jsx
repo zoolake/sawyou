@@ -9,8 +9,10 @@ import {
   Table,
   TableContainer,
   TableRow,
-  Typography
+  Typography,
+  InputAdornment
  } 
+ 
 from '@mui/material';
 import { ReadNft, CellNft } from '../../../api/nft';
 import { User } from '../../../States/User';
@@ -22,7 +24,7 @@ import Web3 from 'web3';
 import SaleFactory from '../../../abi/SaleFactory.json';
 import SsafyNFT from '../../../abi/SsafyNFT.json';
 import Swal from 'sweetalert2';
-
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const style = {
   position: 'absolute',
@@ -40,7 +42,7 @@ const style2 = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: '600px',
+  width: '660px',
   height: '200px',
   bgcolor: 'background.paper',
   border: '2px solid #000',
@@ -52,7 +54,7 @@ const style2 = {
 const style3 = {
   display: 'flex',
   height: '70%',
-  width: '100%',
+  width: '660px',
   alignItems: 'center',
   justifyContent: 'center'
 }
@@ -226,8 +228,11 @@ const Postmodal = ({ item, userData }) => {
           id="outlined-start-adornment"
           sx={{ ml: 5, width: '50ch' }}
           onChange={(event) => setPrice(event.target.value)}
-        /></Box>
-
+          InputProps={{
+            endAdornment: <InputAdornment position="end"><img src="/images/SSF.jpg"/></InputAdornment>,
+          }}
+        /> 
+        </Box>
       <Box sx={{ display: 'flex', height: '20%', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
         <Button
           sx={{ width: '30%' }}
