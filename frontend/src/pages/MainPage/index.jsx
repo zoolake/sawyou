@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Main from '../../components/Main';
 import { ReadFollowingPost } from '../../api/list'
 import Box from '@mui/material/Box';
+import Wrapper from './styles';
 
 
 const MainPage = (props) => {

@@ -1,5 +1,6 @@
 import React from 'react';
 import Market from '../../../components/Nft/Market';
+import Wrapper from './styles';
 
 const MarketplacePage = () => {
 
