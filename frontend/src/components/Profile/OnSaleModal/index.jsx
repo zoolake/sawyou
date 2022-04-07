@@ -192,6 +192,7 @@ const Postmodal = (item) => {
     }
     finally {
       setIsPurchaseLoaded(false);
+      window.location.reload()
     }
   }
 
