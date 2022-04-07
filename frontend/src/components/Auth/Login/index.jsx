@@ -94,7 +94,7 @@ const Login = (props) => {
             </Button>
           </div>
           <div className="login__form form_1">
-            계정이 있으신가요?<Link to="/signup" style={{ textDecoration: 'none', padding: 8, color: 'blue'}}>회원가입</Link>
+            계정이 없으신가요?<Link to="/signup" style={{ textDecoration: 'none', padding: 8, color: 'blue'}}>회원가입</Link>
           </div>
         </Box>
       </div>
