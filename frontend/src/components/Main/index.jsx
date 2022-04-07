@@ -161,7 +161,15 @@ const Main = (props) => {
                 <strong className="cur1" onClick={onClickRedirectPathHandler(`/profile/${props.data.userId}`)}>
                   {props.data.userId}
                 </strong><span>&nbsp;</span>
-                {props.data.postContent}
+                <span>&nbsp;</span>
+                    {props.data.postContent.split(/(#[^\s]+)/g).map((v) => {
+                    if (v.match(/#[^\s]+/)) {
+                      return (
+                        <a href={"/search/tags/" + v.slice(1)}>{v}</a>
+                      );
+                    }
+                    return v;
+                  })}
               </h4>
             </div>
             <Typography variant='caption'>{displayedAt(props.data.postWritingTime)} 작성</Typography>
