@@ -75,7 +75,7 @@ public class ListController {
         List<PostRes> lists = listService.getPostListFollowing(userSeq, pageable);
 
         if(lists.isEmpty())
-            return ResponseEntity.status(404).body(Result.builder().status(404).message("게시글 없음").build());
+            return ResponseEntity.status(200).body(Result.builder().data(false).status(200).message("게시글 없음").build());
 
         return ResponseEntity.status(200).body(Result.builder().data(lists).status(200).message("팔로잉 게시글 조회 성공").build());
     }
