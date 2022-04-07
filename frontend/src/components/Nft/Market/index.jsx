@@ -13,16 +13,13 @@ const Market = () => {
   const [nfts, setNft] = React.useState();
   const navigate = useNavigate();
   React.useEffect(() => {
-    console.log("ㅡㅡ")
     ReadSaleNftTop10().then(({data}) => {
-      console.log(data.data);
 
       setNft(data.data);
     })  
   }, []);
 
   const onClickRedirectPathHandler = (nftSeq) => {
-    console.log("click",nftSeq);
     window.scrollTo(0, 0);
     navigate(`/nft/${nftSeq}`);
   };
@@ -38,13 +35,16 @@ const Market = () => {
   return (
     <Wrapper>
       <div className="nftheader">
-        <Box className="nftbox" sx={{width: 345, height:300}}>
+        <Box className="nftbox" sx={{width: 400, height:300}}>
           <div>
-            <Typography className="headtitle t1" variant="h3" gutterBottom>
-              자신만의 NFT를 팔아보세요
+            <Typography className="headtitle2 t1" variant="h3" gutterBottom>
+              자신만의 NFT를 소유해 보아요
             </Typography>
+            <br></br>
+            <br></br>
+            <br></br>
             <Typography variant="h5" gutterBottom>              
-              다양하고 독특한 NFT 상품들을 발견하고, 수집하고, 판매하고
+            마음에 드는 NFT 상품을 찾고 구매하여 수집해보세요
             </Typography>
           </div>
         </Box>
@@ -63,8 +63,8 @@ const Market = () => {
                       src="/images/baseimg.jpg"
                     />
                   }
-                  title="Lizard"
-                  subheader="Username"              
+                  title="I SAW YOU"
+                  subheader="50 SSF"              
                 />
             </CardActionArea>
           </Card>
@@ -84,7 +84,7 @@ const Market = () => {
                     
                     className="nftmedia"
                     image={nft.nftPictureLink}
-                    title="Contemplative Reptile"
+                    title={nft.sellerId}
                   />              
                     <CardHeader
                       avatar={

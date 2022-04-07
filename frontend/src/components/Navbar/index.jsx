@@ -351,9 +351,6 @@ const UserHeader = (props) => {
                 </Badge>
               </Button>
 
-              <Button color="secondary">
-                {balance == null ? "" : balance + " SSF"}
-              </Button>
             </Box>
           </Box>
         </Container>
