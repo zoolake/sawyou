@@ -364,7 +364,7 @@ const UserHeader = (props) => {
         )) : null}
         {result && category === '해시태그' ? result.map((data) => (
           <Button style={{textTransform: 'lowercase'}} key={data.hashtagName} sx={{justifyContent:'left'}} onMouseDown={onClickRedirectPathHandler(`/search/tags/${data.hashtagName}`)}>
-            <img class="img2" src="/images/baseimg_hash.png" />
+            <img class="img2" src="/images/baseimg_hash.PNG" />
             <Box sx={{ ml: 2 }}><Typography>{data.hashtagName}</Typography></Box>
           </Button>
         )) : null}
