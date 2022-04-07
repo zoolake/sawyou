@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
  */
 @Service("ListService")
 public class ListServiceImpl implements ListService {
-	@Autowired
-	private PostRepository postRepository;
+    @Autowired
+    private PostRepository postRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -61,9 +61,9 @@ public class ListServiceImpl implements ListService {
                     .postLikeCnt(post.getPostLikes().size())
                     .postCommentCnt(
                             post.getComments().stream().filter(comment ->
-                                            !comment.isCommentIsDelete()
-                                    ).collect(Collectors.toList()).size()
-                            )
+                                    !comment.isCommentIsDelete()
+                            ).collect(Collectors.toList()).size()
+                    )
                     .userSeq(user.getUserSeq())
                     .userId(user.getUserId())
                     .userName(user.getUserName())
@@ -139,11 +139,11 @@ public class ListServiceImpl implements ListService {
 
     // 해시태그 게시글 조회
     @Override
-    public List<PostRes> getPostListHashtag(Long userSeq, Long hashtagSeq, Pageable pageable) {
+    public List<PostRes> getPostListHashtag(Long userSeq, String hashtagName, Pageable pageable) {
         Long offset = pageable.getOffset();
         int size = pageable.getPageSize();
 
-        List<PostRes> list = postHashtagRepository.findPostHashtagByHashtag_HashtagSeq(hashtagSeq).stream().map(postHashtag -> {
+        List<PostRes> list = postHashtagRepository.findPostHashtagByHashtag_HashtagName(hashtagName).stream().map(postHashtag -> {
             Post post = postHashtag.getPost();
             User user = post.getUser();
             PostLike postLike = postLikeRepository.findByUser_UserSeqAndPost_PostSeq(userSeq, post.getPostSeq());
@@ -186,16 +186,16 @@ public class ListServiceImpl implements ListService {
         final int[] cnt = {0};
         List<User> userNameList = userRepository.findByUserNameStartsWith(keyword, JpaSort.unsafe("Length(userName)"));
         userNameList.forEach(user -> {
-            if(cnt[0] == 3)
+            if (cnt[0] == 3)
                 return;
-            if(userSeqList.contains(user.getUserSeq()))
+            if (userSeqList.contains(user.getUserSeq()))
                 return;
             userList.add(user);
             userSeqList.add(user.getUserSeq());
             cnt[0]++;
         });
 
-        userRepositorySupport.findUserByKeyword(keyword).stream().filter(user-> !userSeqList.contains(user.getUserSeq()))
+        userRepositorySupport.findUserByKeyword(keyword).stream().filter(user -> !userSeqList.contains(user.getUserSeq()))
                 .forEach(user -> userList.add(user));
 
         return userList.stream().map(user ->

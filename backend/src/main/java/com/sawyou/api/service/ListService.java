@@ -22,7 +22,7 @@ public interface ListService {
     List<PostRes> getPostListUser(Long userSeq, String userId, Pageable pageable);
 
     // 해시태그 게시글 조회
-    List<PostRes> getPostListHashtag(Long userSeq, Long hashtagSeq, Pageable pageable);
+    List<PostRes> getPostListHashtag(Long userSeq, String hashtagName, Pageable pageable);
 
     // 계정 검색
     List<UserListRes> searchUserList(String keyword);

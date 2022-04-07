@@ -19,6 +19,6 @@ public interface PostHashtagRepository extends JpaRepository<PostHashtag, Long> 
     // hashtagSeq를 가지고 있는 데이터 count 세기
     int countPostHashtagByHashtag_HashtagSeq(Long hashtagSeq);
 
-    // hashtagSeq로 데이터 전부 조회
-    List<PostHashtag> findPostHashtagByHashtag_HashtagSeq(Long hashtagSeq);
+    // hashtagName으로 데이터 전부 조회
+    List<PostHashtag> findPostHashtagByHashtag_HashtagName(String hashtagName);
 }
