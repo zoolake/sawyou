@@ -410,7 +410,7 @@ const Postmodal = ({ item }) => {
                 null} 
             </Box>
             <Box gutterbottom sx={{ height: '81%' }} style={searchStyle}>
-              <Box gutterbottom sx={{display: 'flex'}}>
+              <Box gutterbottom >
                 <h4 className="post_text" onClick={onClickRedirectPathHandler(`/profile/${item.userId}`)}></h4>
                   <strong className="cur1">
                     {item.userId}
@@ -427,7 +427,7 @@ const Postmodal = ({ item }) => {
               </Box>
               { comment && comment.map((data) => 
                 <Box sx={{display: 'flex', alignItems: 'baseline'}}>
-                  <h4 className="post_article_comment" onClick={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
+                  <h4 className="post_article_comment2" onClick={onClickRedirectPathHandler(`/profile/${data.userId}`)}>
                     <strong className="cur1">
                       {data.userId}
                     </strong>

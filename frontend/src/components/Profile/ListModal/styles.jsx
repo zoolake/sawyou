@@ -22,9 +22,15 @@ const Wrapper = styled.div`
     align-items: center;
     font-size: 14px;
     margin: 0.5% 2%;
-    word-break: break-word;
   }
 
+  .post_article_comment2 {
+    font-weight: 300;
+    align-items: center;
+    font-size: 14px;
+    margin: 0.5% 2%;
+    word-break: break-word;
+  }
   .post_like {
     align-items: center;
     background: 0 0;
