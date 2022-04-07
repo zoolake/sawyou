@@ -9,16 +9,25 @@ const Wrapper = styled.div`
   position: relative;
   border: 1px solid #d4d2d2;
   box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
-  width: 500px;
-  height: 420px;
+  width: 480px;
+  height: 430px;
 
   .logo {
     margin-top: 5px;
+    margin-bottom: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: sans-serif;
     font-size: 20px;
+  }
+  .logo2 {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+    width: 40px;
   }
 
   .c1 {
