@@ -122,7 +122,7 @@ public class NFTServiceImpl implements NFTService {
                 .nftPictureLink(nft.getNftPictureLink())
                 .nftAuthorName(nft.getNftAuthorName())
                 .nftTitle(nft.getNftTitle())
-                .nftDesc(nft.getNftAuthorName())
+                .nftDesc(nft.getNftDesc())
                 .nftTokenId(nft.getNftTokenId())
                 .nftCreateAt(nft.getNftCreatedAt().toString())
                 .build();
