@@ -144,7 +144,7 @@ const Product = () => {
               </dl>
               <dl className="detailPage__info1 info">
                 <dt>컨트랙트 주소</dt>
-                <dd className="detailPage__contract">{saleInfo.nftOwnerAddress}</dd>
+                <dd className="detailPage__contract">{saleInfo.saleContractAddress.slice(0,4)}...{saleInfo.saleContractAddress.slice(-4) }</dd>
               </dl>
               <dl className="detailPage__info1 info">
                 <dt>토큰 ID</dt>

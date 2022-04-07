@@ -65,6 +65,7 @@ const Login = (props) => {
               name="loginId"
               placeholder="아이디"
               className="inputBox"
+              required
               onChange={onChangeId}
             >
             </input>
