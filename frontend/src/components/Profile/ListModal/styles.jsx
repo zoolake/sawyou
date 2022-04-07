@@ -50,6 +50,10 @@ const Wrapper = styled.div`
     margin-left: 0;
   }
 
+  .post_hashtag {
+    color: #00376b;
+    text-decoration: none;
+  }
 
 `;
 
