@@ -213,7 +213,7 @@ const Postmodal = ({ item, userData }) => {
 
     const request = {
       "nftSeq": item.nftSeq,
-      "salePrice": 2,
+      "salePrice": price,
       "saleContractAddress": saleContractAddress,
     }
     await CellNft(request);
