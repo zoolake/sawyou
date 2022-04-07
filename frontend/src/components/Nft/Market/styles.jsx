@@ -7,7 +7,7 @@ const Wrapper = styled.div`
 
   .nftheader {
     width: 100%;
-    max-width: min(1280px, 100% - 40px);
+    max-width: min(1400px, 100% - 40px);
     margin: 20px auto;
     display: flex;
     flex-wrap: wrap;
@@ -24,6 +24,12 @@ const Wrapper = styled.div`
   }
 
   .headtitle {
+    line-height: 110%;
+    font-family: Poppins, sans-serif;
+    font-weight: 600;
+  }
+  .headtitle2 {
+    width : 690px;
     line-height: 110%;
     font-family: Poppins, sans-serif;
     font-weight: 600;
