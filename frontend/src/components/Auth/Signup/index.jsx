@@ -102,7 +102,7 @@ const Signup = () =>{
   }   
 
   const onChangePassword = (e) => {
-    var reg_password = /^.*(?=^.{8,16}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
+    var reg_password = /^.*(?=^.{8,16}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!*@#$%^&+=]).*$/;
     if(!reg_password.test(e.target.value)){
       setPasswordWarning(true);
     }
