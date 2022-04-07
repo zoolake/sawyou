@@ -74,7 +74,7 @@ public class UserController {
         if(user == null)
             return ResponseEntity.status(200).body(Result.builder().data(true).status(200).message("중복 아이디 없음").build());
         // 중복 아이디가 있을 경우 false 반환
-        return ResponseEntity.status(409).body(Result.builder().data(false).status(409).message("중복 아이디 있음").build());
+        return ResponseEntity.status(200).body(Result.builder().data(false).status(200).message("중복 아이디 있음").build());
     }
 
     @PostMapping("/login")
