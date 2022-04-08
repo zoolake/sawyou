@@ -5,8 +5,10 @@ import Button from '@mui/material/Button';
 import Wrapper from './styles';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { ProfileImage} from "../../../api/user"
+import { ProfileImage, Profile  } from "../../../api/user"
 import { useParams } from 'react-router';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { UserImage } from '../../../States/UserImage';
 
 const style = {
   position: 'absolute',
@@ -27,6 +29,7 @@ const ImageModal = (props) => {
   const [imageUrl, setImageUrl] = useState(null);
   const forImage = props.item.userProfile
   const params = useParams().id;
+  const [userImage, setuserImage] = useRecoilState(UserImage);
 
   useEffect(() => {
     if (selectedImage) {
@@ -40,6 +43,7 @@ const ImageModal = (props) => {
 
     ProfileImage(body)
     .then(res => {
+      Profile(params).then((res) => setuserImage(res.data.data.userProfile))
       handleClose()
       window.location.reload()
     })
