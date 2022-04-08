@@ -110,7 +110,7 @@ public class ListServiceImpl implements ListService {
                         .userProfile(user.getUserProfile()).build());
             });
         });
-        return postResList.stream().skip(offset).limit(size).collect(Collectors.toList());
+        return postResList.stream().sorted(Comparator.comparing(PostRes::getPostWritingTime).reversed()).skip(offset).limit(size).collect(Collectors.toList());
     }
 
     // 유저 게시글 조회
