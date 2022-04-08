@@ -4,6 +4,10 @@
 
 - Ubuntu 20.04 LTS (GNU/Linux 5.4.0-1018-aws x86_64)
 - 환경에 따라 vi, nano / ssh, bash 같은 명령어가 달라질 수 있으니 주의
+- **ERC 721 CA** : 0x6c5BC9afdFf1E7354A1A03E7f8683d78EEe231E2
+- **ERC 20 CA** : 0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333
+- **Sale Factory CA** : 0x0922ea92B9C3f3C580127BE07aeEfDad9CBc3540
+
 
 ## 서버 포트
 
