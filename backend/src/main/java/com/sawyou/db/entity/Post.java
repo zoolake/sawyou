@@ -1,8 +1,9 @@
 package com.sawyou.db.entity;
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,14 +15,17 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "postSeq")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postSeq = null;
+    private Long postSeq;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq")
     private User user;
 
@@ -29,6 +33,8 @@ public class Post {
     private String postPictureLink;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @Generated(GenerationTime.INSERT)
+    @Column
     private LocalDateTime postWritingTime;
 
     private boolean postIsDelete;
@@ -45,4 +51,7 @@ public class Post {
     @JsonIgnore
     @OneToMany(mappedBy = "post")
     private List<PostLike> postLikes;
+
+    @OneToOne(mappedBy = "post")
+    private NFT nft;
 }

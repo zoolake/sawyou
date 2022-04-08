@@ -17,12 +17,13 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userSeq")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userSeq = null;
+    private Long userSeq;
 
     private String userId;
 
@@ -59,4 +60,7 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<PostLike> postLikes;
+
+    @OneToMany(mappedBy = "user")
+    private List<NFT> NFTs;
 }
