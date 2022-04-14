@@ -2,7 +2,7 @@
 
 # ✨ 소유, I saw you ✨
 
-![sawyou.png](README%200103e/sawyou.png)
+![sawyou](/uploads/07e6c3222ee2112a3b6588fee7e4efad/sawyou.png)
 
 ## 📷 프로젝트 개요
 
@@ -14,7 +14,7 @@
 > SNS (Social NFT Service) 서비스입니다.
 > 
 
-![Untitled](README%200103e/Untitled%201.png)
+![logo](/uploads/7ef68bc529a203e12390bf711d8fc428/logo.png)
 
 ## 📌 주요 기능
 
@@ -46,7 +46,7 @@
 
 ### Front-End
 
-![Untitled](README%200103e/Untitled%202.png)
+![fe](/uploads/28707faee25c3ea152c54999c46367fb/fe.png)
 
 - React 17.0.2
   
@@ -57,7 +57,7 @@
 
 ### Back-End
 
-![Untitled](README%200103e/Untitled%204.png)
+![be](/uploads/733133778e4230ce9ef9727ce6fdbd17/be.png)
 
 - Springboot 2.5.10
 - Java 11
@@ -69,7 +69,7 @@
 
 ### Smart-Contract
 
-![Untitled](README%200103e/Untitled%205.png)
+![sc](/uploads/ef11f132c110161f5dd3acc993e07ed5/sc.png)
 
 - solidity ^0.8.4
 - Truffle 5.5.2 (core: 5.5.2)
@@ -79,7 +79,7 @@
 
 ### Server
 
-![Untitled](README%200103e/Untitled%206.png)
+![server](/uploads/0941244f58dac3f3da81b261766ed9c6/server.png)
 
 - Docker 20.10.12
 - Docker-compose 1.29.2
@@ -99,7 +99,7 @@
 | 이메일 | wjdgur778@gmail.com | junhomoon224@gmail.com | mage888@naver.com | sw200662@naver.com | melonbottle@gmail.com | cjcm1525@naver.com |
 ## 📋 시스템 아키텍쳐
 
-![스크린샷 2022-04-14 오후 5.28.39(2).png](README%200103e/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2022-04-14_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_5.28.39(2).png)
+![arch](/uploads/97d5db0e9b7910960238fb491eeb313f/arch.png)
 
 ## 🚀 산출물
 
