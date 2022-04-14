@@ -30,9 +30,21 @@
 
 (gif)
 
-### 게시된 사진을 구매
+### 작성한 게시글을 민팅
 
-(gif)
+![minting](/uploads/d07234e17560c666907c32823cda0ab2/minting.gif)
+
+### 보유한 NFT를 판매 등록
+
+![sale](/uploads/0139695d2d041629e720261665bc9659/sale.gif)
+
+### 판매중인 NFT를 구매
+
+![purchase](/uploads/2468f39b16c72b6bdbc6794b3433072d/purchase.gif)
+
+### 구매한 NFT 확인
+
+![after_purchase](/uploads/60065047b9fd43a709c8a35258f68cb6/after_purchase.gif)
 
 ### 보유한 NFT를 전시
 
