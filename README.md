@@ -1,5 +1,7 @@
 ![](README.assets/sawyou.png)
 
+&nbsp;
+
 ## 소개 😀
 
 ✔ 사용자의 추억을 자유롭게 업로드하고 공유할 수 있습니다.
@@ -7,7 +9,7 @@
 
 ✔ 컨텐츠를 NFT화 하여 **소유(saw you)**, 거래할 수 있는 SNS (Social NFT Service) 서비스입니다.
 
-
+&nbsp;
 
 
 
@@ -15,7 +17,7 @@
 
 ![logo](README.assets/logo.png)
 
-
+&nbsp;
 
 ## 주요 기능 📌
 
@@ -23,19 +25,19 @@
 
 ![minting](README.assets/minting.gif)
 
-
+&nbsp;
 
 ##### 보유한 NFT를 판매 등록
 
 ![sale](README.assets/sale.gif)
 
-
+&nbsp;
 
 ##### 판매중인 NFT를 구매
 
 ![purchase](README.assets/purchase.gif)
 
-
+&nbsp;
 
 ##### 구매한 NFT 확인
 
@@ -43,7 +45,7 @@
 
 
 
-
+&nbsp;
 
 ## 기술 스택 🛠
 
@@ -51,19 +53,19 @@
 
 ![Generic badge](https://img.shields.io/badge/Java-11-green.svg)&nbsp;![Generic badge](https://img.shields.io/badge/SpringBoot-2.5.10-lightgreen.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Gradle-7.4.1-%232e2929.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Swagger-3.0.0-yellowgreen.svg)&nbsp;![Generic badge](https://img.shields.io/badge/QueryDSL-5.0.0-%236f8ed1.svg)
 
-
+&nbsp;
 
 #### Front-end
 
 ![Generic badge](https://img.shields.io/badge/React-17.0.2-skyblue.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Recoil-0.6.1-yellow.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Styled_Components-5.3.3-pink.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Material_UI-5.5.0-blue.svg)
 
-
+&nbsp;
 
 #### Smart-Contract
 
 ![Generic badge](https://img.shields.io/badge/Solidity-0.8.4-%234d4d4d.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Truffle-5.5.2-%23947676.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Web3.js-1.5.3-orange.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Ganache-7.0.1-red.svg)
 
-
+&nbsp;
 
 #### Server
 
@@ -71,7 +73,7 @@
 
 
 
-
+&nbsp;
 
 ## 개발 기간 📅
 
@@ -79,7 +81,7 @@
 
 
 
-
+&nbsp;
 
 ## 팀원 구성 🤝
 
@@ -90,13 +92,13 @@
 
 
 
-
+&nbsp;
 
 ##  시스템 아키텍쳐 ⚙
 
 ![system_architecture](README.assets/system_architecture.png)
 
-
+&nbsp;
 
 ## 바로가기 👉
 
