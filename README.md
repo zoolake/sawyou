@@ -1,103 +1,106 @@
-# ✨ 소유, I saw you ✨
+![](README.assets/sawyou.png)
 
-## 📷 프로젝트 개요
+&nbsp;
 
-> 사용자의 추억을 자유롭게 업로드하고 공유하며, 
->
-> 컨텐츠를 NFT화 하여 소유, 거래할 수 있는
->
-> SNS (Social NFT Service) 서비스입니다.
+## 소개 😀
+
+✔ 사용자의 추억을 자유롭게 업로드하고 공유할 수 있습니다.
 
 
+✔ 컨텐츠를 NFT화 하여 **소유(saw you)**, 거래할 수 있는 SNS (Social NFT Service) 서비스입니다.
 
-## 📌 주요 기능
-
-### 사진 위주의 자유로운 SNS
-
-### 게시된 사진을 구매
-
-### 보유한 NFT를 전시
-
-### 해시태그를 통한 검색 기능
+&nbsp;
 
 
 
-## 👩‍💻 팀원 구성
+## 마스코트 👀
 
-### Smart-Contract
+![logo](README.assets/logo.png)
 
-* [김정혁](https://lab.ssafy.com/wjdgur778) - 팀장
-  * Solidity 개발
-  * Git 관리
-* [문준호](https://lab.ssafy.com/junhomoon224)
-  * Solidity 개발
-  * Web3.js 개발
+&nbsp;
 
+## 주요 기능 📌
 
+##### 작성한 게시글을 민팅
 
-### Front-End
+![minting](README.assets/minting.gif)
 
-* [김영후](https://lab.ssafy.com/mage888)
-  * UI / UX 디자인 담당
-  * Axios 및 API 연동
-* [이상원](https://lab.ssafy.com/sw200662)
-  * NFT 관련 페이지 개발
-  * Jira 관리
+&nbsp;
 
-### Back-End
+##### 보유한 NFT를 판매 등록
 
-* [박건우](https://lab.ssafy.com/hggygw77) 
-  * CI/CD 환경 구축
-  * 유저, 게시글 API 개발
-* [오나연](https://lab.ssafy.com/cjcm1525)
-  * AWS 서버 리더
-  * 검색, NFT API 개발
+![sale](README.assets/sale.gif)
 
+&nbsp;
 
+##### 판매중인 NFT를 구매
 
-## 📆 개발 기간
+![purchase](README.assets/purchase.gif)
 
-2022.02.28 ~ 2022.04.08 (6주)
+&nbsp;
+
+##### 구매한 NFT 확인
+
+![after_purchase](README.assets/after_purchase.gif)
 
 
 
-## 🌳 개발 환경
+&nbsp;
 
-### Front-End
+## 기술 스택 🛠
 
-- React 17.0.2
-- Node 16.13.0
-- Recoil 0.6.1
-- Styled-Components 5.3.3
-- Material-UI 5.5.0
+#### Back-end
 
+![Generic badge](https://img.shields.io/badge/Java-11-green.svg)&nbsp;![Generic badge](https://img.shields.io/badge/SpringBoot-2.5.10-lightgreen.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Gradle-7.4.1-%232e2929.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Swagger-3.0.0-yellowgreen.svg)&nbsp;![Generic badge](https://img.shields.io/badge/QueryDSL-5.0.0-%236f8ed1.svg)
 
+&nbsp;
 
-### Back-End
+#### Front-end
 
-- Springboot 2.5.10
-- Java 11
-- Gradle 7.4.1
-- Java-JWT 3.10.3
-- Lombok 1.18.22
-- Swagger 3.0.0
-- QueryDSL 5.0.0
+![Generic badge](https://img.shields.io/badge/React-17.0.2-skyblue.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Recoil-0.6.1-yellow.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Styled_Components-5.3.3-pink.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Material_UI-5.5.0-blue.svg)
 
+&nbsp;
 
+#### Smart-Contract
 
-### Smart-Contract
+![Generic badge](https://img.shields.io/badge/Solidity-0.8.4-%234d4d4d.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Truffle-5.5.2-%23947676.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Web3.js-1.5.3-orange.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Ganache-7.0.1-red.svg)
 
-- solidity ^0.8.4
-- Truffle 5.5.2 (core: 5.5.2)
-- Node 14.17.1
-- Web3.js 1.5.3
-- Ganache 7.0.1
+&nbsp;
+
+#### Server
+
+![Generic badge](https://img.shields.io/badge/Docker-20.10.12-%234d80f0.svg)&nbsp;![Generic badge](https://img.shields.io/badge/MySQL-8.0-%238aa1d4.svg)&nbsp;![Generic badge](https://img.shields.io/badge/Nginx-1.21.6-%23299e29.svg)
 
 
 
-### Server
+&nbsp;
 
-- Docker 20.10.12
-- Docker-compose 1.29.2
-- MySQL 8.0
-- NGINX 1.21.6
+## 개발 기간 📅
+
+##### 2022. 02. 28 ~ 2022. 04. 08 (6주)
+
+
+
+&nbsp;
+
+## 팀원 구성 🤝
+
+|                 김정혁 (팀장)                  |                     문준호                     |                     김영후                     |                     이상원                     |                     오나연                     |                     박건우                     |
+| :--------------------------------------------: | :--------------------------------------------: | :--------------------------------------------: | :--------------------------------------------: | :--------------------------------------------: | :--------------------------------------------: |
+| ![정혁](README.assets/정혁-16499481259662.png) | ![준호](README.assets/준호-16499481362253.png) | ![영후](README.assets/영후-16499481393054.png) | ![상원](README.assets/상원-16499481433695.png) | ![나연](README.assets/나연-16499481459186.png) | ![건우](README.assets/건우-16499481480937.png) |
+|                 Smart-Contract                 |                 Smart-Contract                 |                    Frontend                    |                    Frontend                    |                  Backend, UCC                  |                    Backend, CI/CD           |
+
+
+
+&nbsp;
+
+##  시스템 아키텍쳐 ⚙
+
+![system_architecture](README.assets/system_architecture.png)
+
+&nbsp;
+
+## 바로가기 👉
+
+<a href="https://www.notion.so/A401-ISawYou-2e521b17caa141dc8351c91733d613a5"><img src="https://img.shields.io/badge/시연 시나리오-black?style=flat-square&logo=Notion&logoColor=lightgreen&link=https://www.notion.so/A401-ISawYou-2e521b17caa141dc8351c91733d613a5"/></a> <a href="https://www.youtube.com/watch?v=gS62E9DLDSc"><img src="https://img.shields.io/badge/UCC 영상-black?style=flat-square&logo=Youtube&logoColor=FF0000&link=https://www.youtube.com/watch?v=gS62E9DLDSc"></a>
+
